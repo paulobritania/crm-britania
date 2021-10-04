@@ -1,0 +1,5 @@
+export enum ClientStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  WORKFLOW_IN_PROGRESS = 'WORKFLOW_IN_PROGRESS'
+}

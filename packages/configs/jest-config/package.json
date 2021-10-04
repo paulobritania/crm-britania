@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@britania-crm-com/jest-config",
+  "version": "0.0.0",
+  "main": "jest.config.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.1.2",
+    "jest": "^26.4.0",
+    "jest-extended": "^0.11.5",
+    "jest-resolve": "^24.9.0",
+    "ts-jest": "^25.2.0"
+  }
+}

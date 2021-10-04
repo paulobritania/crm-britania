@@ -1,0 +1,40 @@
+<p>
+  VOCÊ POSSUI UM CADASTRO NOVO PARA ANALISAR.
+  <br />
+  Acesse o Workflow no CRM e confirme sua tarefa.
+</p>
+<p>
+  * * * * * NÃO RESPONDER ESTE E-MAIL * * * * *
+</p>
+<br />
+<p>
+  Dados da tarefa:
+</p>
+<p>
+  Prazo da tarefa:
+  {{deadline}}
+  dia(s)
+  <br />
+  Data limite para conclusão:
+  {{dateLimit}}
+  <br />
+  Cliente:
+  {{client}}
+  <br />
+  Responsável principal do cliente:
+  {{clientResponsible}}
+</p>
+<p>
+  Respostas das tarefas:
+  <br />
+  {{#each responses}}
+    {{this.respondedAt}}
+    -
+    {{this.taskTitle}}
+    -
+    {{this.responseTitle}}
+    :
+    {{this.responseJustification}}
+  {{/each}}
+  <br />
+</p>

@@ -1,0 +1,200 @@
+{
+  "isNotEmpty": "Este é um campo obrigatório",
+  "isDecimal": "Deve ser um valor decimal válido",
+  "isBooleanString": "Deve ser um valor booleano em formato de texto",
+  "isBoolean": "Deve ser um valor booleano",
+  "isCurrency": "Deve ser um valor monetário",
+  "isDataURI": "Deve ser um dado em formato de URI",
+  "isDate": "Deve ser uma data",
+  "isDateString": "Deve ser uma data em formato ISO",
+  "isHexColor": "Deve ser uma cor em formato hexadecimal",
+  "isHexadecimal": "Deve ser um número em formato hexadecimal",
+  "isJSON": "Deve ser um JSON em formato de texto",
+  "isJWT": "Deve ser um JWT em formato de texto",
+  "isLatitude": "Deve ser um valor de Latitude",
+  "isLatlong": "Deve ser um valor de Latitude e Longitude",
+  "isLongitude": "Deve ser um valor de Longitude",
+  "isLowercase": "Deve ser um texto em caixa baixa",
+  "isUppercase": "Deve ser um texto em caixa alta",
+  "isNegative": "Deve ser um número negativo",
+  "isNotEmptyObject": "Deve ser um objeto não vazio",
+  "isNumber": "Deve ser um número válido",
+  "isNumberString": "Deve ser um número válido em formato de texto",
+  "isPhoneNumber": "Deve ser um número de telefone válido",
+  "isPositive": "Deve ser um número positivo",
+  "isString": "Deve ser um texto",
+  "isEnum": "Deve ser um valor enumerado válido",
+  "isMilitaryTime": "Deve ser um valor de horário no formato HH:MM",
+  "isArray": "Deve ser uma lista",
+  "isEmail": "Deve ser um e-mail",
+  "isInt": "Deve ser um número inteiro",
+  "isObject": "Deve ser um objeto",
+  "isURL": "Deve ser um endereço URL",
+  "isUUID": "Deve ser um UUID",
+  "isEmpty": "Deve ser vazio",
+  "isDefined": "Não deve ser vazia",
+  "isRgbColor": "Deve ser uma cor RGB",
+  "ArrayUnique": "Todos itens da lista devem ser únicos",
+  "isAscii": "Deve conter apenas caracteres da tabela ASCII",
+  "isAlpha": "Deve conter apenas letras (a-zA-Z)",
+  "isAlphanumeric": "Deve conter apenas letras e números",
+  "isCurrentOrFutureDate": "Deve ser a data atual ou uma data futura",
+  "isStringifiedNumberArray": "Deve ser um array em formato de texto",
+  "isValidPeriodValidator": "O período deve possuir duas ou nenhuma data informada",
+  "length": {
+    "original": [
+      "$property must be longer than or equal to (\\S+) and shorter than or equal to (\\S+) characters",
+      "$property must be longer than or equal to (\\S+) characters",
+      "$property must be shorter than or equal to (\\S+) characters"
+    ],
+    "translated": [
+      "Deve ser maior ou igual a {{constraint1}} e menor ou igual a {{constraint2}} caracteres",
+      "Deve ser maior ou igual a {{constraint1}} caracteres",
+      "Deve ser menor ou igual a {{constraint1}} caracteres"
+    ]
+  },
+  "isHash": {
+    "original": [
+      "$property must be a hash of type (.+)"
+    ],
+    "translated": [
+      "Deve ser um hash do tipo {{constraint1}}"
+    ]
+  },
+  "isDivisibleBy": {
+    "original": [
+      "$property must be divisible by (.+)"
+    ],
+    "translated": [
+      "Deve ser divisível por {{constraint1}}"
+    ]
+  },
+  "isIn": {
+    "original": [
+      "$property must be one of the following values: (\\S+)"
+    ],
+    "translated": [
+      "Deve ser um dos seguintes valores: {{constraint1}}"
+    ]
+  },
+  "maxLength": {
+    "original": [
+      "$property must be shorter than or equal to (\\S+) characters"
+    ],
+    "translated": [
+      "Deve ser menor ou igual a {{constraint1}} caracteres"
+    ]
+  },
+  "arrayContains": {
+    "original": [
+      "$property must contain (\\S+) values"
+    ],
+    "translated": [
+      "A lista deve conter os seguintes valores: {{constraint1}}"
+    ]
+  },
+  "contains": {
+    "original": [
+      "$property must contain a (\\S+) string"
+    ],
+    "translated": [
+      "Deve conter o seguinte texto: {{constraint1}}"
+    ]
+  },
+  "arrayMinSize": {
+    "original": [
+      "$property must contain at least (\\S+) elements"
+    ],
+    "translated": [
+      "Deve conter ao menos {{constraint1}} elemento(s)"
+    ]
+  },
+  "arrayMaxSize": {
+    "original": [
+      "$property must contain not more than (\\S+) elements"
+    ],
+    "translated": [
+      "Deve conter no máximo {{constraint1}} elemento(s)"
+    ]
+  },
+  "matches": {
+    "original": [
+      "$property must match (\\S+) regular expression"
+    ],
+    "translated": [
+      "Deve satisfazer a seguinte expressão regular: {{constraint1}}"
+    ]
+  },
+  "notEquals": {
+    "original": [
+      "$property should not be equal to (.+)"
+    ],
+    "translated": [
+      "Deve ser diferente de {{constraint1}}"
+    ]
+  },
+  "isNotIn": {
+    "original": [
+      "$property should not be one of the following values: (.+)"
+    ],
+    "translated": [
+      "Não deve conter os seguintes valores: {{constraint1}}"
+    ]
+  },
+  "equals": {
+    "original": [
+      "$property must be equal to (.+)"
+    ],
+    "translated": [
+      "Deve ser igual a {{constraint1}}"
+    ]
+  },
+  "maxDate": {
+    "original": [
+      "maximal allowed date for $property is (.+)"
+    ],
+    "translated": [
+      "A data máxima deve ser {{constraint1}}"
+    ]
+  },
+  "minDate": {
+    "original": [
+      "minimal allowed date for $property is (.+)"
+    ],
+    "translated": [
+      "A data mínima deve ser {{constraint1}}"
+    ]
+  },
+  "isBeforeOrEqualThan": {
+    "original": [
+      "$property must be before or igual than (.+)"
+    ],
+    "translated": [
+      "Deve ser anterior ou igual a {{constraint1}}"
+    ]
+  },
+  "isNotConjunction": {
+    "original": [
+      "$property and (.+) must not be true at the same time"
+    ],
+    "translated": [
+      "Este e o campo {{constraint1}} não podem ser verdadeiro ao mesmo tempo"
+    ]
+  },
+  "isRequiredWhenAnotherFieldIsProvided": {
+    "original": [
+      "$property must have a value when (.+) is provided"
+    ],
+    "translated": [
+      "Este campo campo é obrigatório quando o campo {{constraint1}} é informado"
+    ]
+  },
+  "isArrayOfTwoNumbersJoinedInString": {
+    "original": [
+      "$property must be an array of two numbers joined by comma in string"
+    ],
+    "translated": [
+      "Deve ser uma lista de textos contendo dois números inteiros separados por vírgula. Ex.: ['1,2']"
+    ]
+  }
+}

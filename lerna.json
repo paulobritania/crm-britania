@@ -1,0 +1,11 @@
+{
+  "packages": [
+    "frontend/doc",
+    "packages/*/*",
+    "packages/*/shared/*",
+    "packages/*/core/*",
+    "packages/*/web/*",
+    "packages/*/web/apps/*"
+  ],
+  "version": "0.0.0"
+}

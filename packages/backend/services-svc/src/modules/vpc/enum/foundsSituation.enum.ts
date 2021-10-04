@@ -1,0 +1,6 @@
+export enum FoundsSituationEnum {
+  CANCELED = 'CANCELED',
+  TOTALLY_PAYED = 'TOTALLY_PAYED',
+  PARTIALLY_PAYED = 'PARTIALLY_PAYED',
+  PENDING = 'PENDING'
+}

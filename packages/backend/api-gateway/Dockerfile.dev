@@ -1,0 +1,15 @@
+FROM node:12-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json tsconfig*.json ./
+
+RUN npm install
+
+RUN npm i -g @nestjs/cli
+
+COPY src/ src/
+
+RUN npm run build
+
+CMD ["npm", "run", "start:dev"]
