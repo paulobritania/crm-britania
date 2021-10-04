@@ -1,0 +1,82 @@
+---
+name: InputPhone
+menu: Components
+route: '/components/input-phone'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import phone from '@britania-crm/forms/validators/phone.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputPhone from '@britania-crm/web-components/InputPhone'
+
+# @britania-crm/web-componens/InputPhone
+```js
+import Form from '@britania-crm/web-components/Form'
+import InputPhone from '@britania-crm/web-components/InputPhone'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field).
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import InputPhone from '@britania-crm/web-components/InputPhone'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <InputPhone
+        detached // important to use it outside form
+        value={ value }
+        onChange={ onChange }
+        label="Phone"
+        name="phone"
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import { useRef, useCallback } from 'react'
+
+import * as Yup from 'yup'
+
+import phone from '@britania-crm/forms/validators/phone.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputPhone from '@britania-crm/web-components/InputPhone'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({ phone: phone({ t })(Yup.string()) }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputPhone label="Phone" name="phone" />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ InputPhone } />

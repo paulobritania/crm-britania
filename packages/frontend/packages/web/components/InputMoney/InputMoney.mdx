@@ -1,0 +1,82 @@
+---
+name: InputMoney
+menu: Components
+route: '/components/input-money'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import float from '@britania-crm/forms/validators/float.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputMoney from '@britania-crm/web-components/InputMoney'
+
+# @britania-crm/web-componens/InputMoney
+```js
+import Form from '@britania-crm/web-components/Form'
+import InputMoney from '@britania-crm/web-components/InputMoney'
+import float from '@britania-crm/forms/validators/float.validator'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field)..
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import InputMoney from '@britania-crm/web-components/InputMoney'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <InputMoney
+        detached // important to use it outside form
+        value={ value }
+        onChange={ onChange }
+        label="Money"
+        name="money"
+        maxLength={ 18 }
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import * as Yup from 'yup'
+import { useRef, useCallback } from 'react'
+import Form from '@britania-crm/web-components/Form'
+import InputMoney from '@britania-crm/web-components/InputMoney'
+import float from '@britania-crm/forms/validators/float.validator'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({ money: float({ t })(Yup.string()) }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputMoney label="Money" name="money" maxLength={ 18 } />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ InputMoney } />

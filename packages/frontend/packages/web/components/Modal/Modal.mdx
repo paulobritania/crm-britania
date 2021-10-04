@@ -1,0 +1,48 @@
+---
+name: Modal
+menu: Components
+route: '/components/modal'
+---
+
+import { Playground } from 'docz'
+
+import { useDialog } from '@britania-crm/dialog'
+import Button from '@britania-crm/web-components/Button'
+import Modal from '@britania-crm/web-components/Modal'
+
+# @britania-crm/web-componens/Modal
+```js
+import Modal from '@britania-crm/web-components/Modal'
+```
+## Basic usage
+
+```js
+import { useDialog } from '@britania-crm/dialog'
+import Button from '@britania-crm/web-components/Button'
+import Modal from '@britania-crm/web-components/Modal'
+```
+
+<Playground>
+  {() => {
+    const { createDialog } = useDialog()
+    return (
+      <Button
+        id="dialog-button"
+        onClick={ () => createDialog({
+          id: 'dialog',
+          Component (modalProps) {
+            // eslint-disable-next-line
+            const { id, open } = modalProps
+            return (
+              <Modal id={ id } open={ open } title="Modal" >
+                <h1>My modal</h1>
+              </Modal>
+            )
+          }
+        }) }
+      >
+        Open Modal
+      </Button>
+    )
+  }}
+</Playground>

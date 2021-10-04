@@ -1,0 +1,44 @@
+---
+name: Chart
+menu: Components
+route: '/components/chart'
+---
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import { useDemo1Chart } from '@britania-crm/charts/demo/demo1'
+import { useDemo2Chart } from '@britania-crm/charts/demo/demo2'
+import Chart from '@britania-crm/web-components/Chart'
+
+# @britania-crm/web-componens/Chart
+```js
+import { useDemo1Chart } from '@britania-crm/charts/demo/demo1'
+import { useDemo2Chart } from '@britania-crm/charts/demo/demo2'
+import Chart from '@britania-crm/web-components/Chart'
+```
+
+This component is a wrapper to [`Highcharts React`](https://github.com/highcharts/highcharts-react#highcharts-react).
+
+## Live basic usage
+
+<Playground>
+  {() => {
+    const options1 = useDemo1Chart()
+    const options2 = useDemo2Chart()
+    return (
+      <div style={ {
+        flex: 1, display: 'flex', flexDirection: 'column'
+      } }
+      >
+        <Chart options={ options1 } />
+        <Chart options={ options2 } />
+      </div>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ Chart } />

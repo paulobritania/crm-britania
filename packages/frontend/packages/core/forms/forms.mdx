@@ -1,0 +1,534 @@
+---
+name: forms
+menu: Core
+route: '/core/forms'
+---
+
+import { useRef, useState, useMemo, useCallback, useEffect } from 'react'
+
+import { Form as Unform } from '@unform/web'
+import { Playground, Props } from 'docz'
+import * as Yup from 'yup'
+
+import {
+  FormProvider,
+  withField,
+  useField,
+  Scope,
+  reloadSchema
+} from '@britania-crm/forms'
+import FieldProvider from '@britania-crm/forms/src/providers/FieldProvider'
+import demoSchema, { INITIAL_VALUES as DEMO_INITIAL_VALUES } from '@britania-crm/forms/schemas/demo.schema'
+import required from '@britania-crm/forms/validators/required.validator'
+import { useT } from '@britania-crm/i18n'
+
+import Button from '@britania-crm/web-components/Button'
+import Form from '@britania-crm/web-components/Form'
+import InputEmail from '@britania-crm/web-components/InputEmail'
+import InputCEP from '@britania-crm/web-components/InputCEP'
+import InputText from '@britania-crm/web-components/InputText'
+import JsonViewer from '@britania-crm/web-components/JsonViewer'
+
+# @britania-crm/forms
+```js
+import {
+  FormProvider,
+  withField,
+  useField,
+  Scope,
+  reloadSchema
+} from '@britania-crm/forms'
+```
+
+> **This package provide an [Unform](https://unform.dev/) wrapper core**
+> **to make more easy form manipulations  on web and mobile platforms at same time, with same validations on both them.**
+
+
+## -> Provider
+### `FormProvider`
+This component provide a **Form scoped** to your application. Can be used to create the Form component for web and mobile platforms.
+
+### Props
+<Props of={ FormProvider } />
+
+
+## HOC
+### `withField`
+High Order Component that receive an function to provide the Unform registerField options.
+It is used to inject the field context into field component.
+Visit the Unform official documentation to see all options.
+
+Each field created with this HOC, will be able to receive this props:
+<Props of={ FieldProvider } />
+
+----
+
+
+## Hook
+### `useField`
+Usage is only inside field components that use HOC `withField`.
+```js
+const {
+  fieldName,
+  defaultValue,
+  error,
+  clearError,
+  fieldRef,
+  handleChange,
+  handleBlur,
+  handleChangeNative,
+  handleBlurNative,
+  required,
+  validateField
+} = useField()
+```
+
+----
+
+
+## -> `Scope`
+This component format all inputs children as a nested object into the data submitted, where the key is the `path` prop.
+
+____
+
+
+## Schema Constructor
+Schemas Constructors are simple functions that receive one object param like:
+```json
+{
+  t, // i18n translator
+  data // form data live snapshot
+}
+```
+and return an [Yup](https://github.com/jquense/yup) schema object
+with all form fields configurations and validations.
+
+### Example
+```js
+/* @britania-crm/forms/schemas/demo.schema.js */
+
+import * as Yup from 'yup'
+
+import flow from 'lodash/fp/flow'
+
+import email from '@britania-crm/forms/validators/email.validator'
+import min from '@britania-crm/forms/validators/min.validator'
+import required from '@britania-crm/forms/validators/required.validator'
+
+export const INITIAL_VALUES = {
+  name: '',
+  email: '',
+  address: {
+    city: '',
+    neighborhood: '',
+    street: ''
+  }
+}
+
+export default ({ t, data }) => Yup.object().shape({
+  name: required({ t })(Yup.string()),
+  email: flow(
+    email({ t }),
+    required({ t })
+  )(Yup.string()),
+  address: Yup.object().shape({
+    city: flow(
+      min({
+        t,
+        min: 3,
+        name: t('city', { howMany: 1 })
+      }),
+      required({ t })
+    )(Yup.string()),
+    neighborhood: (() => {
+      let YupInstance = Yup.string()
+      if (data?.address?.street) {
+        YupInstance = required({ t })(YupInstance)
+      }
+      return YupInstance
+    })(),
+    street: Yup.string()
+  })
+})
+
+```
+**Important:** Business schemas are maintained from `@britania-crm/forms/schemas/**/*`
+
+----
+
+
+## reloadSchema
+### `reloadSchema(formRef<React.Ref>, doubleCheck<boolean>)`
+Debounced function that reload the form schema. The `doubleCheck` enable reload on first and last input hit.
+
+____
+
+
+## Validators
+Each validator provide a incremented `Yup` intance with the rules to use in your form schema.
+
+Every validator is an high order function that receive the `t` and some configs in the first function,
+and receive the `Yup` instance as the parameter of the second function.
+
+So, the validator will return the Yup instance with the rules incremented.
+
+### Creating a custom rule
+```js
+
+export default ({ t }) => YupInstance => YupInstance
+  .test('my validation', t('my error string'), (value) => {
+    return !value // return `false` if has any errors on this input data
+  })
+
+```
+
+### Flow validation
+You can use many validators to compose the input data validation using the `flow`, provided by
+[lodash functional programming](https://github.com/lodash/lodash/wiki/FP-Guide).
+
+The error message will be applied by the last rule that doesn't satisfy the test.
+```js
+import * as Yup from 'yup'
+
+import flow from 'lodash/fp/flow'
+
+import email from '@britania-crm/forms/validators/email.validator'
+import password from '@britania-crm/forms/validators/password.validator'
+import required from '@britania-crm/forms/validators/required.validator'
+
+export const INITIAL_VALUES = {
+  name: '',
+  email: ''
+}
+
+export default ({ t }) => Yup.object().shape({
+  name: required({ t })(Yup.string()),
+  email: flow(
+    email({ t }),
+    required({ t })
+  )(Yup.string())
+})
+```
+**Important:** Business validators are maintained from `@britania-crm/forms/validators/*.validator`
+
+----
+
+## Masks
+You can use an mask to control and format an data input.
+To do it, you need define the input prop `setMask` as a function that receive the input value and some configs, respectivally.
+
+### Mask component
+The `@britania-crm/web-components/InputText` is masking using the [react-input-mask](https://github.com/sanniassin/react-input-mask) thirty library.
+
+### Example
+```js
+/* @britania-crm/forms/masks/cpfCnpj.mask.js */
+import { trimMask } from '@britania-crm/utils/formatters'
+
+import size from 'lodash/size'
+
+export default (value = '', { mode }) => {
+  const cpfSize = 11 // without mask
+  const valueTrim = trimMask(value || '')
+  const isCpf = size(valueTrim) <= cpfSize
+  if (mode === 'cpf' || (mode !== 'cnpj' && isCpf)) {
+    // CPF mask
+    // the last digit enables the mask to change to CNPJ
+    return `999.999.999-99${ mode === 'both' ? '9' : '' }`
+  }
+  // CNPJ mask
+  return '99.999.999/9999-99'
+}
+```
+and to use:
+```js
+import React, { useCallback } from 'react'
+
+import PropTypes from 'prop-types'
+
+import cpfCnpjMask from '@britania-crm/forms/masks/cpfCnpj.mask'
+import InputText from '@britania-crm/(web|mobile)-components/InputText'
+
+const InputCpfCnpj = (props) => {
+  const {
+    mode, // 'cpf' | 'cnpj' | 'both'
+    ...otherProps
+  } = props
+
+  const setMask = useCallback(
+    (value) => cpfCnpjMask(value, { mode }),
+    [mode]
+  )
+
+  return (
+    <InputText
+      { ...otherProps }
+      setMask={ setMask }
+    />
+  )
+}
+```
+**Important:** Business masks are maintained from `@britania-crm/forms/masks/*`
+
+
+## Live basic usage
+
+### Web
+```js
+import React, { useRef, useState, useCallback } from 'react'
+
+import debounce from 'lodash/debounce'
+
+import { Scope, reloadSchema } from '@britania-crm/forms'
+import demoSchema, { INITIAL_VALUES as DEMO_INITIAL_VALUES } from '@britania-crm/forms/schemas/demo.schema'
+import { useT } from '@britania-crm/i18n'
+import Form from '@britania-crm/web-components/Form'
+import Button from '@britania-crm/web-components/Button'
+import InputCEP from '@britania-crm/web-components/InputCEP'
+import InputEmail from '@britania-crm/web-components/InputEmail'
+import InputText from '@britania-crm/web-components/InputText'
+```
+
+<Playground>
+  {() => {
+    const formRef = useRef(null) // create form DOM reference
+    const [data, setData] = useState({})
+    const t = useT()
+    //
+    // fill fields by CEP
+    const handleCepChange = useCallback(
+      (address) => {
+        formRef.current.setData(old => ({
+          ...old,
+          address: {
+            ...old.address,
+            ...address
+          }
+        }))
+      },
+      [formRef]
+    )
+    //
+    // subscribe street onChange to regenerate schema
+    // and refresh neighborhood rules from lambda function
+    const handleStreetChange = useCallback(
+      () => reloadSchema(formRef, true),
+      [formRef]
+    )
+    return (
+      <Form
+        ref={ formRef }
+        schemaConstructor={ demoSchema }
+        onSubmit={ setData }
+        defaultValues={ DEMO_INITIAL_VALUES }
+      >
+        <InputText
+          name="name"
+          label={ t('name', { howMany: 1 }) }
+        />
+        <InputEmail
+          name="email"
+          label={ t('email') }
+        />
+        <Scope path="address">
+          <InputCEP
+            name="cep"
+            label="CEP"
+            onAddressChange={ handleCepChange }
+          />
+          <InputText
+            name="state"
+            label={ t('state', { howMany: 1 }) }
+          />
+          <InputText
+            name="city"
+            label={ t('city', { howMany: 1 }) }
+          />
+          <InputText
+            name="neighborhood"
+            label={ t('neighborhood') }
+          />
+          <InputText
+            name="street"
+            label={ t('street') }
+            onChange={ handleStreetChange }
+          />
+        </Scope>
+        <Button
+          id="submit"
+          variant="contained"
+          onClick={ () => formRef.current.submit() }
+        >
+          submit
+        </Button>
+        <JsonViewer name="data submitted" data={ data } />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Manipulating form/field value
+```js
+import { useRef, useCallback, useEffect, useMemo } from 'react'
+
+import required from '@britania-crm/forms/validators/required.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputText from '@britania-crm/web-components/InputText'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const INITIAL_VALUES = useMemo(() => ({
+      defaultField: '',
+      asyncField: ''
+    }), [])
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({
+        defaultField: required({ t })(Yup.string()),
+        asyncField: required({ t })(Yup.string())
+      }),
+      []
+    )
+    return (
+      <Form
+        ref={ formRef }
+        schemaConstructor={ schemaConstructor }
+        defaultValues={ INITIAL_VALUES }
+      >
+        <InputText
+          label="Default field"
+          name="defaultField"
+          defaultValue="default value"
+        />
+        <InputText
+          name="asyncField"
+          label="Async field"
+        />
+        <div style={ { display: 'flex' } }>
+          <Button
+            id="set-field-value-web"
+            size="small"
+            onClick={ () => {
+              formRef.current.setData({ asyncField: 'async text' })
+            } }
+          >
+            create async field value
+          </Button>
+          <Button
+            id="clear-field-web"
+            size="small"
+            onClick={ () => {
+              formRef.current.clearField('asyncField')
+            } }
+          >
+            clear async field
+          </Button>
+          <Button
+            id="reset-web"
+            size="small"
+            onClick={ () => {
+              formRef.current.reset()
+            } }
+          >
+            reset form
+          </Button>
+        </div>
+      </Form>
+    )
+  }}
+</Playground>
+
+
+## Setting submit errors
+
+```js
+import { useRef, useCallback, useMemo } from 'react'
+
+import Form from '@britania-crm/web-components/Form'
+import InputText from '@britania-crm/web-components/InputText'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    //
+    const INITIAL_VALUES = useMemo(() => ({
+      shortname: '',
+      fullname: '',
+      bio: ''
+    }), [])
+    //
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({
+        shortname: Yup.string(),
+        fullname: Yup.string(),
+        bio: Yup.string()
+      }),
+      []
+    )
+    //
+    const handleSubmit = useCallback(
+      (values) => {
+        try {
+          // do request 
+          // throwing mock axios error response
+          throw {
+            response: {
+              data: {
+                errorCode: 'VALIDATION_FAILED',
+                details: [
+                  {
+                    field: 'shortname',
+                    messages: [
+                      'Deve ser maior ou igual a 1 caracteres',
+                      'Este é um campo obrigatório'
+                    ]
+                  },
+                  {
+                    field: 'fullname',
+                    messages: [
+                      'Este é um campo obrigatório'
+                    ]
+                  },
+                  {
+                    field: 'bio',
+                    messages: [
+                      'Este é um campo obrigatório'
+                    ]
+                  },
+                ]
+              }
+            }
+          }
+        } catch (error) {
+          formRef.current.setSubmitError(error)
+        }
+      },
+      []
+    )
+    //
+    return (
+      <Form
+        ref={ formRef }
+        schemaConstructor={ schemaConstructor }
+        defaultValues={ INITIAL_VALUES }
+        onSubmit={ handleSubmit }
+      >
+        <InputText
+          name="shortname"
+          label="Short name"
+        />
+        <InputText
+          name="fullname"
+          label="Full name"
+        />
+        <InputText
+          name="bio"
+          label="Biography"
+        />
+        <Button onClick={ () => formRef.current.submit() }>
+          submit
+        </Button>
+      </Form>
+    )
+  }}
+</Playground>

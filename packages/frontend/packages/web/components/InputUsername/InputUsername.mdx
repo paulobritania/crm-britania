@@ -1,0 +1,80 @@
+---
+name: InputUsername
+menu: Components
+route: '/components/input-user'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import Form from '@britania-crm/web-components/Form'
+import InputUsername from '@britania-crm/web-components/InputUsername'
+
+# @britania-crm/web-componens/InputUsername
+```js
+import Form from '@britania-crm/web-components/Form'
+import InputUsername from '@britania-crm/web-components/InputUsername'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field).
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import InputUsername from '@britania-crm/web-components/InputUsername'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <InputUsername
+        detached // important to use it outside form
+        value={ value }
+        onChange={ onChange }
+        label="User"
+        name="user"
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import { useRef, useCallback } from 'react'
+
+import * as Yup from 'yup'
+
+import Form from '@britania-crm/web-components/Form'
+import InputUsername from '@britania-crm/web-components/InputUsername'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      () => Yup.object().shape({ user: Yup.string() }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputUsername label="user" name="user" />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ InputUsername } />

@@ -1,0 +1,35 @@
+---
+name: Loader
+menu: Components
+route: '/components/loaders'
+---
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import {
+  CircularLoader,
+  LinearLoader
+} from '@britania-crm/web-components/Loader'
+
+# @britania-crm/web-componens/Loader
+```js
+import { CircularLoader, LinearLoader } from '@britania-crm/web-components/Loader'
+```
+
+## Circular Loader
+This component is a wrapper to [`@material-ui/core/CircularProgress`](https://material-ui.com/api/circular-progress).
+<Playground>
+  <CircularLoader />
+</Playground>
+
+### Props
+<Props of={ CircularLoader } />
+
+## Linear Loader
+This component is a wrapper to [`@material-ui/core/LinearProgress`](https://material-ui.com/api/linear-progress).
+<Playground>
+  <LinearLoader />
+</Playground>

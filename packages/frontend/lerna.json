@@ -1,0 +1,25 @@
+{
+  "packages": [
+    "configs/*",
+    "doc",
+    "packages/core/*",
+    "packages/web/*",
+    "packages/web/apps/*"
+  ],
+  "version": "0.0.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "allowBranch": [
+        "develop",
+        "master",
+        "release-*"
+      ],
+      "message": "chore(release): Publish"
+    },
+    "publish": {
+      "conventionalCommits": true
+    }
+  }
+}

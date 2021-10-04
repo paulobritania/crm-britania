@@ -1,0 +1,174 @@
+---
+name: i18n
+menu: Core
+route: '/core/i18n'
+---
+
+import { PureComponent } from 'react'
+import { Playground, Props } from 'docz'
+
+import I18n, { I18nProvider, useT, withT, dictionaries } from '@britania-crm/i18n'
+import JsonViewer from '@britania-crm/web-components/JsonViewer'
+
+# @britania-crm/i18n
+```js
+import I18n, { useT, withT, I18nProvider, dictionaries } from '@britania-crm/i18n'
+```
+
+## Dictionaries
+
+### Example
+```js
+export default {
+  'hello world': 'Olá mundo!',
+  'producer':
+    '{gender, select, male {{howMany, plural, one {Produtor} other {Produtores}}} female {{howMany, plural, one {Produtora} other {Produtoras}}}}',
+  'city': '{howMany, plural, one {Cidade} other {Cidades}}',
+}
+```
+### Official translations
+<JsonViewer name="dictionaries" data={ dictionaries } />
+
+
+----
+
+## -> Provider
+### `I18nProvider`
+
+#### Props
+<Props of={ I18nProvider } />
+
+#### Basic Usage
+```js
+import { I18nProvider, dictionaries } from '@britania-crm/i18n'
+
+function App() {
+  return (
+    <I18nProvider
+      language="pt-BR"
+      dictionaries={ dictionaries }
+    >
+      ...
+    </I18nProvider>
+  )
+}
+```
+
+**React Native** apps need set the *fallbackComponent* and *textComponent* props to override the default html tags:
+```js
+import { I18nProvider, dictionaries } from '@britania-crm/i18n'
+import { Text, View } from 'react-native'
+
+function App() {
+  return (
+    <I18nProvider
+      // ...props of example above
+      fallbackComponent={ <View /> }
+      textComponent={ Text }
+    >
+      ...
+    </I18nProvider>
+  )
+}
+```
+
+----
+
+## -> Component
+### `I18n`
+
+#### Props
+<Props of={ I18n } />
+
+#### Basic Usage
+```js
+import I18n from '@britania-crm/i18n'
+```
+<Playground>
+  <I18n>hello world</I18n>
+</Playground>
+
+
+## Hook
+### `useT`
+```js
+import { useT } from '@britania-crm/i18n'
+```
+<Playground>
+  {() => {
+    const t = useT()
+    const str = t('hello world')
+    return (
+      <span>
+        {str}
+      </span>
+    )
+  }}
+</Playground>
+
+
+## HOC
+### `withT`
+```js
+import { withT } from '@britania-crm/i18n'
+```
+<Playground>
+  {() => {
+    class MyClassComponent extends PureComponent {
+      render() {
+        const { t } = this.props
+        const str = t('hello world')
+        return (
+          <span>
+            {str}
+          </span>
+        )
+      }
+    }
+    const MyClassComponentWithT = withT(MyClassComponent)
+    return <MyClassComponentWithT />
+  }}
+</Playground>
+
+
+## String manipulation
+### Interpolation, plural and gender
+Visit the [official guide](http://userguide.icu-project.org/formatparse/messages) to learn about how manipulate an translation.
+<Playground>
+  {() => {
+    const t = useT()
+    const str1 = t('{this} must contain at least {size} characters', {
+      this: t('neighborhood'),
+      size: 10,
+    })
+    const str2 = t('city', { howMany: 1 })
+    const str3 = t('producer', { howMany: 2, gender: 'male' })
+    return (
+      <div>
+        <p>
+          {str1}
+        </p>
+        <I18n
+          tagName="span"
+          params={ {
+            this: t('street'),
+            size: 5,
+          } }>
+          {'{this} must contain at least {size} characters'}
+        </I18n>
+        <p>
+          {str2}
+        </p>
+        <I18n tagName="span" params={ { howMany: 2 } }>
+          city
+        </I18n>
+        <p>
+          {str3}
+        </p>
+        <I18n tagName="span" params={ { howMany: 1, gender: 'female' } }>
+          producer
+        </I18n>
+      </div>
+    )
+  }}
+</Playground>

@@ -1,0 +1,194 @@
+---
+name: Snackbar
+menu: Core
+route: '/core/snackbar'
+---
+
+import { useEffect } from 'react'
+
+import { Playground, Props } from 'docz'
+
+import { useSnackbar } from '@britania-crm/snackbar'
+import Button from '@britania-crm/web-components/Button'
+import { SnackbarsProvider } from '@britania-crm/web-components/Snackbar'
+
+# Snackbar
+
+## SnackbarsProvider
+```js
+import { useSnackbar } from '@britania-crm/snackbar'
+```
+
+Use this component to provide snackbars to yours apps. The options include the same that [notistack](https://iamhosseindhv.com/notistack) and other custom options. By default `maxSnack` is 5.
+
+One time provided it, you will be able to create a snackbar from `useSnackbar` hook.
+
+### Props
+<Props of={ SnackbarsProvider } />
+
+## useSnackbar
+Snackbar hook that receive the snackbar object with all functions generators.
+Every type usage receive the same parameters:
+`message` - the string message - and `options` - snackbar options object
+`snackbar.[type](message, options)`
+
+```js
+// useSnackbar
+{
+  default: (message, options),
+  info: (message, options),
+  success: (message, options),
+  warning: (message, options),
+  error: (message, options)
+}
+```
+
+Each snackbar return options to access:
+```js
+{
+  open: () => {},
+  close: () => {},
+  message,
+  options,
+  key
+}
+```
+
+### Snackbar options
+The options include the same that [notistack](https://iamhosseindhv.com/notistack) and other custom options.
+```js
+{
+  variant: 'default'|'info'|'success'|'warning'|'error'
+  closeOnClick: true|false,
+  autoHideDuration: 7000, // time in ms
+  persist: true|false, // if true disable autoHideDuration
+  onClick: () => {},
+  anchorOrigin: {
+    vertical: 'top'|'center'|'top', // vertical position
+    horizontal: 'right'|'center','left' // horizontal position
+  }
+}
+```
+
+## Default snackbar options by type
+
+#### default
+```js
+{
+  variant: 'default',
+  closeOnClick: true,
+  autoHideDuration: 3000,
+  anchorOrigin: {
+    vertical: 'top',
+    horizontal: 'right'
+  }
+}
+```
+
+#### info
+```js
+{
+  variant: 'info',
+  closeOnClick: true,
+  autoHideDuration: 3000,
+  anchorOrigin: {
+    vertical: 'top',
+    horizontal: 'right'
+  }
+}
+```
+
+#### success
+```js
+{
+  variant: 'success',
+  closeOnClick: true,
+  autoHideDuration: 3000,
+  anchorOrigin: {
+    vertical: 'top',
+    horizontal: 'right'
+  }
+}
+```
+
+#### warning
+```js
+{
+  variant: 'warning',
+  closeOnClick: true,
+  autoHideDuration: 7000,
+  anchorOrigin: {
+    vertical: 'top',
+    horizontal: 'right'
+  }
+}
+```
+
+#### error
+```js
+{
+  variant: 'error',
+  persist: true,
+  closeOnClick: false,
+  anchorOrigin: {
+    vertical: 'top',
+    horizontal: 'right'
+  }
+}
+```
+
+
+## Basic Usage
+<Playground>
+  {() => {
+    const App = () => {
+      const snackbar = useSnackbar()
+      useEffect(() => {
+        snackbar.default('Snackbar default!')
+        snackbar.info('Snackbar info!')
+        snackbar.success('Snackbar success!')
+        snackbar.warning('Snackbar warning!')
+        snackbar.error('Snackbar error!')
+      }, [snackbar])
+      return (
+        <div style={ { display: 'inline-flex' } }>
+          <Button
+            id="default"
+            onClick={ () => snackbar.default('Snackbar default!') }
+          >
+            default
+          </Button>
+          <Button
+            id="info"
+            onClick={ () => snackbar.info('Snackbar info!') }
+          >
+            info
+          </Button>
+          <Button
+            id="success"
+            onClick={ () => snackbar.success('Snackbar success!') }
+          >
+            success
+          </Button>
+          <Button
+            id="warning"
+            onClick={ () => snackbar.warning('Snackbar warning!') }
+          >
+            warning
+          </Button>
+          <Button
+            id="error"
+            onClick={ () => snackbar.error('Snackbar error!') }
+          >
+            error
+          </Button>
+        </div>
+      )
+    }
+    return (
+      <SnackbarsProvider>
+        <App />
+      </SnackbarsProvider>
+    )
+  }}
+</Playground>

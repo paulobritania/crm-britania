@@ -1,0 +1,79 @@
+---
+name: InputDateRange
+menu: Components
+route: '/components/input-date-range'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import dateRange from '@britania-crm/forms/validators/dateRange.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputDateRange from '@britania-crm/web-components/InputDateRange'
+
+# @britania-crm/web-componens/InputDateRange
+```js
+import InputDateRange from '@britania-crm/web-components/InputDateRange'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field).
+
+## Live basic usage
+```js
+import { useState } from 'react'
+
+import InputDateRange from '@britania-crm/web-components/InputDateRange'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState({
+      from: '2020-07-19',
+      to: '2020-07-30'
+    })
+    return (
+      <InputDateRange
+        detached
+        value={ value }
+        onChange={ setValue }
+        label="Range Date"
+        name="dates"
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import * as Yup from 'yup'
+import { useRef, useCallback } from 'react'
+import Form from '@britania-crm/web-components/Form'
+import InputDateRange from '@britania-crm/web-components/InputDateRange'
+import dateRange from '@britania-crm/forms/validators/dateRange.validator'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({ range: dateRange({ t })(Yup.object()) }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputDateRange label="Percentage" name="range" />
+        <button type="submit">submit</button>
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ InputDateRange } />

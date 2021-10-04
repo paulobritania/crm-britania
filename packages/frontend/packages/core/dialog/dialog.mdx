@@ -1,0 +1,65 @@
+---
+name: Dialog
+menu: Core
+route: '/core/dialog'
+---
+
+import { Playground } from 'docz'
+import { DialogProvider, useDialog } from '@britania-crm/dialog'
+import Button from '@britania-crm/web-components/Button'
+
+
+# Dialog
+```js
+import { DialogProvider, useDialog } from '@britania-crm/dialog'
+```
+### DialogProvider
+```js
+  import { DialogProvider } from '@britania-crm/dialog'
+  ...
+  // inside react component
+  return (
+    <DialogProvider>
+      ...
+    </DialogProvider>
+  )
+```
+### Hooks
+#### useDialog
+```js
+import { useDialog } from '@britania-crm/dialog'
+...
+// inside react component
+const { createDialog, removeDialog, resetDialogs } = useDialog()
+```
+
+## Basic usage
+
+<Playground>
+  {() => {
+    const Example = () => {
+      const { createDialog } = useDialog()
+      return (
+        <Button
+          id="dialog-button"
+          onClick={ () => createDialog({
+            id: 'dialog',
+            Component: (modalProps) => {
+              const { id, handleClose } = modalProps
+              return (
+                <h1 onClick={ handleClose }>modal</h1>
+              )
+            }
+          }) }
+        >
+          Open dialog
+        </Button>
+      )
+    }
+    return (
+      <DialogProvider>
+        <Example />
+      </DialogProvider>
+    )
+  }}
+</Playground>

@@ -1,0 +1,81 @@
+---
+name: CalendarPicker
+menu: Components
+route: '/components/calendar-picker'
+---
+
+import { useState } from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import CalendarPicker from '@britania-crm/web-components/CalendarPicker'
+
+# @britania-crm/web-components/CalendarPicker
+```js
+import CalendarPicker from '@britania-crm/web-components/CalendarPicker'
+```
+
+## Live basic usage
+
+### Date
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    return (
+      <div>
+        <CalendarPicker
+          value={ value }
+          onChange={ setValue }
+          maxDate={ new Date() }
+        />
+        <p>
+          Selected: {value}
+        </p>
+      </div>
+    )
+  }}
+</Playground>
+
+### Time
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    return (
+      <div>
+        <CalendarPicker
+          value={ value }
+          onChange={ setValue }
+          mode="time"
+        />
+        <p>
+          Selected: {value}
+        </p>
+      </div>
+    )
+  }}
+</Playground>
+
+### DateTime
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    return (
+      <div>
+        <CalendarPicker
+          value={ value }
+          onChange={ setValue }
+          mode="datetime"
+        />
+        <p>
+          Selected: {value}
+        </p>
+      </div>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ CalendarPicker } />

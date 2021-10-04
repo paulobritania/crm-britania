@@ -1,0 +1,163 @@
+---
+name: InputStateRegistration
+menu: Components
+route: '/components/input-stateRegistration'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import stateRegistration from '@britania-crm/forms/validators/stateRegistration.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputSelect from '@britania-crm/web-components/InputSelect'
+import InputStateRegistration from '@britania-crm/web-components/InputStateRegistration'
+
+# @britania-crm/web-componens/InputStateRegistration
+```js
+import InputStateRegistration from '@britania-crm/web-components/InputStateRegistration'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field)..
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import InputStateRegistration from '@britania-crm/web-components/InputStateRegistration'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const [state, setState] = useState('')
+    const onChangeState = useCallback(
+      (event) => setState(event.target.value),
+      []
+    )
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <>
+        <InputSelect
+          detached
+          name="state"
+          label="State"
+          value={ state }
+          onChange={ onChangeState }
+          style={ { width: 100, marginRight: 10 } }
+          options={ [
+            { id: 'AC', name: 'AC' },
+            { id: 'AM', name: 'AM' },
+            { id: 'BA', name: 'BA' },
+            { id: 'CE', name: 'CE' },
+            { id: 'DF', name: 'DF' },
+            { id: 'GO', name: 'GO' },
+            { id: 'MT', name: 'MT' },
+            { id: 'MG', name: 'MG' },
+            { id: 'PA', name: 'PA' },
+            { id: 'PB', name: 'PB' },
+            { id: 'PR', name: 'PR' },
+            { id: 'PE', name: 'PE' },
+            { id: 'RJ', name: 'RJ' },
+            { id: 'RN', name: 'RN' },
+            { id: 'RS', name: 'RS' },
+            { id: 'RO', name: 'RO' },
+            { id: 'RR', name: 'RR' },
+            { id: 'SC', name: 'SC' },
+            { id: 'SP', name: 'SP' },
+            { id: 'SE', name: 'SE' }
+          ] }
+        />
+        <InputStateRegistration
+          detached // important to use it outside form
+          value={ value }
+          onChange={ onChange }
+          label="Inscrição Estadual"
+          name="stateRegistration"
+          state={ state }
+        />
+      </>
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import * as Yup from 'yup'
+import { useRef, useCallback } from 'react'
+import Form from '@britania-crm/web-components/Form'
+import InputStateRegistration from '@britania-crm/web-components/InputStateRegistration'
+import stateRegistration from '@britania-crm/forms/validators/stateRegistration.validator'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const [state, setState] = useState('')
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({
+        state: Yup.string(),
+        stateRegistration: stateRegistration({
+          t
+          // stateFieldName: 'state'
+        })(Yup.string())
+      }),
+      []
+    )
+    const onChangeState = useCallback(
+      (newState) => {
+        setState(newState)
+        formRef.current.validateField('stateRegistration')
+      },
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputSelect
+          name="state"
+          label="State"
+          onValueChange={ onChangeState }
+          options={ [
+            { id: 'AC', name: 'AC' },
+            { id: 'AM', name: 'AM' },
+            { id: 'BA', name: 'BA' },
+            { id: 'CE', name: 'CE' },
+            { id: 'DF', name: 'DF' },
+            { id: 'GO', name: 'GO' },
+            { id: 'MT', name: 'MT' },
+            { id: 'MG', name: 'MG' },
+            { id: 'PA', name: 'PA' },
+            { id: 'PB', name: 'PB' },
+            { id: 'PR', name: 'PR' },
+            { id: 'PE', name: 'PE' },
+            { id: 'RJ', name: 'RJ' },
+            { id: 'RN', name: 'RN' },
+            { id: 'RS', name: 'RS' },
+            { id: 'RO', name: 'RO' },
+            { id: 'RR', name: 'RR' },
+            { id: 'SC', name: 'SC' },
+            { id: 'SP', name: 'SP' },
+            { id: 'SE', name: 'SE' }
+          ] }
+        />
+        <InputStateRegistration
+          label="Inscrição Estadual"
+          name="stateRegistration"
+          state={ state }
+        />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ InputStateRegistration } />

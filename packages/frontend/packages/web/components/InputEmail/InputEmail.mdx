@@ -1,0 +1,76 @@
+---
+name: InputEmail
+menu: Components
+route: '/components/input-email'
+---
+
+import {
+  useState,
+  useRef,
+  useCallback
+} from 'react'
+
+import { Playground } from 'docz'
+import * as Yup from 'yup'
+
+import email from '@britania-crm/forms/validators/email.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputEmail from '@britania-crm/web-components/InputEmail'
+
+# @britania-crm/web-componens/InputEmail
+```js
+import Form from '@britania-crm/web-components/Form'
+import InputEmail from '@britania-crm/web-components/InputEmail'
+```
+
+This component is a wrapper to [`@britania-crm/web-components/TextField`](/web-components/text-field).
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import InputEmail from '@britania-crm/web-components/InputEmail'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <InputEmail
+        detached // important to use it outside form
+        value={ value }
+        onChange={ onChange }
+        label="E-mail"
+        name="email"
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import { useRef, useCallback } from 'react'
+
+import * as Yup from 'yup'
+
+import email from '@britania-crm/forms/validators/email.validator'
+import Form from '@britania-crm/web-components/Form'
+import InputEmail from '@britania-crm/web-components/InputEmail'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({ email: email({ t })(Yup.string()) }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <InputEmail label="E-mail" name="email" />
+      </Form>
+    )
+  }}
+</Playground>

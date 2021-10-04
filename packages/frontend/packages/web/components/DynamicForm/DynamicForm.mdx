@@ -1,0 +1,206 @@
+---
+name: DynamicForm
+menu: Components
+route: '/components/dynamic-form'
+---
+
+import {
+  useMemo,
+  useRef,
+  useState
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import DynamicForm from '@britania-crm/web-components/DynamicForm'
+import JsonViewer from '@britania-crm/web-components/JsonViewer'
+
+# @britania-crm/web-componens/DynamicForm
+```js
+import DynamicForm from '@britania-crm/web-components/DynamicForm'
+```
+
+## Live basic usage
+
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const [result, setResult] = useState({})
+    const schema = useMemo(
+      () => [
+        /* {
+          input: 'autocomplete',
+          name: 'fieldAutocomplete',
+          label: 'Autocomplete',
+          defaultValue: { id: 1 },
+          url: '/services/users/autocomplete'
+        }, */
+        {
+          input: 'text',
+          name: 'fieldText',
+          label: 'Text',
+          rules: ['required']
+        },
+        {
+          input: 'cep',
+          name: 'fieldCep',
+          label: 'CEP'
+        },
+        {
+          input: 'cpfCnpj',
+          name: 'fieldCpfCnpj',
+          label: 'CPF/CNPJ'
+        },
+        {
+          input: 'cpfCnpj',
+          name: 'fieldCpf',
+          label: 'CPF',
+          mode: 'cpf'
+        },
+        {
+          input: 'cpfCnpj',
+          name: 'fieldCnpj',
+          label: 'CNPJ',
+          mode: 'cnpj'
+        },
+        {
+          input: 'date',
+          name: 'fieldDate',
+          label: 'Date'
+          // defaultValue: '2021-01-15'
+        },
+        {
+          input: 'dateRange',
+          name: 'fieldDateRange',
+          label: 'Date Range'
+          // defaultValue: { from: '2021-01-02', to: '2021-01-15' }
+        },
+        {
+          input: 'dayMonth',
+          name: 'fieldDayMonth',
+          label: 'Day Month'
+          // defaultValue: '01-15'
+        },
+        {
+          input: 'email',
+          name: 'fieldEmail',
+          label: 'E-mail'
+        },
+        {
+          input: 'password',
+          name: 'fieldPassword',
+          label: 'Password'
+        },
+        {
+          input: 'phone',
+          name: 'fieldPhone',
+          label: 'Phone'
+        },
+        {
+          input: 'search',
+          name: 'fieldSearch',
+          label: 'Search'
+        },
+        {
+          input: 'select',
+          name: 'fieldSelect',
+          label: 'Select',
+          options: [
+            { id: '1', name: 'Option 1' },
+            { id: '2', name: 'Option 2' },
+            { id: '3', name: 'Option 3' }
+          ]
+          // defaultValue: '1'
+        },
+        {
+          input: 'username',
+          name: 'fieldUsername',
+          label: 'Username'
+        },
+        {
+          input: 'textarea',
+          name: 'fieldTextarea',
+          label: 'Textarea'
+        },
+        {
+          input: 'richText',
+          name: 'fieldRichText',
+          label: 'Rich Text'
+        },
+        {
+          input: 'radioGroup',
+          name: 'fieldRadioGroup',
+          label: 'Radio group',
+          options: [
+            { id: '1', name: 'Option 1' },
+            { id: '2', name: 'Option 2' },
+            { id: '3', name: 'Option 3' }
+          ],
+          defaultValue: '1'
+        },
+        {
+          input: 'switchBool',
+          name: 'fieldSwitchBool',
+          label: 'Switch Bool',
+          defaultValue: false
+        },
+        {
+          input: 'switchStatus',
+          name: 'fieldSwitchStatus',
+          defaultValue: false
+        },
+        {
+          input: 'checkbox',
+          name: 'fieldCheckbox',
+          label: 'Checkbox',
+          defaultValue: true
+        },
+        {
+          input: 'checkboxStatus',
+          name: 'fieldCheckboxStatus',
+          defaultValue: true,
+          activeStatus: 'Checkbox Status Active',
+          inactiveStatus: 'Checkbox Status Inactive'
+        },
+        {
+          input: 'transferList',
+          name: 'fieldTransferList',
+          options: [
+            { id: '1', name: 'Option 1' },
+            { id: '2', name: 'Option 2' },
+            { id: '3', name: 'Option 3' },
+            { id: '4', name: 'Option 4' },
+            { id: '5', name: 'Option 5' },
+            { id: '6', name: 'Option 6' },
+            { id: '7', name: 'Option 7' },
+            { id: '8', name: 'Option 8' }
+          ],
+          defaultValue: [
+            { id: '3' },
+            { id: '6' }
+          ]
+        }
+      ],
+      []
+    )
+    return (
+      <div style={ { flex: 1 } }>
+        <DynamicForm
+          ref={ formRef }
+          schema={ schema }
+          onSubmit={ setResult }
+        />
+        <JsonViewer
+          name="result"
+          data={ result }
+        />
+      </div>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ DynamicForm } />

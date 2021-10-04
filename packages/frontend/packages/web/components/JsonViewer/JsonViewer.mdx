@@ -1,0 +1,36 @@
+---
+name: JsonViewer
+menu: Components
+route: '/components/json-viewer'
+---
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import JsonViewer from '@britania-crm/web-components/JsonViewer'
+
+# @britania-crm/web-componens/JsonViewer
+```js
+import JsonViewer from '@britania-crm/web-components/JsonViewer'
+```
+
+## Live basic usage
+
+<Playground>
+  {() => {
+    const data = {
+      foo: 'bar',
+      baz: 'qux',
+      quux: 2,
+      corge: ['grault', 'garply']
+    }
+    return (
+      <JsonViewer name="myData" data={ data } />
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ JsonViewer } />

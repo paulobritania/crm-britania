@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "@britania-crm/eslint-config",
+  "version": "0.0.0",
+  "main": ".eslintrc.js",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.20.0",
+    "eslint-config-react-app": "^3.0.8",
+    "eslint-config-standard": "14.1.1",
+    "eslint-import-resolver-babel-plugin-root-import": "^1.1.1",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import-helpers": "^1.0.2",
+    "eslint-plugin-jest": "^22.4.1",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-mdx": "^1.8.1",
+    "eslint-plugin-modules-newline": "^0.0.6",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "eslint-plugin-standard": "^5.0.0"
+  }
+}

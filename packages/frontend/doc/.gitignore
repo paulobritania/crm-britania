@@ -1,0 +1,5 @@
+.docz
+node_modules
+dist
+
+!.env

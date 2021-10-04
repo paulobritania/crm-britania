@@ -1,0 +1,27 @@
+.tree-view-card,
+.tree-view-card .rstcustom__rowContents {
+  min-height: 50px;
+}
+
+.tree-view-card .rstcustom__rowContents {
+  border-radius: 14px;
+
+  display: flex;
+
+  padding: 0;
+  margin: 0;
+  border: none;
+
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.5);
+}
+
+.tree-view-card .rstcustom__rowContents .rstcustom__rowLabel {
+  height: 100%;
+}
+
+.tree-view-card .rstcustom__rowContents .rstcustom__rowLabel .rstcustom__rowTitle {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}

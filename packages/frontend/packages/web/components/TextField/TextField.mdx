@@ -1,0 +1,81 @@
+---
+name: TextField
+menu: Components
+route: '/components/text-field'
+---
+
+import {
+  useRef,
+  useCallback,
+  useState
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+import * as Yup from 'yup'
+
+import required from '@britania-crm/forms/validators/required.validator'
+import Form from '@britania-crm/web-components/Form'
+import TextField from '@britania-crm/web-components/TextField'
+
+# @britania-crm/web-componens/TextField
+```js
+import Form from '@britania-crm/web-components/Form'
+import TextField from '@britania-crm/web-components/TextField'
+```
+
+This component is a wrapper to [`@material-ui/core/TextField`](https://material-ui.com/api/text-field).
+
+## Live basic usage
+```js
+import { useState, useCallback } from 'react'
+
+import TextField from '@britania-crm/web-components/TextField'
+```
+<Playground>
+  {() => {
+    const [value, setValue] = useState('')
+    const onChange = useCallback(
+      (event) => setValue(event.target.value),
+      []
+    )
+    return (
+      <TextField
+        detached // important to use it outside form
+        value={ value }
+        onChange={ onChange }
+        label="Text Field"
+        name="text"
+      />
+    )
+  }}
+</Playground>
+
+## Usage in Form
+```js
+import { useRef, useCallback } from 'react'
+
+import * as Yup from 'yup'
+
+import Form from '@britania-crm/web-components/Form'
+import TextField from '@britania-crm/web-components/TextField'
+```
+<Playground>
+  {() => {
+    const formRef = useRef(null)
+    const schemaConstructor = useCallback(
+      ({ t }) => Yup.object().shape({ text: required({ t })(Yup.string()) }),
+      []
+    )
+    return (
+      <Form ref={ formRef } schemaConstructor={ schemaConstructor }>
+        <TextField label="Text Field Form" name="text" />
+      </Form>
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ TextField } />

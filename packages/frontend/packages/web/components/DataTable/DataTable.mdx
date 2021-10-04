@@ -1,0 +1,86 @@
+---
+name: DataTable
+menu: Components
+route: '/components/data-table'
+---
+
+import {
+  useMemo,
+  useCallback
+} from 'react'
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import DataTable from '@britania-crm/web-components/DataTable'
+
+# @britania-crm/web-components/DataTable
+```js
+import DataTable from '@britania-crm/web-components/DataTable'
+```
+
+This component is a wrapper to [`material-table`](https://material-table.com/#/docs/get-started).
+
+## Live basic usage
+
+### Client side
+<Playground>
+  {() => {
+    const data = useMemo(() => [
+      { cooperativa: 'a', matricula: 21 },
+      { cooperativa: 'b', matricula: 22 },
+      { cooperativa: 'c', matricula: 23 },
+      { cooperativa: 'd', matricula: 24 },
+      { cooperativa: 'e', matricula: 25 },
+      { cooperativa: 'f', matricula: 26 },
+      { cooperativa: 'h', matricula: 27 },
+      { cooperativa: 'i', matricula: 28 },
+      { cooperativa: 'j', matricula: 29 },
+      { cooperativa: 'k', matricula: 30 },
+      { cooperativa: 'l', matricula: 31 },
+      { cooperativa: 'm', matricula: 32 },
+      { cooperativa: 'n', matricula: 33 },
+      { cooperativa: 'o', matricula: 34 },
+      { cooperativa: 'p', matricula: 35 },
+      { cooperativa: 'q', matricula: 36 },
+      { cooperativa: 'r', matricula: 37 },
+      { cooperativa: 's', matricula: 38 },
+      { cooperativa: 'r', matricula: 39 },
+      { cooperativa: 't', matricula: 40 },
+      { cooperativa: 'u', matricula: 41 },
+      { cooperativa: 'v', matricula: 42 },
+      { cooperativa: 'x', matricula: 43 },
+      { cooperativa: 'y', matricula: 44 },
+      { cooperativa: 'w', matricula: 45 },
+      { cooperativa: 'z', matricula: 46 }
+    ], [])
+    const columns = useMemo(() => [
+      {
+        title: 'Cooperativa',
+        field: 'cooperativa'
+      },
+      {
+        title: 'Matrícula',
+        field: 'matricula'
+      }
+    ], [])
+    /* eslint-disable no-alert */
+    const onEditClick = useCallback((event, { cooperativa }) => alert(`edit ${ cooperativa }`), [])
+    const onDeleteClick = useCallback((event, { cooperativa }) => alert(`remove ${ cooperativa }`), [])
+    const onRowClick = useCallback((event, { cooperativa }) => alert(`access ${ cooperativa }`), [])
+    return (
+      <DataTable
+        data={ data }
+        columns={ columns }
+        onEditClick={ onEditClick }
+        onDeleteClick={ onDeleteClick }
+        onRowClick={ onRowClick }
+      />
+    )
+  }}
+</Playground>
+
+## Props
+<Props of={ DataTable } />

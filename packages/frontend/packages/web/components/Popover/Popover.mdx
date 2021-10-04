@@ -1,0 +1,35 @@
+---
+name: Popovers
+menu: Components
+route: '/components/popover'
+---
+
+import {
+  Playground,
+  Props
+} from 'docz'
+
+import CloseIconButton from '@britania-crm/web-components/IconButton/CloseIconButton'
+import Popover from '@britania-crm/web-components/Popover'
+
+# @britania-crm/web-componens/Popover
+```js
+import Popover from '@britania-crm/web-components/Popover'
+```
+
+## Live basic usage
+<Playground>
+  <Popover
+    popoverId="popover-example"
+    Component={ CloseIconButton }
+    ComponentProps={ {
+      color: 'primary',
+      edge: 'end'
+    } }
+  >
+    <h3>Popover content</h3>
+  </Popover>
+</Playground>
+
+## Props
+<Props of={ Popover } />
