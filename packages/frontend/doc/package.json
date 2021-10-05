@@ -14,10 +14,6 @@
     "lint": "eslint --cache ./src --ext .js"
   },
   "dependencies": {
-    "@britania-crm/dialog": "^0.0.0",
-    "@britania-crm/i18n": "^0.0.0",
-    "@britania-crm/styles": "^0.0.0",
-    "@britania-crm/web-components": "^0.0.0",
     "@mdi/font": "^4.7.95",
     "docz": "^2.3.1",
     "prop-types": "^15.7.2",
