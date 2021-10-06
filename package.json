@@ -58,9 +58,9 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint --quiet && yarn test --onlyChanged --collectCoverage=false",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+      "pre-commit": "",
+      "commit-msg": "",
+      "prepare-commit-msg": ""
     }
   },
   "config": {
