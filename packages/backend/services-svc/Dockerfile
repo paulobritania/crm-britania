@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # Adding lerna dependencies
 COPY /package.json .
-COPY ../../../lerna.json .
+COPY /lerna.json .
 COPY /yarn.lock .
 
 # Adding auth-utils package to container

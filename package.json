@@ -36,7 +36,6 @@
     "release": "lerna version minor --no-commit-hooks --force-publish",
     "release:fix": "lerna version patch --no-commit-hooks",
     "release:alpha": "lerna version preminor --force-publish --no-commit-hooks",
-    "commit:fix": "yarn add husky -DW",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -55,14 +54,8 @@
     "lerna": "^3.22.1",
     "typescript": "^4.0.2",
     "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "",
-      "commit-msg": "",
-      "prepare-commit-msg": ""
-    }
+    "postinstall-postinstall": "^2.1.0",
+    "rimraf": "^3.0.2"
   },
   "config": {
     "commitizen": {
