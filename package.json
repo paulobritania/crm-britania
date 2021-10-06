@@ -4,13 +4,14 @@
   "main": "index.js",
   "private":true,
   "workspaces":{
-    "packages": [      
-      "frontend/doc",
-      "packages/*/*",
-      "packages/*/shared/*",
-      "packages/*/core/*",
-      "packages/*/web/*",
-      "packages/*/web/apps/*"
+    "packages": [
+      "packages/backend/*",
+      "packages/backend/shared/*",
+      "packages/configs/*",
+      "packages/frontend/doc",
+      "packages/frontend/packages/core/*",
+      "packages/frontend/packages/web/*",
+      "packages/frontend/packages/web/apps/*"
     ],
     "nohoist": [
       "**/electron",
