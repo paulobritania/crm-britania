@@ -5,8 +5,5 @@
   "description": "Package that provide Snackbar basic class",
   "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
   "main": "snackbar.js",
-  "license": "ISC",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  }
+  "license": "ISC"
 }

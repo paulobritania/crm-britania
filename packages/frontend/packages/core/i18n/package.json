@@ -6,9 +6,6 @@
   "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
   "main": "i18n.js",
   "license": "ISC",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  },
   "dependencies": {
     "@meta-awesome/i18n": "^0.0.16",
     "@meta-react/i18n": "^0.2.9"

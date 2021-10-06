@@ -5,9 +5,6 @@
   "description": "Package that provide utility functions",
   "author": "Eduardo Hirt <eduardo.hirt@meta.com.br>",
   "license": "ISC",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  },
   "dependencies": {
     "@britania-crm/constants": "^0.0.0",
     "crypto-js": "^4.0.0",

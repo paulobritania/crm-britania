@@ -29,7 +29,6 @@
     "pack:mac": "electron-builder -m",
     "pack:linux": "electron-builder -l",
     "pack:win": "electron-builder -w",
-    "lint": "eslint --cache ./src --ext .js",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {

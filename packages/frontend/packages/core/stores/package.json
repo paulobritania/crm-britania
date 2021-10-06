@@ -6,9 +6,6 @@
   "description": "Package that provide redux saga stores",
   "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
   "license": "ISC",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  },
   "dependencies": {
     "@britania-crm/constants": "^0.0.0",
     "@britania-crm/services": "^0.0.0",

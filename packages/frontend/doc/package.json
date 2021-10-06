@@ -10,8 +10,7 @@
     "build": "rm -rf .docz && node ./scripts/copyHtml && docz build",
     "serve": "ws -d ./dist",
     "serve:docker": "node ./scripts/serve-docker.js",
-    "pub": "yarn serve:docker",
-    "lint": "eslint --cache ./src --ext .js"
+    "pub": "yarn serve:docker"
   },
   "dependencies": {
     "@mdi/font": "^4.7.95",

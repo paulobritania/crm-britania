@@ -4,9 +4,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "main": "src/index.js",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  },
   "dependencies": {
     "@britania-crm/i18n": "^0.0.0",
     "@unform/core": "^2.1.6",

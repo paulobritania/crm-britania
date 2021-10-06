@@ -7,7 +7,7 @@ services:
   britania-crm-com-logs-svc:
     image: "britania-crm-com-logger-svc"
     build:
-      context: "./packages/logs-svc"
+      context: "./packages/backend/logs-svc"
     container_name: britania-crm-com-logs
     networks:
       - "backend-com"
@@ -32,7 +32,7 @@ services:
     image: "britania-crm-com-api-services"
     build:
       context: "."
-      dockerfile: "./packages/services-svc/Dockerfile"
+      dockerfile: "./packages/backend/services-svc/Dockerfile"
     container_name: britania-crm-com-api-services
     networks:
       - "backend-com"
@@ -40,7 +40,7 @@ services:
     ports:
       - "30107:30107"
     environment:
-      UPLOAD_FOLDER: './files'
+      UPLOAD_FOLDER: "./files"
       NODE_ENV: "development"
       URL: "0.0.0.0"
       PORT: "30107"
@@ -70,7 +70,7 @@ services:
       MAIL_USER: "dinamo.crm@britania.com.br"
       MAIL_PORT: "587"
       MAIL_PASSWORD: "Axv#631bx"
-      MAIL_FROM: "\"Dínamo CRM Comercial\" <dinamo.crm@britania.com.br>"
+      MAIL_FROM: '"Dínamo CRM Comercial" <dinamo.crm@britania.com.br>'
     restart: "on-failure"
     volumes:
       - britania_crm_com_attachments_dev:/usr/src/app/packages/services-svc/files
@@ -78,7 +78,7 @@ services:
   britania-crm-com-authentication-svc:
     image: "britania-crm-com-authentication-svc"
     build:
-      context: "./packages/authentication-svc"
+      context: "./packages/backend/authentication-svc"
     container_name: britania-crm-com-authentication
     networks:
       - "backend-com"
@@ -94,8 +94,8 @@ services:
       DB_NAME: "DinamoCRMCOM_dev"
       DB_USER: "crm_homolog"
       DB_PASSWORD: "Br1t@n1@2020"
-      BRITANIA_LOGIN_URL:  "http://10.0.10.104:1939/api/v1/LoginCRM"
-      SERVICES_URL:  "http://britania-crm-com-api-services:30107"
+      BRITANIA_LOGIN_URL: "http://10.0.10.104:1939/api/v1/LoginCRM"
+      SERVICES_URL: "http://britania-crm-com-api-services:30107"
       JWT_SECRET_KEY: "jwtPrivateKey"
       JWT_EXPIRATION_TIME: "12600"
       SERVICES_SVC_URL: "britania-crm-com-api-services"
@@ -109,7 +109,7 @@ services:
   britania-crm-com-api-gateway:
     image: "britania-crm-com-api-gateway"
     build:
-      context: "./packages/api-gateway"
+      context: "./packages/backend/api-gateway"
     container_name: britania-crm-com-api-gateway
     networks:
       - "backend-com"

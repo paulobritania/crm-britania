@@ -3,8 +3,5 @@
   "name": "@britania-crm/constants",
   "version": "0.0.0",
   "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  }
+  "license": "MIT"
 }

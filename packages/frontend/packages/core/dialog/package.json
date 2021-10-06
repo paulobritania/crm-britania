@@ -5,8 +5,5 @@
   "description": "Package that provide dialogs out the box with react reducer",
   "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
   "main": "dialog.js",
-  "license": "ISC",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  }
+  "license": "ISC"
 }

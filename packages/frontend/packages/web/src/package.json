@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start:web": "CI=true lerna run start --stream --scope @britania-crm/web-app --",
-    "start:electron": "CI=true lerna run start --stream --scope @britania-crm/desktop-app --",
-    "lint": "eslint --cache . --ext .js"
+    "start:electron": "CI=true lerna run start --stream --scope @britania-crm/desktop-app --"
   },
   "dependencies": {
     "@britania-crm/dialog": "^0.0.0",

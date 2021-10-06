@@ -4,9 +4,6 @@
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {
-    "lint": "eslint --cache . --ext .js"
-  },
   "dependencies": {
     "axios": "^0.21.0",
     "swr": "^0.3.2"

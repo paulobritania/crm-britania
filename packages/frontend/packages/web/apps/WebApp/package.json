@@ -11,8 +11,7 @@
     "serve:docker": "node ./scripts/serve-docker.js",
     "serve:docker:hml": "yarn serve:docker -n britania-crm-com-frontend-hml -m 3433",
     "pub": "yarn build && yarn serve:docker",
-    "pub:hml": "yarn build:hml && yarn serve:docker:hml",
-    "lint": "eslint --cache ./src --ext .js"
+    "pub:hml": "yarn build:hml && yarn serve:docker:hml"
   },
   "browserslist": {
     "production": [
