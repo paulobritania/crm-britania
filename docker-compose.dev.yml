@@ -83,9 +83,9 @@ services:
       MAIL_FROM: '"Dínamo CRM Comercial" <dinamo.crm@britania.com.br>'
     restart: "on-failure"
     volumes:
-      - ./packages/services-svc:/usr/src/app/packages/services-svc
-      - ./packages/shared:/usr/src/app/packages/shared
-      - ./packages/services-svc/files:/usr/src/app/packages/services-svc/files
+      - ./packages/backend/services-svc:/usr/src/app/packages/services-svc
+      - ./packages/backend/shared:/usr/src/app/packages/shared
+      - ./packages/backend/services-svc/files:/usr/src/app/packages/services-svc/files
 
   britania-crm-com-authentication-svc:
     image: "britania-crm-com-authentication-svc"
