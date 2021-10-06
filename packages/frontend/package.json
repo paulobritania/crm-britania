@@ -27,7 +27,6 @@
   },
   "scripts": {
     "commit:fix": "yarn remove husky -W && yarn add husky@4.3.8 -DW",
-    "lint": "lerna run --parallel lint --",
     "test": "lerna run test --stream -- --watchAll=false --colors --passWithNoTests",
     "release": "lerna version minor --no-commit-hooks --force-publish",
     "release:fix": "lerna version patch --no-commit-hooks",
