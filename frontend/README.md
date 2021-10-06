@@ -35,6 +35,7 @@ $ cd packages/web/apps/DesktopApp && yarn start
 # build 
 # artifacts path: packages/web/apps/DesktopApp/dist
 $ yarn lerna run build --stream --scope @britania-crm/desktop-app
+
 $ yarn lerna run pack:mac --stream --scope @britania-crm/desktop-app
 $ yarn lerna run pack:win --stream --scope @britania-crm/desktop-app
 $ yarn lerna run pack:linux --stream --scope @britania-crm/desktop-app
