@@ -25,13 +25,6 @@
     "release:alpha": "lerna version preminor --force-publish --no-commit-hooks",
     "postinstall": "patch-package"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint --quiet && yarn test --onlyChanged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-    }
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
