@@ -8,14 +8,14 @@ import { Column, Model, Table, DataType } from 'sequelize-typescript'
   timestamps: false
 })
 export class Log extends Model<Log> {
-  @Column({
-    primaryKey: true,
-    allowNull: false,
-    autoIncrement: true,
-    type: DataType.INTEGER,
-    comment: 'The identifier for the logs record'
-  })
-  id: number
+  // @Column({
+  //   primaryKey: true,
+  //   allowNull: false,
+  //   autoIncrement: true,
+  //   type: DataType.INTEGER,
+  //   comment: 'The identifier for the logs record'
+  // })
+  // id: number
 
   @Column({
     allowNull: false,

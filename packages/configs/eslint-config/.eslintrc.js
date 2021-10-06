@@ -1,10 +1,10 @@
 module.exports = {
   env: {
+    browser: true,
     es2020: true,
     node: true,
     jest: true,
   },
-  root: true,
   extends: [
     "airbnb-base",
     "plugin:@typescript-eslint/recommended",
@@ -15,13 +15,26 @@ module.exports = {
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
+    "plugin:react/recommended",
+    "react-app",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "tsconfig.json",
     sourceType: "module",
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+      jsx: true,
+    },
   },
-  plugins: ["@typescript-eslint", "import-helpers", "prettier"],
+  plugins: [
+    "@typescript-eslint",
+    "import-helpers",
+    "prettier",
+    "react",
+    "modules-newline",
+  ],
   ignorePatterns: [
     "**/config/*.js",
     "**/database/migrations/*.js",
@@ -36,6 +49,7 @@ module.exports = {
     "no-shadow": "off",
     "max-classes-per-file": "off",
     "class-methods-use-this": 0,
+    "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "import/extensions": [
       "error",
@@ -52,8 +66,11 @@ module.exports = {
       {
         newlinesBetween: "always",
         groups: [
+          "/^react/",
+          "/^redux/",
           "module",
           "/^lodash/",
+          "/^@material-ui/",
           "/^@britania-crm-com/",
           ["parent", "sibling", "index"],
         ],
@@ -72,13 +89,45 @@ module.exports = {
     "no-trailing-spaces": "error",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
+    "template-curly-spacing": [2, "always"],
+    "jsx-quotes": ["error", "prefer-double"],
+    "react/display-name": "off",
+    "react/forbid-prop-types": "off",
+    "react/function-component-definition": [
+      2,
+      { namedComponents: "arrow-function" },
+    ],
+    "react/jsx-curly-spacing": [2, "always"],
+    "react/jsx-filename-extension": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-closing-bracket-location": [1, "tag-aligned"],
+    "react/jsx-no-duplicate-props": [2, { ignoreCase: false }],
+    "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "error",
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      { additionalHooks: "(useFormEffect)" },
+    ],
+    "react/no-unused-prop-types": "error",
+    "object-shorthand": [
+      "error",
+      "always",
+      { avoidExplicitReturnArrows: true },
+    ],
+    "modules-newline/import-declaration-newline": "error",
+    "modules-newline/export-declaration-newline": "error",
+    "arrow-parens": ["error", "always"],
+    "import/no-unresolved": 2,
+    "prefer-template": "error",
   },
   settings: {
     "import/resolver": {
       typescript: {},
+      react: { version: "detect" },
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
   },
+  globals: { __DEV__: true },
 };
