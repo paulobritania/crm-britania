@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "britania-crm",
+  "name": "@britania-crm-com/frontend",
   "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
   "repository": {
     "type": "git",
@@ -11,13 +11,6 @@
     "node": "14"
   },
   "workspaces": {
-    "packages": [
-      "doc",
-      "configs/*",
-      "packages/core/*",
-      "packages/web/*",
-      "packages/web/apps/*"
-    ],
     "nohoist": [
       "**/electron",
       "**/electron/**",

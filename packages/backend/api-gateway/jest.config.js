@@ -1,6 +1,3 @@
-const { name } = require("./package.json");
+const jestConfig = require('@britania-crm-com/jest-config');
 
-module.exports = {
-  displayName: name,
-  name,
-};
+module.exports = jestConfig;

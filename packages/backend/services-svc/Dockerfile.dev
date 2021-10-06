@@ -8,20 +8,20 @@ COPY /lerna.json .
 COPY /yarn.lock .
 
 # Adding auth-utils package to container
-COPY /packages/shared/auth-utils/package.json ./packages/shared/auth-utils/
-COPY /packages/shared/auth-utils/tsconfig.json ./packages/shared/auth-utils/
-COPY /packages/shared/auth-utils/build/ ./packages/shared/auth-utils/build
+COPY /packages/backend/shared/auth-utils/package.json ./packages/shared/auth-utils/
+COPY /packages/backend/shared/auth-utils/tsconfig.json ./packages/shared/auth-utils/
+COPY /packages/backend/shared/auth-utils/build/ ./packages/shared/auth-utils/build
 
 # Adding notifications-utils package to container
-COPY /packages/shared/notifications-utils/package.json ./packages/shared/notifications-utils/
-COPY /packages/shared/notifications-utils/tsconfig.json ./packages/shared/notifications-utils/
-COPY /packages/shared/notifications-utils/build/ ./packages/shared/notifications-utils/build
+COPY /packages/backend/shared/notifications-utils/package.json ./packages/shared/notifications-utils/
+COPY /packages/backend/shared/notifications-utils/tsconfig.json ./packages/shared/notifications-utils/
+COPY /packages/backend/shared/notifications-utils/build/ ./packages/shared/notifications-utils/build
 
 # Adding service files to container
-COPY /packages/services-svc/package.json ./packages/services-svc/
-COPY /packages/services-svc/tsconfig*.json ./packages/services-svc/
-COPY /packages/services-svc/src ./packages/services-svc/src
-COPY /packages/services-svc/files ./packages/services-svc/files
+COPY /packages/backend/services-svc/package.json ./packages/services-svc/
+COPY /packages/backend/services-svc/tsconfig*.json ./packages/services-svc/
+COPY /packages/backend/services-svc/src ./packages/services-svc/src
+COPY /packages/backend/services-svc/files ./packages/services-svc/files
 
 # Installing lerna globally
 RUN yarn --silent global add lerna

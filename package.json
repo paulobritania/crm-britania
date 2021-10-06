@@ -6,9 +6,10 @@
   "workspaces":{
     "packages": [
       "packages/backend/*",
-      "packages/backend/shared/*",
+      "packages/frontend/*",
       "packages/configs/*",
-      "packages/frontend/doc",
+      "packages/frontend/doc/*",
+      "packages/backend/shared/*",
       "packages/frontend/packages/core/*",
       "packages/frontend/packages/web/*",
       "packages/frontend/packages/web/apps/*"
@@ -54,9 +55,7 @@
     "lerna": "^3.22.1",
     "typescript": "^4.0.2",
     "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0",
-    "@britania-crm-com/eslint-config": "*",
-    "@britania-crm-com/jest-config": "*"
+    "postinstall-postinstall": "^2.1.0"
   },
   "husky": {
     "hooks": {
