@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "@britania-crm/web-src",
+  "version": "0.0.0",
+  "main": "App.js",
+  "license": "MIT",
+  "scripts": {
+    "start:web": "CI=true lerna run start --stream --scope @britania-crm/web-app --",
+    "start:electron": "CI=true lerna run start --stream --scope @britania-crm/desktop-app --",
+    "lint": "eslint --cache . --ext .js"
+  },
+  "dependencies": {
+    "@britania-crm/dialog": "^0.0.0",
+    "@britania-crm/forms": "^0.0.0",
+    "@britania-crm/i18n": "^0.0.0",
+    "@britania-crm/services": "^0.0.0",
+    "@britania-crm/snackbar": "^0.0.0",
+    "@britania-crm/stores": "^0.0.0",
+    "@britania-crm/styles": "^0.0.0",
+    "@britania-crm/utils": "^0.0.0",
+    "@britania-crm/web-components": "^0.0.0",
+    "formik": "^2.2.6",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
+  }
+}

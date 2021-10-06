@@ -1,0 +1,24 @@
+stages:
+  - quality
+
+sonar:
+  stage: quality
+  tags:
+    - sonar
+  script:
+    - echo executing sonar...
+    - sonar-scanner "-Dsonar.projectKey=$CI_PROJECT_PATH_SLUG" "-Dsonar.sources=."
+  allow_failure: true
+  only:
+    - master
+
+sonar_develop:
+  stage: quality
+  tags:
+    - sonar
+  script:
+    - echo executing sonar...
+    - sonar-scanner "-Dsonar.projectKey=$CI_PROJECT_PATH_SLUG-develop" "-Dsonar.sources=."
+  allow_failure: true
+  only:
+    - develop

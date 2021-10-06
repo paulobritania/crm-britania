@@ -1,8 +1,0 @@
-{
-  "private": true,
-  "name": "@britania-crm/charts",
-  "version": "0.0.0",
-  "description": "Package that provide highcharts react hooks",
-  "author": "Guilherme Monte <guilherme.monte@meta.com.br>",
-  "license": "ISC"
-}

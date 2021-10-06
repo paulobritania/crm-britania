@@ -1,0 +1,40 @@
+image: midig/node-12-alpine-firebase:latest
+
+stages:
+  - quality
+
+cache: &cache
+  paths:
+    - node_modules/
+    - configs/*/node_modules/
+    - doc/node_modules/
+    - doc/dist/
+    - packages/core/*/node_modules/
+    - packages/web/*/*/node_modules/
+    - packages/web/*/*/build/
+
+lint:
+  stage: quality
+  tags:
+    - awesome
+    - deploy
+    - docker
+    - yarn
+  script:
+    - yarn
+    - yarn lerna bootstrap
+    - yarn lint
+  only:
+    - merge_requests
+
+lint-develop:
+  stage: quality
+  tags:
+    - awesome
+    - yarn
+  script:
+    - yarn
+    - yarn lerna bootstrap
+    - yarn lint
+  only:
+    - develop

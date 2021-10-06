@@ -1,0 +1,23 @@
+{
+  "packages": [
+    "configs/*",
+    "packages/*",
+    "packages/shared/*"
+  ],
+  "version": "0.0.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "allowBranch": [
+        "develop",
+        "master",
+        "release-*"
+      ],
+      "message": "chore(release): Publish"
+    },
+    "publish": {
+      "conventionalCommits": true
+    }
+  }
+}

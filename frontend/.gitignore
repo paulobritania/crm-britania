@@ -1,0 +1,16 @@
+node_modules
+dist
+.history
+.vscode
+
+.vscode/launch.json
+
+.DS_Store
+.eslintcache
+.jest
+
+.env.*.local
+.env
+
+*.log
+.prettierrc

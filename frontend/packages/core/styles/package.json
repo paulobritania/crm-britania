@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@britania-crm/styles",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --cache . --ext .js"
+  },
+  "dependencies": {
+    "hex-to-rgba": "^2.0.1"
+  }
+}
