@@ -1,0 +1,152 @@
+version: "3"
+
+services:
+  britania-crm-com-database:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    container_name: britania-crm-com-database
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: 'BRITania@2020'
+    expose:
+      - "1433"
+    ports:
+      - "1433:1433"
+    networks:
+      - "database"
+
+  britania-crm-com-logs-svc:
+    image: "britania-crm-com-logger-svc"
+    build:
+      context: "./packages/logs-svc"
+    container_name: britania-crm-com-logs
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30101:30101"
+      - "30102:30102"
+    environment:
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30102"
+      HTTP_PORT: "30101"
+      DB_HOST: "britania-crm-com-database"
+      DB_PORT: "1433"
+      DB_USER: "SA"
+      DB_PASSWORD: "BRITania@2020"
+      DB_NAME: "britania_crm_com"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+    restart: "on-failure"
+
+  britania-crm-com-api-services:
+    image: "britania-crm-com-api-services"
+    build:
+      context: "."
+      dockerfile: "./packages/services-svc/Dockerfile.dev"
+    container_name: britania-crm-com-api-services
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30107:30107"
+    environment:
+      UPLOAD_FOLDER: './files'
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30107"
+      LOG_HOST: "britania-crm-com-logs-svc"
+      LOG_PORT: "30102"
+      DB_HOST: "britania-crm-com-database"
+      DB_PORT: "1433"
+      DB_USER: "SA"
+      DB_PASSWORD: "BRITania@2020"
+      DB_NAME: "britania_crm_com"
+      API_TOVTS: "http://10.0.10.131:8080/dts/datasul-rest/resources/"
+      API_TOVTS_LOGIN: "super"
+      API_TOVTS_PASS: "Cxy1LZCHUb8HQ0SqMjU3AfN%2FB1A%3D"
+      BRITANIA_REPRESENTANTE_URL: "http://10.0.10.85:45897"
+      BRITANIA_CLIENTE_URL: "http://10.0.10.85:45898"
+      BRITANIA_CLIENTE_HIERARQUIA: "http://10.0.10.85:45899"
+      BRITANIA_EMPRESA_URL: "http://10.0.10.85:45903"
+      BRITANIA_LOGIN_URL: "http://10.0.10.104:1452/Usuario/PostUsuario"
+      BRITANIA_TABELA_PRECO_URL: "http://10.0.10.85:45900"
+      BRITANIA_INTEGRACOES_TOTVS_URL: "http://10.0.10.133:8180/dts/datasul-rest/resources/prg/WSRest/v1"
+      BRITANIA_NATUREZA_OPERACAO_URL: "http://10.0.10.85:45904"
+      BRITANIA_PEDIDO_URL: "http://10.0.10.85:45905"
+      BRITANIA_CONTRATO_VERBA_URL: "http://10.0.10.85:45910"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
+      MAIL_HOST: "smtp.office365.com"
+      MAIL_USER: "dinamo.crm@britania.com.br"
+      MAIL_PORT: "587"
+      MAIL_PASSWORD: "Axv#631bx"
+      MAIL_FROM: "\"Dínamo CRM Comercial\" <dinamo.crm@britania.com.br>"
+    restart: "on-failure"
+    volumes:
+      - ./packages/services-svc:/usr/src/app/packages/services-svc
+      - ./packages/shared:/usr/src/app/packages/shared
+      - ./packages/services-svc/files:/usr/src/app/packages/services-svc/files
+
+  britania-crm-com-authentication-svc:
+    image: "britania-crm-com-authentication-svc"
+    build:
+      context: "./packages/authentication-svc"
+    container_name: britania-crm-com-authentication
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30117:30117"
+    environment:
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30117"
+      DB_HOST: "britania-crm-com-database"
+      DB_PORT: "1433"
+      DB_NAME: "britania_crm_com"
+      DB_USER: "SA"
+      DB_PASSWORD: "BRITania@2020"
+      BRITANIA_LOGIN_URL:  "http://10.0.10.104:1939/api/v1/LoginCRM"
+      SERVICES_URL:  "http://britania-crm-com-api-services:30107"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+      JWT_EXPIRATION_TIME: "12600"
+      SERVICES_SVC_URL: "britania-crm-com-api-services"
+      SERVICES_SVC_PORT: "30107"
+      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
+      INTERNAL_JWT_EXPIRATION_TIME: "600"
+    depends_on:
+      - britania-crm-com-api-services
+    restart: "on-failure"
+
+  britania-crm-com-api-gateway:
+    image: "britania-crm-com-api-gateway"
+    build:
+      context: "./packages/api-gateway"
+    container_name: britania-crm-com-api-gateway
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30110:30110"
+    environment:
+      NODE_ENV: "production"
+      URL: "0.0.0.0"
+      PORT: "30110"
+      DB_HOST: "britania-crm-com-database"
+      DB_PORT: "1433"
+      DB_USER: "SA"
+      DB_PASSWORD: "BRITania@2020"
+      DB_NAME: "britania_crm_com"
+      LOGGER_PORT: "30102"
+      AUTHENTICATION_SVC_URL: "britania-crm-com-authentication-svc"
+      AUTHENTICATION_SVC_PORT: "30117"
+      SERVICES_SVC_URL: "britania-crm-com-api-services"
+      SERVICES_SVC_PORT: "30107"
+    depends_on:
+      - britania-crm-com-logs-svc
+      - britania-crm-com-api-services
+    restart: "on-failure"
+
+networks:
+  backend-com:
+  database:

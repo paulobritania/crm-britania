@@ -1,0 +1,140 @@
+version: "3"
+
+volumes:
+  britania_crm_com_attachments_hml:
+
+services:
+  britania-crm-com-logs-svc-hml:
+    image: "britania-crm-com-logs-svc-hml"
+    build:
+      context: "./packages/logs-svc"
+    container_name: britania-crm-com-logs-svc-hml
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30400:30400"
+      - "30401:30401"
+    environment:
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30401"
+      HTTP_PORT: "30400"
+      DB_HOST: "pr-s187.ad.britania.com.br"
+      DB_PORT: "1433"
+      DB_USER: "crm_homolog"
+      DB_PASSWORD: "Br1t@n1@2020"
+      DB_NAME: "DinamoCRMCOM_homolog"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+    restart: "on-failure"
+
+  britania-crm-com-api-services-hml:
+    image: "britania-crm-com-api-services-hml"
+    build:
+      context: "."
+      dockerfile: "./packages/services-svc/Dockerfile"
+    container_name: britania-crm-com-api-services-hml
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30402:30402"
+    environment:
+      UPLOAD_FOLDER: './files'
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30402"
+      LOG_HOST: "britania-crm-com-logs-svc-hml"
+      LOG_PORT: "30401"
+      DB_HOST: "pr-s187.ad.britania.com.br"
+      DB_PORT: "1433"
+      DB_USER: "crm_homolog"
+      DB_PASSWORD: "Br1t@n1@2020"
+      DB_NAME: "DinamoCRMCOM_homolog"
+      API_TOVTS: "http://10.0.10.131:8080/dts/datasul-rest/resources/"
+      API_TOVTS_LOGIN: "super"
+      API_TOVTS_PASS: "Cxy1LZCHUb8HQ0SqMjU3AfN%2FB1A%3D"
+      BRITANIA_REPRESENTANTE_URL: "http://10.0.10.85:45897"
+      BRITANIA_CLIENTE_URL: "http://10.0.10.85:45898"
+      BRITANIA_CLIENTE_HIERARQUIA: "http://10.0.10.85:45899"
+      BRITANIA_EMPRESA_URL: "http://10.0.10.85:45903"
+      BRITANIA_LOGIN_URL: "http://10.0.10.104:1452/Usuario/PostUsuario"
+      BRITANIA_TABELA_PRECO_URL: "http://10.0.10.85:45900"
+      BRITANIA_INTEGRACOES_TOTVS_URL: "http://10.0.10.133:8180/dts/datasul-rest/resources/prg/WSRest/v1"
+      BRITANIA_NATUREZA_OPERACAO_URL: "http://10.0.10.85:45904"
+      BRITANIA_PEDIDO_URL: "http://10.0.10.85:45905"
+      BRITANIA_CONTRATO_VERBA_URL: "http://10.0.10.85:45910"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
+      MAIL_HOST: "smtp.office365.com"
+      MAIL_USER: "dinamo.crm@britania.com.br"
+      MAIL_PORT: "587"
+      MAIL_PASSWORD: "Axv#631bx"
+      MAIL_FROM: "\"Dínamo CRM Comercial\" <dinamo.crm@britania.com.br>"
+    restart: "on-failure"
+    volumes:
+      - britania_crm_com_attachments_hml:/usr/src/app/packages/services-svc/files
+
+  britania-crm-com-authentication-svc-hml:
+    image: "britania-crm-com-authentication-svc-hml"
+    build:
+      context: "./packages/authentication-svc"
+    container_name: britania-crm-com-authentication-svc-hml
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30403:30403"
+    environment:
+      NODE_ENV: "development"
+      URL: "0.0.0.0"
+      PORT: "30403"
+      DB_HOST: "pr-s187.ad.britania.com.br"
+      DB_PORT: "1433"
+      DB_NAME: "DinamoCRMCOM_homolog"
+      DB_USER: "crm_homolog"
+      DB_PASSWORD: "Br1t@n1@2020"
+      BRITANIA_LOGIN_URL:  "http://10.0.10.104:1939/api/v1/LoginCRM"
+      SERVICES_URL:  "http://britania-crm-com-api-services-hml:30402"
+      JWT_SECRET_KEY: "jwtPrivateKey"
+      JWT_EXPIRATION_TIME: "12600"
+      SERVICES_SVC_URL: "britania-crm-com-api-services-hml"
+      SERVICES_SVC_PORT: "30402"
+      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
+      INTERNAL_JWT_EXPIRATION_TIME: "600"
+    depends_on:
+      - britania-crm-com-api-services-hml
+    restart: "on-failure"
+
+  britania-crm-com-api-gateway-hml:
+    image: "britania-crm-com-api-gateway-hml"
+    build:
+      context: "./packages/api-gateway"
+    container_name: britania-crm-com-api-gateway-hml
+    networks:
+      - "backend-com"
+      - "database"
+    ports:
+      - "30404:30404"
+    environment:
+      NODE_ENV: "production"
+      URL: "0.0.0.0"
+      PORT: "30404"
+      DB_HOST: "pr-s187.ad.britania.com.br"
+      DB_PORT: "1433"
+      DB_USER: "crm_homolog"
+      DB_PASSWORD: "Br1t@n1@2020"
+      DB_NAME: "DinamoCRMCOM_homolog"
+      LOGGER_PORT: "30401"
+      AUTHENTICATION_SVC_URL: "britania-crm-com-authentication-svc-hml"
+      AUTHENTICATION_SVC_PORT: "30403"
+      SERVICES_SVC_URL: "britania-crm-com-api-services-hml"
+      SERVICES_SVC_PORT: "30402"
+    depends_on:
+      - britania-crm-com-logs-svc-hml
+      - britania-crm-com-api-services-hml
+    restart: "on-failure"
+
+networks:
+  backend-com:
+  database:

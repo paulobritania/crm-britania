@@ -1,11 +1,27 @@
 {
   "packages": [
-    "frontend/doc",
-    "packages/*/*",
-    "packages/*/shared/*",
-    "packages/*/core/*",
-    "packages/*/web/*",
-    "packages/*/web/apps/*"
+    "packages/configs/*",
+    "packages/backend/*",
+    "packages/backend/shared/*",
+    "packages/doc",
+    "packages/frontend/core/*",
+    "packages/frontend/web/*",
+    "packages/frontend/web/apps/*"
   ],
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "allowBranch": [
+        "develop",
+        "master",
+        "release-*"
+      ],
+      "message": "chore(release): Publish"
+    },
+    "publish": {
+      "conventionalCommits": true
+    }
+  }
 }
