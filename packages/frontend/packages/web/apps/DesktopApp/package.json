@@ -30,7 +30,7 @@
     "pack:linux": "electron-builder -l",
     "pack:win": "electron-builder -w",
     "lint": "eslint --cache ./src --ext .js",
-    "postinstall": "electron-builder install-app-deps"    
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@britania-crm/web-src": "^0.0.0",
@@ -39,7 +39,6 @@
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "@britania-crm/jest-config": "^0.0.0",
     "babel-plugin-root-import": "^6.5.0",
     "concurrently": "^5.3.0",
     "cra-append-sw": "^2.7.0",

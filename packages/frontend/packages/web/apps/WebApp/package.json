@@ -37,7 +37,6 @@
     "react-sortable-tree-theme-full-node-drag": "^1.1.0"
   },
   "devDependencies": {
-    "@britania-crm/jest-config": "^0.0.0",
     "babel-plugin-root-import": "^6.5.0",
     "cra-append-sw": "^2.7.0",
     "customize-cra": "^1.0.0",
