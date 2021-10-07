@@ -89,8 +89,7 @@ module.exports = {
     'modules-newline/export-declaration-newline': 'error',
     'arrow-parens': ['error', 'always'],
     'import/no-unresolved': 2,
-    'prefer-template': 'error',
-    'eslint key-spacing': [2, { beforeColon: true, afterColon: true }]
+    'prefer-template': 'error'
   },
   settings: { react: { version: 'detect' } },
   globals: { __DEV__: true }

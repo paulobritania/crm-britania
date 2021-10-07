@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "lerna run start --scope @britania-crm/doc --stream",
-    "lint": "eslint --cache . --ext .js, mdx",
+    "lint": "eslint --cache . --ext .js",
     "test": "jest --watchAll"
   },
   "dependencies": {

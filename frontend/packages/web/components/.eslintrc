@@ -11,8 +11,7 @@
         "parser": "babel-eslint"
       },
       "rules": {
-        "react/jsx-indent": "off",
-        "eslint key-spacing": [2, { "beforeColon": true, "afterColon": true }]
+        "react/jsx-indent": "off"
       }
     }
   ]
