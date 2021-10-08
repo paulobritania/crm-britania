@@ -21,6 +21,11 @@ const required = { required: true }
 
 export class CreateBuyerDto {
   @IsString()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
+
+  @IsString()
   @Length(11, 11)
   @IsNotEmpty()
   @ApiProperty(required)
