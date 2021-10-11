@@ -4,20 +4,21 @@ import {
   HasMany,
   BelongsTo,
   Table,
-  Model
-} from 'sequelize-typescript'
+  Model,
+  HasOne,
+} from "sequelize-typescript";
 
-import { User } from '../../users/entities/user.entity'
-import { BuyerAddress } from './buyerAddress.entity'
+import { User } from "../../users/entities/user.entity";
+import { BuyerAddress } from "./buyerAddress.entity";
 // eslint-disable-next-line import/no-cycle
-import { BuyerLineFamily } from './buyerLineFamily.entity'
-
+import { BuyerLineFamily } from "./buyerLineFamily.entity";
+import { File } from '../../files/entities/file.entity'
 @Table({
-  modelName: 'Buyer',
-  tableName: 'buyers',
+  modelName: "Buyer",
+  tableName: "buyers",
   underscored: true,
   version: false,
-  timestamps: false
+  timestamps: false,
 })
 export class Buyer extends Model<Buyer> {
   @Column({
@@ -25,125 +26,134 @@ export class Buyer extends Model<Buyer> {
     allowNull: false,
     autoIncrement: true,
     type: DataType.INTEGER,
-    comment: 'The identifier for the Buyer record'
+    comment: "The identifier for the Buyer record",
   })
-  id: number
+  id: number;
 
   @Column({
     allowNull: false,
-    type: DataType.STRING(11)
+    type: DataType.INTEGER,
   })
-  cpf: string
+  imageId: number;
 
   @Column({
     allowNull: false,
-    type: DataType.STRING(200)
+    type: DataType.STRING(11),
   })
-  name: string
+  cpf: string;
 
   @Column({
     allowNull: false,
-    type: DataType.STRING(200)
+    type: DataType.STRING(200),
   })
-  category: string
+  name: string;
+
+  @Column({
+    allowNull: false,
+    type: DataType.STRING(200),
+  })
+  category: string;
 
   @Column({
     type: DataType.STRING(3),
-    allowNull: true
+    allowNull: true,
   })
-  voltage: string
+  voltage: string;
 
   @Column({
     type: DataType.STRING(50),
-    allowNull: true
+    allowNull: true,
   })
-  role: string
+  role: string;
 
   @Column({
     type: DataType.STRING(4),
-    allowNull: true
+    allowNull: true,
   })
-  birthday: string
+  birthday: string;
 
   @Column({
     type: DataType.STRING(40),
-    allowNull: true
+    allowNull: true,
   })
-  email: string
+  email: string;
 
   @Column({
     type: DataType.STRING(12),
-    allowNull: true
+    allowNull: true,
   })
-  telephone: string
+  telephone: string;
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false
+    allowNull: false,
   })
-  clientTotvsCode: number
+  clientTotvsCode: number;
 
   @Column({
     type: DataType.STRING(84),
-    allowNull: false
+    allowNull: false,
   })
-  clientTotvsDescription: string
+  clientTotvsDescription: string;
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: true
+    allowNull: true,
   })
-  regionalManagerCode: number
+  regionalManagerCode: number;
 
   @Column({
     type: DataType.STRING(70),
-    allowNull: true
+    allowNull: true,
   })
-  regionalManagerDescription: string
+  regionalManagerDescription: string;
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: true
+    allowNull: true,
   })
-  responsibleCode: number
+  responsibleCode: number;
 
   @Column({
     type: DataType.STRING(70),
-    allowNull: true
+    allowNull: true,
   })
-  responsibleDescription: string
+  responsibleDescription: string;
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    defaultValue: false
+    defaultValue: false,
   })
-  active: boolean
+  active: boolean;
 
   @BelongsTo(() => BuyerAddress, {
-    foreignKey: 'parentCompanyAddressId',
-    targetKey: 'id'
+    foreignKey: "parentCompanyAddressId",
+    targetKey: "id",
   })
-  parentCompanyAddress: BuyerAddress
+  parentCompanyAddress: BuyerAddress;
 
   @BelongsTo(() => BuyerAddress, {
-    foreignKey: 'buyerAddressId',
-    targetKey: 'id'
+    foreignKey: "buyerAddressId",
+    targetKey: "id",
   })
-  buyerAddress: BuyerAddress
+  buyerAddress: BuyerAddress;
 
-  @HasMany(() => BuyerLineFamily, { foreignKey: 'buyerId', sourceKey: 'id' })
-  buyerLinesFamilies: BuyerLineFamily[]
+  @HasMany(() => BuyerLineFamily, { foreignKey: "buyerId", sourceKey: "id" })
+  buyerLinesFamilies: BuyerLineFamily[];
 
-  @BelongsTo(() => User, {
-    foreignKey: 'createdBy',
-    targetKey: 'id'
-  })
-  userCreated: User
+  @HasOne(() => File, { sourceKey: "imageId", foreignKey: "id" })
+  file: File;
 
   @BelongsTo(() => User, {
-    foreignKey: 'updatedBy',
-    targetKey: 'id'
+    foreignKey: "createdBy",
+    targetKey: "id",
   })
-  userUpdated: User
+  userCreated: User;
+
+  @BelongsTo(() => User, {
+    foreignKey: "updatedBy",
+    targetKey: "id",
+  })
+  userUpdated: User;
 }

@@ -23,7 +23,7 @@ import { UserRepresentativeCode } from './userRepresentativeCode.entity'
     fields: ['username']
   }]
 })
-export class User extends Model<User> {
+export class User extends Model<User> { 
   @Column({
     primaryKey: true,
     allowNull: false,
