@@ -14,8 +14,8 @@ import officegen from 'officegen'
 import { Transaction } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
-import { File } from '../files/entities/file.entity'
 import { ClientsService } from '../clients/clients.service'
+import { File } from '../files/entities/file.entity'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
 import { HierarchyMemberClassEnum } from '../hierarchy/enums/hierarchyMemberClass.enum'
 import { HierarchyService } from '../hierarchy/hierarchy.service'
@@ -287,6 +287,7 @@ export class BuyersService {
       },
       attributes: [
         'id',
+        'imageId',
         'name',
         'clientTotvsDescription',
         'active',
@@ -295,6 +296,10 @@ export class BuyersService {
         'regionalManagerDescription'
       ],
       include: [
+        {
+          model: File,
+          attributes: ['id', 'filename', 'contentType', 'path']
+        },
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
