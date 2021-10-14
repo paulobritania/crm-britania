@@ -10,8 +10,8 @@ import isEmpty from 'lodash/isEmpty'
 import map from 'lodash/map'
 
 import Grid from '@material-ui/core/Grid'
-import Add from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
+import Add from '@material-ui/icons/Add'
 
 import { useDialog } from '@britania-crm/dialog'
 import I18n, { useT } from '@britania-crm/i18n'
@@ -24,8 +24,8 @@ import { useSnackbar } from '@britania-crm/snackbar'
 import { AppActions } from '@britania-crm/stores/app'
 import { getErrorMessage } from '@britania-crm/utils/error'
 import Button from '@britania-crm/web-components/Button'
-import IconButton from '@britania-crm/web-components/IconButton'
 import DataTable from '@britania-crm/web-components/DataTable'
+import IconButton from '@britania-crm/web-components/IconButton'
 import InputAutocomplete from '@britania-crm/web-components/InputAutocomplete'
 import InputCpfCnpj from '@britania-crm/web-components/InputCpfCnpj'
 import InputDayMonth from '@britania-crm/web-components/InputDayMonth'
@@ -34,9 +34,11 @@ import InputPhone from '@britania-crm/web-components/InputPhone'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 import InputText from '@britania-crm/web-components/InputText'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import RadioGroup from '@britania-crm/web-components/RadioGroup'
 import StatusSwitch from '@britania-crm/web-components/StatusSwitch'
 import Tooltip from '@britania-crm/web-components/Tooltip'
-import RadioGroup from '@britania-crm/web-components/RadioGroup'
+
+import FamilyInput from '../components/FamilyInput'
 
 import { useStyles } from './styles'
 
@@ -54,13 +56,23 @@ const MainData = ({
   const dispatch = useCallback(useDispatch(), [])
   const snackbar = useSnackbar()
 
-  const [teste, setTeste] = useState([])
+  const [familiesFromApi, setFamiliesFromApi] = useState([])
+  const [familiesFromApiLoading, setFamiliesFromApiLoading] = useState(false)
 
   const [line, setLine] = useState('')
   const [family, setFamily] = useState([])
   const [listByLineOfFamily, setListByLineOfFamily] = useState([])
   const [matrixCode, setMatrixCode] = useState('')
   const [disabledButton, setDisabledButton] = useState(false)
+  const [familiesByLine, setFamiliesByLine] = useState([
+    {
+      line: 'teste',
+      family: 'teste',
+      responsible: 'teste',
+      regionalManager: 'teste'
+    }
+  ])
+
   const mockVoltage = useMemo(
     () => [
       { id: '110', name: '110' },
@@ -68,15 +80,6 @@ const MainData = ({
     ],
     []
   )
-
-  const familiesParams = useMemo(() => {
-    if (line) {
-      return {
-        clientTotvsCode: matrixCode,
-        lines: line
-      }
-    }
-  }, [line, matrixCode])
 
   const { data: linesFromApi, loading: linesFromApiLoading } = useCrmApi(
     matrixCode ? [linesCrmRoutes.getAll, matrixCode] : null,
@@ -107,8 +110,11 @@ const MainData = ({
     }
   )
 
-  const { data: familiesFromApi, loading: familiesFromApiLoading } = useCrmApi(
-    matrixCode && line ? [linesCrmRoutes.getFamilies, familiesParams] : null,
+  // function getFamiliesFromApi(idx) {
+  const { data } = useCrmApi(
+    matrixCode && familiesByLine[idx].line
+      ? [linesCrmRoutes.getFamilies, familiesParams]
+      : null,
     { params: familiesParams },
     {
       onErrorRetry(error, key, config, revalidate, { retryCount }) {
@@ -134,7 +140,11 @@ const MainData = ({
       },
       revalidateOnFocus: false
     }
-  )
+  ).data
+
+  // setFamiliesFromApi(data)
+  // setFamiliesFromApiLoading(loading)
+  // }
 
   const OPTIONS_LINE = useMemo(
     () =>
@@ -149,74 +159,7 @@ const MainData = ({
     [linesFromApi, listByLineOfFamily]
   )
 
-  const columns = useMemo(
-    () => [
-      {
-        title: t('line', { howMany: 1 }),
-        field: 'lineDescription',
-        width: '25%',
-        render: () => (
-          <InputSelect
-            detached
-            valueKey='lineDescription'
-            idKey='lineCode'
-            value={line}
-            loading={linesFromApiLoading}
-            onChange={({ target }) => {
-              setLine(target.value)
-              setFamily([])
-            }}
-            name='line'
-            label={t('line', { howMany: 1 })}
-            id='select-line'
-            required
-            options={teste}
-            // disabled={isDisabled || !linesFromApi}
-          />
-        )
-      },
-      {
-        title: t('family', { howMany: 1 }),
-        field: 'family',
-        width: '25%',
-        render(row) {
-          if (row?.family) {
-            return (
-              <InputSelect
-                detached
-                valueKey='familyDescription'
-                idKey='familyCode'
-                disabled={isDisabled || isEmpty(familiesFromApi)}
-                value={family}
-                onChange={({ target }) => setFamily(target.value)}
-                name='family'
-                label={t('family', { howMany: 1 })}
-                id='select-family'
-                loading={familiesFromApiLoading}
-                required
-                options={familiesFromApi}
-              />
-            )
-          }
-          return ''
-        }
-      },
-      {
-        title: t('responsible', { howMany: 1 }),
-        field: 'responsible',
-        width: '25%'
-      },
-      {
-        title: t('regional manager', { howMany: 1 }),
-        field: 'regionalManager',
-        width: '25%'
-      }
-    ],
-    [t]
-  )
-
   const doAddItemTable = useCallback(() => {
-    setTeste(linesFromApi)
     const arrayFamily = map(family, (item) =>
       find(familiesFromApi, ({ familyCode }) => familyCode === item)
     )
@@ -357,18 +300,6 @@ const MainData = ({
     [disabledButton, isDisabled, regionalFromApiLoading]
   )
 
-  const handleDeleteItem = useCallback(
-    (event, row) =>
-      formRef.current.setFieldValue(
-        'linesFamilies',
-        filter(
-          listByLineOfFamily,
-          (option, index) => index !== row.tableData.id
-        )
-      ),
-    [formRef, listByLineOfFamily]
-  )
-
   const setNameMatrix = useCallback(
     (value) => {
       setLine('')
@@ -386,6 +317,29 @@ const MainData = ({
     },
     [formRef]
   )
+
+  const handleAddShareholder = () => {
+    setFamiliesByLine([
+      ...familiesByLine,
+      { line: '', family: '', responsible: '', regionalManager: '' }
+    ])
+  }
+
+  const handleRemoveLine = (idx) => () => {
+    setFamiliesByLine(familiesByLine.filter((s, sidx) => idx !== sidx))
+  }
+
+  const handleLineChange = (idx) => (evt) => {
+    const newShareholders = familiesByLine.map((shareholder, sidx) => {
+      if (idx !== sidx) return shareholder
+      return { ...shareholder, [evt.target.name]: evt.target.value }
+    })
+
+    setFamiliesByLine(newShareholders)
+    if (evt.target.name == 'line') {
+      getFamiliesFromApi(idx)
+    }
+  }
 
   return (
     <>
@@ -405,7 +359,7 @@ const MainData = ({
             }
           />
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item sm={12} md={5}>
           <InputText
             name='name'
             label={t('name', { howMany: 1 })}
@@ -413,29 +367,12 @@ const MainData = ({
             inputProps={{ maxLength: 200 }}
           />
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item sm={12} md={3}>
           <InputText
             name='role'
             label={t('office', { howMany: 1 })}
             disabled={isDisabled}
             inputProps={{ maxLength: 50 }}
-          />
-        </Grid>
-        <Grid item sm={12} md={4}>
-          <InputDayMonth
-            label={t('birthday', { howMany: 1 })}
-            type='tel'
-            mode='dd/mm'
-            name='birthday'
-            disabled={isDisabled}
-          />
-        </Grid>
-        <Grid item sm={12} md={4}>
-          <InputText
-            name='email'
-            label={t('email')}
-            disabled={isDisabled}
-            inputProps={{ maxLength: 40 }}
           />
         </Grid>
         <Grid item sm={12} md={4}>
@@ -446,59 +383,22 @@ const MainData = ({
           />
         </Grid>
         <Grid item sm={12} md={5}>
-          <InputSelect
-            detached
-            valueKey='lineDescription'
-            idKey='lineCode'
-            value={line}
-            loading={linesFromApiLoading}
-            onChange={({ target }) => {
-              setLine(target.value)
-              setFamily([])
-            }}
-            name='line'
-            label={t('line', { howMany: 1 })}
-            id='select-line'
-            required
-            options={OPTIONS_LINE}
-            disabled={isDisabled || !linesFromApi}
+          <InputText
+            name='email'
+            label={t('email')}
+            disabled={isDisabled}
+            inputProps={{ maxLength: 40 }}
           />
         </Grid>
-        {/* <Grid item sm={12} md={5}>
-          <InputSelect
-            detached
-            valueKey='familyDescription'
-            idKey='familyCode'
-            disabled={isDisabled || isEmpty(familiesFromApi)}
-            value={family}
-            onChange={({ target }) => setFamily(target.value)}
-            name='family'
-            label={t('family', { howMany: 1 })}
-            id='select-family'
-            loading={familiesFromApiLoading}
-            required
-            options={familiesFromApi}
-            multiple
+        <Grid item sm={12} md={3}>
+          <InputDayMonth
+            label={t('birthday', { howMany: 1 })}
+            type='tel'
+            mode='dd/mm'
+            name='birthday'
+            disabled={isDisabled}
           />
-        </Grid> */}
-        {/* <Grid item sm={12} md={6}>
-        <InputAutocomplete
-          valueKey='approverDescription'
-          name='responsible'
-          label={t('responsible', { howMany: 1 })}
-          disabled={true}
-          loading={representativeFromApiLoading}
-        />
-      </Grid>
-      <Grid item sm={12} md={6}>
-        <InputAutocomplete
-          loading={regionalFromApiLoading}
-          valueKey='approverDescription'
-          name='regionalManager'
-          label={t('regional manager')}
-          disabled={true}
-        />
-      </Grid> */}
+        </Grid>
         {isEdit && (
           <Grid item sm={12} md={2} className={classes.status}>
             <StatusSwitch name='active' disabled={isDisabled} />
@@ -509,7 +409,7 @@ const MainData = ({
         <Grid item className={classes.header} sm={12}>
           <Typography className={classes.title}>{t('matrix')}</Typography>
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item sm={12} md={3}>
           <InputAutocomplete
             url={customerCrmRoutes.getInfoCustomer}
             params={clientParams}
@@ -521,7 +421,7 @@ const MainData = ({
             onValueChange={setNameMatrix}
           />
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item sm={12} md={6}>
           <InputAutocomplete
             url={customerCrmRoutes.getInfoCustomer}
             params={clientParams}
@@ -533,7 +433,7 @@ const MainData = ({
             onValueChange={setCodeMatrix}
           />
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item sm={12} md={3}>
           <InputText
             name='category'
             label={t('category', { howMany: 1 })}
@@ -541,23 +441,90 @@ const MainData = ({
             inputProps={{ maxLength: 200 }}
           />
         </Grid>
-        <Grid item sm={12} md={10} className={classes.containerTable}>
-          <div className={classes.table}>
-            <DataTable
-              data={listByLineOfFamily}
-              columns={columns}
-              loading={false}
-              onDeleteClick={!isDisabled && handleDeleteItem}
-              options={{ search: false }}
-            />
-            <InputHidden
-              name='linesFamilies'
-              onValueChange={handleLineFamily}
-              showError
-            />
-          </div>
+        <Grid item sm={12} md={9} className={classes.containerTable}>
+          <Grid item sm={11}>
+            <ul className={classes.tableHeader}>
+              <li>{t('line', { howMany: 1 })}</li>
+              <li>{t('family', { howMany: 1 })}</li>
+              <li>{t('responsible', { howMany: 1 })}</li>
+              <li>{t('regional manager')}</li>
+            </ul>
+          </Grid>
+          <Grid item sm={12} className={classes.table}>
+            {familiesByLine.map((lines, idx) => (
+              <Grid item key={idx} className={classes.flexContainer}>
+                <Grid item sm={3}>
+                  <InputSelect
+                    detached
+                    valueKey='lineDescription'
+                    idKey='lineCode'
+                    value={lines.line}
+                    loading={linesFromApiLoading}
+                    onChange={handleLineChange(idx)}
+                    name='line'
+                    label={t('line', { howMany: 1 })}
+                    id='select-line'
+                    required
+                    options={OPTIONS_LINE}
+                    disabled={isDisabled || !linesFromApi}
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <FamilyInput
+                    index={idx}
+                    matrixCode={matrixCode}
+                    linesCrmRoutes={linesCrmRoutes}
+                    familiesByLine={familiesByLine}
+                    isView
+                  />
+                  <InputSelect
+                    detached
+                    valueKey='familyDescription'
+                    idKey='familyCode'
+                    disabled={isDisabled || isEmpty(familiesFromApi)}
+                    value={lines.family}
+                    onChange={handleLineChange(idx)}
+                    name='family'
+                    label={t('family', { howMany: 1 })}
+                    id='select-family'
+                    loading={familiesFromApiLoading}
+                    required
+                    options={familiesFromApi}
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <InputAutocomplete
+                    valueKey='approverDescription'
+                    name='responsible'
+                    label={t('responsible', { howMany: 1 })}
+                    disabled={true}
+                    loading={representativeFromApiLoading}
+                    onChange={handleLineChange(idx)}
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <InputAutocomplete
+                    loading={regionalFromApiLoading}
+                    valueKey='approverDescription'
+                    name='regionalManager'
+                    label={t('regional manager')}
+                    disabled={true}
+                    onChange={handleLineChange(idx)}
+                  />
+                </Grid>
+                <Button variant='text' onClick={handleRemoveLine(idx)}>
+                  X
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+          <InputHidden
+            name='linesFamilies'
+            onValueChange={handleLineFamily}
+            showError
+          />
         </Grid>
-        <Grid item sm={12} md={2} className={classes.containerRadio}>
+        <Grid item sm={12} md={3} className={classes.containerRadio}>
           <RadioGroup
             name='voltage'
             label={t('voltage', { howMany: 1 })}
@@ -567,7 +534,8 @@ const MainData = ({
         </Grid>
         <Grid item sm={12} md={2}>
           <IconButton
-            onClick={doAddItemTable}
+            onClick={handleAddShareholder}
+            // onClick={doAddItemTable}
             as={Button}
             size='small'
             variant='text'

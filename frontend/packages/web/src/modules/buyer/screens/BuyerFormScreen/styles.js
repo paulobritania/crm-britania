@@ -49,15 +49,37 @@ export const useStyles = makeStyles(() => ({
     backgroundColor: colors.britSecondary.base
   },
   containerTable: {
-    borderRadius: 15,
-    padding: 15,
-    backgroundColor: colors.britPrimary2.lightest,
-    marginBottom: 15
+    border: `1px solid ${colors.grey20}`,
+    borderRadius: 3
   },
   table: {
     background: colors.white,
     padding: 10,
-    borderRadius: 15
+    borderRadius: 3
+  },
+  tableHeader: {
+    display: 'flex',
+    fontFamily: fonts.fontOpenSans[0].fontFamily,
+    fontWeight: fonts.fontWeight.bold,
+    fontSize: fonts.fontSize.SSB,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.grey20
+  },
+  tableHeader: {
+    display: 'flex',
+    fontFamily: fonts.fontOpenSans[0].fontFamily,
+    fontWeight: fonts.fontWeight.bold,
+    fontSize: fonts.fontSize.SSB,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.grey20,
+    display: 'flex',
+    justifyContent: 'space-between',
+    '& > li': {
+      display: 'inline',
+      float: 'left'
+    }
   },
   labelStatus: { fontSize: '0.75em' },
   status: {

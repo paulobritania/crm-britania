@@ -107,7 +107,12 @@ const fontFacePoppins = [
   }
 ]
 
-const fontFaceOpen = [
+const fontOpenSans = [
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansRegular}") format("truetype")`,
+    fontWeight: fontWeight.regular
+  },
   {
     fontFamily: 'Open Sans',
     src: `url("${openSansBold}") format("truetype")`,
@@ -127,11 +132,6 @@ const fontFaceOpen = [
     fontFamily: 'Open Sans',
     src: `url("${openSansMedium}") format("truetype")`,
     fontWeight: fontWeight.medium
-  },
-  {
-    fontFamily: 'Open Sans',
-    src: `url("${openSansRegular}") format("truetype")`,
-    fontWeight: fontWeight.regular
   },
   {
     fontFamily: 'Open Sans',
@@ -179,7 +179,7 @@ export default {
   fontFaceMonospace,
   fontFamily,
   fontFamilyMonospace,
-  fontFaceOpen,
+  fontOpenSans,
   fontWeight,
   fontSize
 }
