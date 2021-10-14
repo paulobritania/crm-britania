@@ -20,7 +20,7 @@ export const theme = (muiTheme) => ({
       ...(muiTheme.overrides?.MuiInputBase || {}),
       root: {
         ...(muiTheme.overrides?.MuiInputBase?.root || {}),
-        borderRadius: 16,
+        borderRadius: 3,
         '&:disabled': { background: 'red' }
       }
     },
@@ -60,21 +60,20 @@ export const theme = (muiTheme) => ({
         '&$shrink': { transform: 'translate(22px, 10px) scale(0.75)' }
       }
     }
-
   }
 })
 
 export const TextField = styled(TextFieldFromMaterial)`
-  width: ${ (props) => props.width ? `${ props.width }px` : '100%' };
+  width: ${(props) => (props.width ? `${props.width}px` : '100%')};
 
-  margin-left: ${ (props) => props.marginLeft ? `${ props.marginLeft }px` : 0 }; 
-  margin-right: ${ (props) => props.marginTop ? `${ props.marginTop }px` : 0 };
-  
+  margin-left: ${(props) => (props.marginLeft ? `${props.marginLeft}px` : 0)};
+  margin-right: ${(props) => (props.marginTop ? `${props.marginTop}px` : 0)};
+
   padding: 16px 8px;
 
-  pointer-events: ${ (props) => props.readOnly ? 'none' : 'auto' };  
+  pointer-events: ${(props) => (props.readOnly ? 'none' : 'auto')};
 
   input {
     font-size: 15px;
-  } 
+  }
 `

@@ -14,9 +14,10 @@ module.exports = {
     node: true,
     jest: true
   },
-  extends: ['standard', 'plugin:react/recommended', 'react-app'],
+  extends: ['standard', 'plugin:react/recommended', 'react-app', 'prettier'],
   plugins: ['react', 'import-helpers', 'modules-newline'],
   rules: {
+    'space-before-function-paren': ['error', 'never'],
     'template-curly-spacing': [2, 'always'],
     'jsx-quotes': ['error', 'prefer-double'],
     'react/display-name': 'off',
@@ -70,7 +71,6 @@ module.exports = {
       }
     ],
     'generator-star-spacing': ['error', { before: false, after: true }],
-    'space-before-function-paren': ['error', 'always'],
     'object-curly-newline': [
       'error',
       {

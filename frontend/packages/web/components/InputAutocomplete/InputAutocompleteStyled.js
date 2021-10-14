@@ -28,40 +28,43 @@ import Tooltip from '@britania-crm/web-components/Tooltip'
 
 import useStyles from './styles'
 
-const InputAutocompleteStyled = forwardRef(({
-  api,
-  url,
-  label,
-  normalizeDataFn,
-  noOptionsText,
-  loadingText,
-  onChange,
-  required,
-  paramName,
-  params,
-  value,
-  valueKey,
-  disabled,
-  options: optionsProp,
-  loading: externalLoading,
-  infoDescription,
-  ...rest
-}, fieldRef) => {
-  const classes = useStyles()
+const InputAutocompleteStyled = forwardRef(
+  (
+    {
+      api,
+      url,
+      label,
+      normalizeDataFn,
+      noOptionsText,
+      loadingText,
+      onChange,
+      required,
+      paramName,
+      params,
+      value,
+      valueKey,
+      disabled,
+      options: optionsProp,
+      loading: externalLoading,
+      infoDescription,
+      ...rest
+    },
+    fieldRef
+  ) => {
+    const classes = useStyles()
 
-  const [open, setOpen] = useState(false)
-  const [options, setOptions] = useState([])
-  const query = useRef('')
-  const [internalLoading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false)
+    const [options, setOptions] = useState([])
+    const query = useRef('')
+    const [internalLoading, setLoading] = useState(false)
 
-  const loading = useMemo(
-    () => internalLoading || externalLoading,
-    [externalLoading, internalLoading]
-  )
+    const loading = useMemo(() => internalLoading || externalLoading, [
+      externalLoading,
+      internalLoading
+    ])
 
-  const updateList = useCallback(
-    debounce(
-      async () => {
+    const updateList = useCallback(
+      debounce(async () => {
         if (url) {
           try {
             setLoading(true)
@@ -75,129 +78,119 @@ const InputAutocompleteStyled = forwardRef(({
             setLoading(false)
           }
         }
-      },
-      300
-    ),
-    [api, normalizeDataFn, paramName, params, query, url]
-  )
+      }, 300),
+      [api, normalizeDataFn, paramName, params, query, url]
+    )
 
-  const onInputChange = useCallback(
-    (event, value, reason) => {
-      if (reason === 'input') {
-        if (size(value) > 2) {
-          query.current = value
-          updateList()
-        } else {
-          query.current = ''
-          setOptions([])
+    const onInputChange = useCallback(
+      (event, value, reason) => {
+        if (reason === 'input') {
+          if (size(value) > 2) {
+            query.current = value
+            updateList()
+          } else {
+            query.current = ''
+            setOptions([])
+          }
         }
-      }
-    },
-    [updateList]
-  )
+      },
+      [updateList]
+    )
 
-  const handleChange = useCallback(
-    (event, newValue) => onChange(newValue || {}),
-    [onChange]
-  )
+    const handleChange = useCallback(
+      (event, newValue) => onChange(newValue || {}),
+      [onChange]
+    )
 
-  const handleClickSearch = useCallback(
-    debounce(
-      () => {
+    const handleClickSearch = useCallback(
+      debounce(() => {
         updateList()
         setOpen(true)
-      },
-      200
-    ),
-    [url]
-  )
+      }, 200),
+      [url]
+    )
 
-  useEffect(
-    () => {
+    useEffect(() => {
       if (!url) {
         setOptions(optionsProp)
       }
-    },
-    [optionsProp, url]
-  )
+    }, [optionsProp, url])
 
-  useEffect(
-    () => {
-      if (url && !isEmpty(value) && isEmpty(options)) {
-        query.current = value.name
-        updateList()
-      }
-      return updateList.cancel
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query, updateList, url, value]
-  )
+    useEffect(
+      () => {
+        if (url && !isEmpty(value) && isEmpty(options)) {
+          query.current = value.name
+          updateList()
+        }
+        return updateList.cancel
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [query, updateList, url, value]
+    )
 
-  return (
-    <div className={ classes.body }>
-      <Autocomplete
-        ref={ fieldRef }
-        classes={ { root: classes.root, input: classes.autocomplete } }
-        open={ open }
-        onOpen={ () => {
-          setOpen(true)
-        } }
-        onClose={ () => {
-          setOpen(false)
-        } }
-        disabled={ disabled }
-        getOptionSelected={ (option, value) => option[valueKey] === value[valueKey] }
-        getOptionLabel={ (option) => option[valueKey] ? option[valueKey].toString() : '' }
-        onInputChange={ onInputChange }
-        options={ options }
-        loading={ loading }
-        onChange={ handleChange }
-        noOptionsText={ noOptionsText }
-        loadingText={ loadingText }
-        value={ isEmpty(value) ? null : value }
-        renderInput={ (params) => (
-          <InputText
-            { ...params }
-            { ...rest }
-            detached
-            disabled={ disabled }
-            name="auto-complete"
-            label={ label }
-            variant="outlined"
-            required={ required }
-            InputProps={ {
-              ...params.InputProps,
-              endAdornment: (
-                <InputAdornment position="end">
-                  {loading && (
-                    <CircularProgress
-                      color="inherit"
-                      size={ 18 }
-                    />
-                  ) }
-                  {!disabled && (
-                    <SearchIconButton
-                      color="secondary"
-                      onClick={ handleClickSearch }
-                    />
-                  )}
-                </InputAdornment>
-              )
-            } }
-          />
-        ) }
-      />
-      {infoDescription && (
-        <Tooltip title={ infoDescription } arrow>
-          <IconButton color="care" >
-            <InfoIcon />
-          </IconButton>
-        </Tooltip>
-      )
-      }
-    </div>
-  )
-})
+    return (
+      <div className={classes.body}>
+        <Autocomplete
+          ref={fieldRef}
+          classes={{ root: classes.root, input: classes.autocomplete }}
+          open={open}
+          onOpen={() => {
+            setOpen(true)
+          }}
+          onClose={() => {
+            setOpen(false)
+          }}
+          disabled={disabled}
+          getOptionSelected={(option, value) =>
+            option[valueKey] === value[valueKey]
+          }
+          getOptionLabel={(option) =>
+            option[valueKey] ? option[valueKey].toString() : ''
+          }
+          onInputChange={onInputChange}
+          options={options}
+          loading={loading}
+          onChange={handleChange}
+          noOptionsText={noOptionsText}
+          loadingText={loadingText}
+          value={isEmpty(value) ? null : value}
+          renderInput={(params) => (
+            <InputText
+              {...params}
+              {...rest}
+              detached
+              disabled={disabled}
+              name='auto-complete'
+              label={label}
+              required={required}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    {loading && <CircularProgress color='inherit' size={18} />}
+                    {!disabled && (
+                      <SearchIconButton
+                        color='secondary'
+                        onClick={handleClickSearch}
+                      />
+                    )}
+                  </InputAdornment>
+                )
+              }}
+            />
+          )}
+        />
+        {infoDescription && (
+          <Tooltip title={infoDescription} arrow>
+            <IconButton color='care'>
+              <InfoIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </div>
+    )
+  }
+)
 
 InputAutocompleteStyled.propTypes = {
   url: PropTypes.string,
@@ -222,7 +215,7 @@ InputAutocompleteStyled.defaultProps = {
   type: 'text',
   noOptionsText: 'Sem opções',
   loadingText: 'Carregando...',
-  onChange () {},
+  onChange() {},
   normalizeDataFn: (d) => d,
   required: false,
   value: {},

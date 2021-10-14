@@ -1,9 +1,4 @@
-import React, {
-  useMemo,
-  useCallback,
-  forwardRef,
-  memo
-} from 'react'
+import React, { useMemo, useCallback, forwardRef, memo } from 'react'
 import MaskedInput from 'react-input-mask'
 import NumberFormat from 'react-number-format'
 
@@ -49,10 +44,7 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
     ...rest
   } = props
 
-  const inputId = useMemo(
-    () => id || uuid().new(),
-    [id]
-  )
+  const inputId = useMemo(() => id || uuid().new(), [id])
 
   const handleChange = useCallback(
     (event) => {
@@ -68,12 +60,13 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
   )
 
   const helperText = useMemo(
-    () => (error || externalHelperText) && (
-      <Box component="span" display="flex" alignItems="center">
-        <InfoIcon fontSize="small" style={ { marginRight: '8px' } } />
-        {' '}{ error || externalHelperText }
-      </Box>
-    ),
+    () =>
+      (error || externalHelperText) && (
+        <Box component='span' display='flex' alignItems='center'>
+          <InfoIcon fontSize='small' style={{ marginRight: '8px' }} />{' '}
+          {error || externalHelperText}
+        </Box>
+      ),
     [error, externalHelperText]
   )
 
@@ -94,7 +87,20 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
       },
       ...rest
     }),
-    [inputRef, inputId, required, minWidth, error, helperText, disabled, readOnly, type, maxLength, inputProps, rest]
+    [
+      inputRef,
+      inputId,
+      required,
+      minWidth,
+      error,
+      helperText,
+      disabled,
+      readOnly,
+      type,
+      maxLength,
+      inputProps,
+      rest
+    ]
   )
 
   const transformedValue = useMemo(
@@ -103,48 +109,48 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
   )
 
   return (
-    <ThemeProvider theme={ MuiTheme(theme) }>
-      { numberFormatProps ? (
+    <ThemeProvider theme={MuiTheme(theme)}>
+      {numberFormatProps ? (
         <NumberFormat
-          value={ transformedValue ? toNumber(transformedValue) : '' }
-          onValueChange={ handleChange }
-          onBlur={ onBlur }
-          onKeyDown={ onKeyDown }
-          customInput={ MuiTextFieldStyled }
-          { ...numberFormatProps }
-          { ...textFieldProps }
+          value={transformedValue ? toNumber(transformedValue) : ''}
+          onValueChange={handleChange}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+          customInput={MuiTextFieldStyled}
+          {...numberFormatProps}
+          {...textFieldProps}
         />
       ) : (
         <>
-          {(textFieldProps.multiline || !mask) ? (
+          {textFieldProps.multiline || !mask ? (
             <MuiTextFieldStyled
-              { ...textFieldProps }
-              value={ transformedValue }
-              onChange={ handleChange }
-              onBlur={ onBlur }
-              onKeyDown={ onKeyDown }
-              disabled={ disabled }
-              readOnly={ readOnly }
+              {...textFieldProps}
+              value={transformedValue}
+              onChange={handleChange}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+              disabled={disabled}
+              readOnly={readOnly}
             />
           ) : (
             <MaskedInput
-              mask={ mask }
-              onChange={ handleChange }
-              value={ transformedValue }
-              onBlur={ onBlur }
-              onKeyDown={ onKeyDown }
-              maskPlaceholder={ null }
-              disabled={ disabled }
-              readOnly={ readOnly }
+              mask={mask}
+              onChange={handleChange}
+              value={transformedValue}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+              maskPlaceholder={null}
+              disabled={disabled}
+              readOnly={readOnly}
             >
               <MuiTextFieldStyled
-                { ...textFieldProps }
-                value={ transformedValue }
+                {...textFieldProps}
+                value={transformedValue}
               />
             </MaskedInput>
           )}
         </>
-      ) }
+      )}
     </ThemeProvider>
   )
 })
@@ -152,10 +158,7 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
 TextFieldStyled.propTypes = {
   id: PropTypes.string,
   numberFormatProps: PropTypes.object,
-  mask: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.array
-  ]),
+  mask: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   value: PropTypes.any,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
@@ -186,8 +189,8 @@ TextFieldStyled.defaultProps = {
   id: undefined,
   numberFormatProps: undefined,
   mask: undefined,
-  onBlur () {},
-  onKeyDown () {},
+  onBlur() {},
+  onKeyDown() {},
   setMask: undefined,
   required: false,
   className: null,
@@ -198,7 +201,7 @@ TextFieldStyled.defaultProps = {
   variant: 'outlined',
   size: 'small',
   value: '',
-  onChange () {},
+  onChange() {},
   transformRender: (v) => v,
   minWidth: 0,
   notEditable: false,

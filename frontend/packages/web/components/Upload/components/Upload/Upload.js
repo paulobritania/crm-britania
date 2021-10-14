@@ -35,49 +35,42 @@ const Upload = () => {
 
   return (
     <div
-      onDragOver={ dragOver }
-      onDragEnter={ dragEnter }
-      onDragLeave={ dragLeave }
-      onDrop={ fileDrop }
+      onDragOver={dragOver}
+      onDragEnter={dragEnter}
+      onDragLeave={dragLeave}
+      onDrop={fileDrop}
     >
       <UploadSVG />
-      <p style={ {
-        marginBottom: '0px',
-        marginTop: '0px',
-        fontSize: '22px',
-        fontWeight: '500',
-        justifyContent: 'center'
-      } }
-      >{ t('login image add new file message') }
-      </p>
-      <p style={ {
-        textAlign: 'center',
-        marginTop: '0px',
-        marginBottom: '23px',
-        fontSize: '14px',
-        color: colors.britSupport1.base
-      } }
+      <p
+        style={{
+          marginBottom: '0px',
+          marginTop: '0px',
+          fontSize: '22px',
+          fontWeight: '500',
+          justifyContent: 'center'
+        }}
       >
-        Arraste e solte para adicionar<br />a imagem ou
+        {t('login image add new file message')}
+      </p>
+      <p
+        style={{
+          textAlign: 'center',
+          marginTop: '0px',
+          marginBottom: '23px',
+          fontSize: '14px',
+          color: colors.britSupport1.base
+        }}
+      >
+        Arraste e solte para adicionar
+        <br />a imagem ou
       </p>
       <input
-        accept="image/png, image/jpg, image/jpeg, image/gif"
-        style={ { display: 'none' } }
-        id="button-file"
-        type="file"
-        onChange={ handleUpload }
+        accept='image/png, image/jpg, image/jpeg, image/gif'
+        style={{ display: 'none' }}
+        id='button-file'
+        type='file'
+        onChange={handleUpload}
       />
-      <label
-        htmlFor="button-file"
-      >
-        <Button
-          className={ classes.selectButton }
-          component="span"
-          color="secondary"
-        >
-          { t('login image add new file') }
-        </Button>
-      </label>
     </div>
   )
 }

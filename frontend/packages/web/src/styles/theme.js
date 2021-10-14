@@ -58,7 +58,7 @@ export default createMuiTheme({
       root: {
         height: 40,
         borderTopColor: 'transparent',
-        borderRadius: 16,
+        borderRadius: 3,
         backgroundColor: colors.white2,
         '& input': { fontSize: 16 },
         '& fieldset': { borderColor: 'transparent' }

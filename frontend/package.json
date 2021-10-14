@@ -35,10 +35,6 @@
     "postinstall": "patch-package"
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint --quiet && yarn test --onlyChanged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "config": {
     "commitizen": {
