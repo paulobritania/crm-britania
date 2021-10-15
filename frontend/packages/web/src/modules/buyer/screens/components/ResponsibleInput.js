@@ -1,68 +1,70 @@
 import React, { useEffect, useState } from 'react'
 
-import { AppActions } from '@britania-crm/stores/app'
+import { useT } from '@britania-crm/i18n'
+
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 
-import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 
-const ResponsibleInput = ({
-  index,
-  matrixCode,
-  listByLineOfFamily,
-  linesAndFamilies,
-  isView
-}) => {
-  const { data: representativeFromApi, loading: representativeFromApiLoading } =
-    useCrmApi(
-      matrixCode && !isEmpty(listByLineOfFamily)
-        ? [
-            customerCrmRoutes.getResponsible.replace(
-              ':clientCode',
-              matrixCode,
-              listByLineOfFamily
-            ),
-            {
-              page: 1,
-              pageSize: 10,
-              linesAndFamilies
-            }
-          ]
-        : null,
+const ResponsibleInput = ({ index }) => {
+  const t = useT()
+  const [responsibleFromApiLoading, setResponsibleFromApiLoading] =
+    useState(false)
+  const [responsibleFromApi, setResponsibleFromApi] = useState([])
+  const [responsible, setResponsible] = useState('')
+
+  useCrmApi(
+    [
+      customerCrmRoutes.getResponsible.replace(
+        ':clientCode',
+        1049,
+        listByLineOfFamily
+      ),
       {
-        params: {
-          page: 1,
-          pageSize: 10,
-          linesAndFamilies
-        }
+        page: 1,
+        pageSize: 10,
+        linesAndFamilies
+      }
+    ],
+    {
+      params: {
+        page: 1,
+        pageSize: 10,
+        linesAndFamilies
+      }
+    },
+    {
+      revalidateOnFocus: false,
+      onSuccess(data) {
+        console.log(data)
+        setResponsibleFromApi(data)
+        setResponsibleFromApiLoading(false)
       },
-      {
-        revalidateOnFocus: false,
-        onSuccess(data) {
-          const responsible = formRef.current.getFieldValue('responsible')
-          if (isEmpty(responsible)) {
-            formRef.current.setFieldValue('responsible', first(data))
-          }
-        },
-        onErrorRetry(error) {
-          if (error.response.status === 500) {
-            snackbar.error(getErrorMessage(error))
-          }
+      onErrorRetry(error) {
+        if (error.response.status === 500) {
+          snackbar.error(getErrorMessage(error))
         }
       }
-    )
+    }
+  )
+
+  const handleResponsibleChange = (evt) => {
+    setFamily(evt.target.value)
+  }
 
   return (
     <InputSelect
       detached
       valueKey='approverDescription'
       disabled={isDisabled || isEmpty(familiesFromApi)}
-      onChange={handleLineChange(index)}
+      onChange={handleResponsibleChange(index)}
       name='responsible'
       label={t('responsible', { howMany: 1 })}
+      value={responsible}
       id='select-responsible'
-      loading={representativeFromApiLoading}
+      loading={responsibleFromApiLoading}
       required
-      options={representativeFromApi}
+      options={responsibleFromApi}
     />
   )
 }

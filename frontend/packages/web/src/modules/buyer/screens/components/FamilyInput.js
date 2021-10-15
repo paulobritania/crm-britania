@@ -1,67 +1,63 @@
 import React, { useEffect, useState } from 'react'
 
+import isEmpty from 'lodash/isEmpty'
+
+import I18n, { useT } from '@britania-crm/i18n'
 import { AppActions } from '@britania-crm/stores/app'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 
-import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import { lines as linesCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 
-const FamilyInput = ({
-  index,
-  matrixCode,
-  linesCrmRoutes,
-  familiesByLine,
-  isView
-}) => {
+import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import InputSelect from '@britania-crm/web-components/InputSelect'
+
+const FamilyInput = ({ index }) => {
+  const t = useT()
   const [familiesFromApiLoading, setFamiliesFromApiLoading] = useState(false)
   const [familiesFromApi, setFamiliesFromApi] = useState([])
+  const [family, setFamily] = useState('')
 
-  useEffect(() => {
-    const { data: familiesFromApi, loading: familiesFromApiLoading } =
-      useCrmApi(
-        matrixCode && familiesByLine[index].line
-          ? [
-              linesCrmRoutes.getFamilies,
-              {
-                clientTotvsCode: matrixCode,
-                lines: familiesByLine[index].line
-              }
-            ]
-          : null,
-        {
-          params: {
-            clientTotvsCode: matrixCode,
-            lines: familiesByLine[index].line
-          }
-        },
-        {
-          onSuccess(data) {
-            const regional = formRef.current.getFieldValue('regionalManager')
-          },
-          onErrorRetry(error, key, config, revalidate, { retryCount }) {
-            if (error.response.status === 500 && retryCount < 5 && !isView) {
-              createDialog({
-                id: 'new-request-family-modal',
-                Component: ConfirmModal,
-                props: {
-                  onConfirm() {
-                    revalidate({ retryCount })
-                  },
-                  text: t('search error family')
-                }
-              })
-            } else {
-              dispatch(
-                AppActions.addAlert({
-                  type: 'error',
-                  message: t('maximum number of attempts reached')
-                })
-              )
+  useCrmApi(
+    [linesCrmRoutes.getFamilies],
+    {
+      params: {
+        clientTotvsCode: 1049,
+        lines: 7
+      }
+    },
+    {
+      onSuccess(data) {
+        setFamiliesFromApi(data)
+        setFamiliesFromApiLoading(false)
+      },
+      onErrorRetry(error, key, config, revalidate, { retryCount }) {
+        if (error.response.status === 500 && retryCount < 5 && !isView) {
+          createDialog({
+            id: 'new-request-family-modal',
+            Component: ConfirmModal,
+            props: {
+              onConfirm() {
+                revalidate({ retryCount })
+              },
+              text: t('search error family')
             }
-          },
-          revalidateOnFocus: false
+          })
+        } else {
+          dispatch(
+            AppActions.addAlert({
+              type: 'error',
+              message: t('maximum number of attempts reached')
+            })
+          )
         }
-      )
-  }, [index])
+      },
+      revalidateOnFocus: false
+    }
+  )
+
+  const handleFamilyChange = (evt) => {
+    setFamily(evt.target.value)
+  }
 
   return (
     <InputSelect
@@ -69,8 +65,8 @@ const FamilyInput = ({
       valueKey='familyDescription'
       idKey='familyCode'
       disabled={isEmpty(familiesFromApi)}
-      value={lines.family}
-      onChange={handleLineChange(idx)}
+      value={family}
+      onChange={handleFamilyChange}
       name='family'
       label={t('family', { howMany: 1 })}
       id='select-family'

@@ -110,42 +110,6 @@ const MainData = ({
     }
   )
 
-  // function getFamiliesFromApi(idx) {
-  const { data } = useCrmApi(
-    matrixCode && familiesByLine[idx].line
-      ? [linesCrmRoutes.getFamilies, familiesParams]
-      : null,
-    { params: familiesParams },
-    {
-      onErrorRetry(error, key, config, revalidate, { retryCount }) {
-        if (error.response.status === 500 && retryCount < 5 && !isView) {
-          createDialog({
-            id: 'new-request-family-modal',
-            Component: ConfirmModal,
-            props: {
-              onConfirm() {
-                revalidate({ retryCount })
-              },
-              text: t('search error family')
-            }
-          })
-        } else {
-          dispatch(
-            AppActions.addAlert({
-              type: 'error',
-              message: t('maximum number of attempts reached')
-            })
-          )
-        }
-      },
-      revalidateOnFocus: false
-    }
-  ).data
-
-  // setFamiliesFromApi(data)
-  // setFamiliesFromApiLoading(loading)
-  // }
-
   const OPTIONS_LINE = useMemo(
     () =>
       filter(
@@ -330,15 +294,12 @@ const MainData = ({
   }
 
   const handleLineChange = (idx) => (evt) => {
-    const newShareholders = familiesByLine.map((shareholder, sidx) => {
+    const newLine = familiesByLine.map((shareholder, sidx) => {
       if (idx !== sidx) return shareholder
       return { ...shareholder, [evt.target.name]: evt.target.value }
     })
 
-    setFamiliesByLine(newShareholders)
-    if (evt.target.name == 'line') {
-      getFamiliesFromApi(idx)
-    }
+    setFamiliesByLine(newLine)
   }
 
   return (
@@ -470,27 +431,7 @@ const MainData = ({
                   />
                 </Grid>
                 <Grid item sm={3}>
-                  <FamilyInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    linesCrmRoutes={linesCrmRoutes}
-                    familiesByLine={familiesByLine}
-                    isView
-                  />
-                  <InputSelect
-                    detached
-                    valueKey='familyDescription'
-                    idKey='familyCode'
-                    disabled={isDisabled || isEmpty(familiesFromApi)}
-                    value={lines.family}
-                    onChange={handleLineChange(idx)}
-                    name='family'
-                    label={t('family', { howMany: 1 })}
-                    id='select-family'
-                    loading={familiesFromApiLoading}
-                    required
-                    options={familiesFromApi}
-                  />
+                  <FamilyInput index={idx} />
                 </Grid>
                 <Grid item sm={3}>
                   <InputAutocomplete

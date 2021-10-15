@@ -1,32 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-import { AppActions } from '@britania-crm/stores/app'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 
-import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 
-const ResponsibleInput = ({
-  index,
-  matrixCode,
-  customerCrmRoutes,
-  linesAndFamilies,
-  isView
-}) => {
+const ResponsibleInput = ({ index }) => {
+  const t = useT()
+  const [regionalFromApiLoading, setRegionalFromApiLoading] = useState(false)
+  const [regionalFromApi, setRegionalFromApi] = useState([])
+  const [regional, setRegional] = useState('')
+
   const { loading: regionalFromApiLoading } = useCrmApi(
-    matrixCode && !isEmpty(linesAndFamilies)
-      ? [
-          customerCrmRoutes.getRegional.replace(
-            ':clientCode',
-            matrixCode,
-            linesAndFamilies
-          ),
-          {
-            page: 1,
-            pageSize: 10,
-            linesAndFamilies
-          }
-        ]
-      : null,
+    [
+      customerCrmRoutes.getRegional.replace(
+        ':clientCode',
+        1049,
+        linesAndFamilies
+      ),
+      {
+        page: 1,
+        pageSize: 10,
+        linesAndFamilies
+      }
+    ],
     {
       params: {
         page: 1,
@@ -36,23 +32,9 @@ const ResponsibleInput = ({
     },
     {
       onSuccess(data) {
-        const regional = formRef.current.getFieldValue('regionalManager')
-
-        if (
-          first(data)?.approverCode !== regional.approverCode &&
-          !isEmpty(regional)
-        ) {
-          setDisabledButton(true)
-          setFamily([])
-          setLine('')
-          snackbar.error(t('many managers found'))
-        } else {
-          setDisabledButton(false)
-        }
-
-        if (isEmpty(regional)) {
-          formRef.current.setFieldValue('regionalManager', first(data))
-        }
+        console.log(data)
+        setRegionalFromApi(data)
+        setRegionalFromApiLoading(false)
       },
       onErrorRetry(error) {
         if (error.response.status === 500) {
@@ -63,15 +45,20 @@ const ResponsibleInput = ({
     }
   )
 
+  const handleRegionalChange = (evt) => {
+    setFamily(evt.target.value)
+  }
+
   return (
     <InputSelect
       detached
       valueKey='approverDescription'
       disabled={isDisabled || isEmpty(regionalFromApi)}
-      onChange={handleLineChange(index)}
+      onChange={handleRegionalChange(index)}
       name='regionalManager'
       label={t('regional manager')}
       id='select-regional'
+      value={regional}
       loading={regionalFromApiLoading}
       required
       options={regionalFromApi}
