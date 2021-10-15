@@ -10,31 +10,25 @@ import { lines as linesCrmRoutes } from '@britania-crm/services/apis/crmApi/reso
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 
-const FamilyInput = forwardRef((props, ref) => {
+const LineInput = forwardRef((props, ref) => {
   const { index, matrixCode } = props
   const t = useT()
   const { linesBuyers, handleLineChange } = useLinesBuyers()
-  const line = linesBuyers[index].line
 
-  const { data: familiesFromApi, loading: familiesFromApiLoading } = useCrmApi(
-    matrixCode && !!line ? [linesCrmRoutes.getFamilies] : null,
-    {
-      params: {
-        clientTotvsCode: matrixCode,
-        lines: line
-      }
-    },
+  const { data: linesFromApi, loading: linesFromApiLoading } = useCrmApi(
+    matrixCode ? [linesCrmRoutes.getAll, matrixCode] : null,
+    { params: { clientTotvsCode: matrixCode } },
     {
       onErrorRetry(error, key, config, revalidate, { retryCount }) {
         if (error.response.status === 500 && retryCount < 5 && !isView) {
           createDialog({
-            id: 'new-request-family-modal',
+            id: 'new-request-modal',
             Component: ConfirmModal,
             props: {
               onConfirm() {
                 revalidate({ retryCount })
               },
-              text: t('search error family')
+              text: t('search error line')
             }
           })
         } else {
@@ -52,21 +46,20 @@ const FamilyInput = forwardRef((props, ref) => {
 
   return (
     <InputSelect
-      ref={ref}
       detached
-      valueKey='familyDescription'
-      idKey='familyCode'
-      disabled={!line}
-      value={linesBuyers[index].family}
+      valueKey='lineDescription'
+      idKey='lineCode'
+      disabled={!linesBuyers}
+      value={linesBuyers[index].line}
       onChange={(e) => handleLineChange(index, e)}
-      name='family'
-      label={t('family', { howMany: 1 })}
-      id='select-family'
-      loading={familiesFromApiLoading}
+      name='line'
+      label={t('line', { howMany: 1 })}
+      id='select-line'
       required
-      options={familiesFromApi}
+      loading={linesFromApiLoading}
+      options={linesFromApi}
     />
   )
 })
 
-export default FamilyInput
+export default LineInput

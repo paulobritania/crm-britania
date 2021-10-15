@@ -14,8 +14,8 @@ import 'react-sortable-tree/style.css'
 import 'moment/locale/pt-br'
 
 const App = () => (
-  <StoreProvider store={store}>
-    <LinesBuyerProvider>
+  <LinesBuyerProvider>
+    <StoreProvider store={store}>
       <I18nProvider language='pt-BR' dictionaries={dictionaries}>
         <SnackbarsProvider>
           <DialogProvider>
@@ -23,8 +23,8 @@ const App = () => (
           </DialogProvider>
         </SnackbarsProvider>
       </I18nProvider>
-    </LinesBuyerProvider>
-  </StoreProvider>
+    </StoreProvider>
+  </LinesBuyerProvider>
 )
 
 export default withGlobalStyles(App)

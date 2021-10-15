@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback, useState, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 
 import PropTypes from 'prop-types'
@@ -7,23 +7,16 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import first from 'lodash/first'
 import isEmpty from 'lodash/isEmpty'
-import map from 'lodash/map'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Add from '@material-ui/icons/Add'
 
 import { useDialog } from '@britania-crm/dialog'
-import I18n, { useT } from '@britania-crm/i18n'
-import {
-  lines as linesCrmRoutes,
-  customer as customerCrmRoutes
-} from '@britania-crm/services/apis/crmApi/resources/routes'
-import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
+import { useT } from '@britania-crm/i18n'
+import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 import { useSnackbar } from '@britania-crm/snackbar'
-import { AppActions } from '@britania-crm/stores/app'
-import { getErrorMessage } from '@britania-crm/utils/error'
 import Button from '@britania-crm/web-components/Button'
 import IconButton from '@britania-crm/web-components/IconButton'
 import InputAutocomplete from '@britania-crm/web-components/InputAutocomplete'
@@ -33,11 +26,11 @@ import InputHidden from '@britania-crm/web-components/InputHidden'
 import InputPhone from '@britania-crm/web-components/InputPhone'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 import InputText from '@britania-crm/web-components/InputText'
-import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import RadioGroup from '@britania-crm/web-components/RadioGroup'
 import StatusSwitch from '@britania-crm/web-components/StatusSwitch'
 import Tooltip from '@britania-crm/web-components/Tooltip'
 
+import LineInput from '../components/LineInput'
 import FamilyInput from '../components/FamilyInput'
 import RegionalInput from '../components/RegionalInput'
 import ResponsibleInput from '../components/ResponsibleInput'
@@ -58,16 +51,13 @@ const MainData = ({
   const dispatch = useCallback(useDispatch(), [])
   const snackbar = useSnackbar()
 
-  const { linesBuyers, handleLineChange, handleAddLine, handleRemoveLine } =
-    useLinesBuyers()
-
-  console.log('main data', linesBuyers)
-
   const [line, setLine] = useState('')
-  const [family, setFamily] = useState([])
   const [listByLineOfFamily, setListByLineOfFamily] = useState([])
   const [matrixCode, setMatrixCode] = useState('')
   const [disabledButton, setDisabledButton] = useState(false)
+
+  const { linesBuyers, handleLineChange, handleRemoveLine, handleAddLine } =
+    useLinesBuyers()
 
   const mockVoltage = useMemo(
     () => [
@@ -75,48 +65,6 @@ const MainData = ({
       { id: '220', name: '220' }
     ],
     []
-  )
-
-  const { data: linesFromApi, loading: linesFromApiLoading } = useCrmApi(
-    matrixCode ? [linesCrmRoutes.getAll, matrixCode] : null,
-    { params: { clientTotvsCode: matrixCode } },
-    {
-      onErrorRetry(error, key, config, revalidate, { retryCount }) {
-        if (error.response.status === 500 && retryCount < 5 && !isView) {
-          createDialog({
-            id: 'new-request-modal',
-            Component: ConfirmModal,
-            props: {
-              onConfirm() {
-                revalidate({ retryCount })
-              },
-              text: t('search error line')
-            }
-          })
-        } else {
-          dispatch(
-            AppActions.addAlert({
-              type: 'error',
-              message: t('maximum number of attempts reached')
-            })
-          )
-        }
-      },
-      revalidateOnFocus: false
-    }
-  )
-
-  const OPTIONS_LINE = useMemo(
-    () =>
-      filter(
-        linesFromApi,
-        (item) =>
-          !find(
-            listByLineOfFamily,
-            ({ lineCode }) => lineCode === item.lineCode
-          )
-      ),
-    [linesFromApi, listByLineOfFamily]
   )
 
   const handleLineFamily = useCallback(
@@ -209,14 +157,7 @@ const MainData = ({
   // )
 
   const isDisabledButton = useMemo(
-    () =>
-      // (isEmpty(family) && isEmpty(line)) ||
-      // isDisabled || disabledButton || regionalFromApiLoading,
-      isDisabled ||
-      disabledButton[
-        // [disabledButton, isDisabled, regionalFromApiLoading]
-        (disabledButton, isDisabled)
-      ]
+    () => isDisabled || disabledButton[(disabledButton, isDisabled)]
   )
 
   const setNameMatrix = useCallback(
@@ -347,59 +288,39 @@ const MainData = ({
             </ul>
           </Grid>
           <Grid item sm={12} className={classes.table}>
-            {!isEmpty(linesBuyers) ? (
-              linesBuyers.map((lines, idx) => (
-                <Grid item key={lines.line} className={classes.flexContainer}>
-                  <Grid item sm={3}>
-                    <InputSelect
-                      detached
-                      valueKey='lineDescription'
-                      idKey='lineCode'
-                      // value={linesBuyers[idx].line}
-                      value={line}
-                      loading={linesFromApiLoading}
-                      onChange={handleLineChange(idx)}
-                      name='line'
-                      label={t('line', { howMany: 1 })}
-                      id='select-line'
-                      required
-                      options={linesFromApi}
-                      disabled={isDisabled || !linesFromApi}
-                    />
-                  </Grid>
-                  <Grid item sm={3}>
-                    <FamilyInput index={idx} />
-                  </Grid>
-                  <Grid item sm={3}>
-                    {/* <ResponsibleInput index={idx} /> */}
+            {linesBuyers.map((lines, idx) => (
+              <Grid item key={idx} className={classes.flexContainer}>
+                <Grid item sm={3}>
+                  <LineInput index={idx} matrixCode={matrixCode} />
+                </Grid>
+                <Grid item sm={3}>
+                  <FamilyInput index={idx} matrixCode={matrixCode} />
+                </Grid>
+                {/* <Grid item sm={3}>
                     <InputAutocomplete
                       valueKey='approverDescription'
                       name='responsible'
                       label={t('responsible', { howMany: 1 })}
                       disabled={true}
-                      // loading={representativeFromApiLoading}
-                      onChange={handleLineChange(idx)}
+                      loading={representativeFromApiLoading}
+                      onChange={(e) => handleLineChange(idx, e)}
                     />
                   </Grid>
                   <Grid item sm={3}>
-                    {/* <RegionalInput index={idx} /> */}
                     <InputAutocomplete
-                      // loading={regionalFromApiLoading}
+                      loading={regionalFromApiLoading}
                       valueKey='approverDescription'
                       name='regionalManager'
                       label={t('regional manager')}
                       disabled={true}
-                      onChange={handleLineChange(idx)}
+                      onChange={(e) => handleLineChange(idx, e)}
                     />
-                  </Grid>
-                  <Button variant='text' onClick={handleRemoveLine(idx)}>
-                    X
-                  </Button>
-                </Grid>
-              ))
-            ) : (
-              <span>Vazio</span>
-            )}
+                  </Grid> */}
+                <Button variant='text' onClick={(e) => handleRemoveLine(e)}>
+                  X
+                </Button>
+              </Grid>
+            ))}
           </Grid>
           <InputHidden
             name='linesFamilies'
@@ -417,7 +338,7 @@ const MainData = ({
         </Grid>
         <Grid item sm={12} md={2}>
           <IconButton
-            onClick={handleAddLine}
+            onClick={() => handleAddLine()}
             // onClick={doAddItemTable}
             as={Button}
             size='small'

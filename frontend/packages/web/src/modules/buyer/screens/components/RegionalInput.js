@@ -46,16 +46,12 @@ const RegionalInput = forwardRef((props, ref) => {
     }
   )
 
-  const handleRegionalChange = (evt) => {
-    setFamily(evt.target.value)
-  }
-
   return (
     <InputSelect
       detached
       valueKey='approverDescription'
       disabled={isDisabled || isEmpty(regionalFromApi)}
-      onChange={handleRegionalChange(index)}
+      onChange={(e) => handleLineChange(index, e)}
       name='regionalManager'
       label={t('regional manager')}
       id='select-regional'

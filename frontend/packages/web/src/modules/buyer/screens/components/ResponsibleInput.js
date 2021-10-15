@@ -49,16 +49,12 @@ const ResponsibleInput = forwardRef((props, ref) => {
     }
   )
 
-  const handleResponsibleChange = (evt) => {
-    setFamily(evt.target.value)
-  }
-
   return (
     <InputSelect
       detached
       valueKey='approverDescription'
       disabled={isDisabled || isEmpty(familiesFromApi)}
-      onChange={handleResponsibleChange(index)}
+      onChange={(e) => handleLineChange(index, e)}
       name='responsible'
       label={t('responsible', { howMany: 1 })}
       value={responsible}
