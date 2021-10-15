@@ -20,11 +20,11 @@ import {
   customer as customerCrmRoutes
 } from '@britania-crm/services/apis/crmApi/resources/routes'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
+import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 import { useSnackbar } from '@britania-crm/snackbar'
 import { AppActions } from '@britania-crm/stores/app'
 import { getErrorMessage } from '@britania-crm/utils/error'
 import Button from '@britania-crm/web-components/Button'
-import DataTable from '@britania-crm/web-components/DataTable'
 import IconButton from '@britania-crm/web-components/IconButton'
 import InputAutocomplete from '@britania-crm/web-components/InputAutocomplete'
 import InputCpfCnpj from '@britania-crm/web-components/InputCpfCnpj'
@@ -39,6 +39,8 @@ import StatusSwitch from '@britania-crm/web-components/StatusSwitch'
 import Tooltip from '@britania-crm/web-components/Tooltip'
 
 import FamilyInput from '../components/FamilyInput'
+import RegionalInput from '../components/RegionalInput'
+import ResponsibleInput from '../components/ResponsibleInput'
 
 import { useStyles } from './styles'
 
@@ -56,22 +58,16 @@ const MainData = ({
   const dispatch = useCallback(useDispatch(), [])
   const snackbar = useSnackbar()
 
-  const [familiesFromApi, setFamiliesFromApi] = useState([])
-  const [familiesFromApiLoading, setFamiliesFromApiLoading] = useState(false)
+  const { linesBuyers, handleLineChange, handleAddLine, handleRemoveLine } =
+    useLinesBuyers()
+
+  console.log('main data', linesBuyers)
 
   const [line, setLine] = useState('')
   const [family, setFamily] = useState([])
   const [listByLineOfFamily, setListByLineOfFamily] = useState([])
   const [matrixCode, setMatrixCode] = useState('')
   const [disabledButton, setDisabledButton] = useState(false)
-  const [familiesByLine, setFamiliesByLine] = useState([
-    {
-      line: 'teste',
-      family: 'teste',
-      responsible: 'teste',
-      regionalManager: 'teste'
-    }
-  ])
 
   const mockVoltage = useMemo(
     () => [
@@ -123,23 +119,6 @@ const MainData = ({
     [linesFromApi, listByLineOfFamily]
   )
 
-  const doAddItemTable = useCallback(() => {
-    const arrayFamily = map(family, (item) =>
-      find(familiesFromApi, ({ familyCode }) => familyCode === item)
-    )
-
-    const arrayLine = find(linesFromApi, ({ lineCode }) => lineCode === line)
-    formRef.current.setFieldValue('linesFamilies', (old) => [
-      ...old,
-      {
-        family: [...arrayFamily],
-        ...arrayLine
-      }
-    ])
-    // setFamily([])
-    // setLine('')
-  }, [familiesFromApi, family, formRef, line, linesFromApi])
-
   const handleLineFamily = useCallback(
     (value) => {
       setListByLineOfFamily(value)
@@ -160,108 +139,84 @@ const MainData = ({
     []
   )
 
-  const linesAndFamilies = useMemo(() => {
-    const linesFamilies = []
-    if (!isEmpty(family) && line) {
-      map(family, (item) => {
-        linesFamilies.push(`${line},${item}`)
-      })
-    }
-    return linesFamilies
-  }, [family, line])
+  // const { loading: regionalFromApiLoading } = useCrmApi(
+  //   matrixCode && !isEmpty(linesAndFamilies)
+  //     ? [
+  //         customerCrmRoutes.getRegional.replace(
+  //           ':clientCode',
+  //           matrixCode,
+  //           linesAndFamilies
+  //         ),
+  //         regionalParams
+  //       ]
+  //     : null,
+  //   { params: regionalParams },
+  //   {
+  //     onSuccess(data) {
+  //       const regional = formRef.current.getFieldValue('regionalManager')
 
-  const regionalParams = useMemo(
-    () => ({
-      page: 1,
-      pageSize: 10,
-      linesAndFamilies
-    }),
-    [linesAndFamilies]
-  )
+  //       if (
+  //         first(data)?.approverCode !== regional.approverCode &&
+  //         !isEmpty(regional)
+  //       ) {
+  //         setDisabledButton(true)
+  //         setFamily([])
+  //         setLine('')
+  //         snackbar.error(t('many managers found'))
+  //       } else {
+  //         setDisabledButton(false)
+  //       }
 
-  const respresentativeParams = useMemo(
-    () => ({
-      page: 1,
-      pageSize: 10,
-      linesAndFamilies
-    }),
-    [linesAndFamilies]
-  )
+  //       if (isEmpty(regional)) {
+  //         formRef.current.setFieldValue('regionalManager', first(data))
+  //       }
+  //     },
+  //     onErrorRetry(error) {
+  //       if (error.response.status === 500) {
+  //         snackbar.error(getErrorMessage(error))
+  //       }
+  //     },
+  //     revalidateOnFocus: false
+  //   }
+  // )
 
-  const { loading: regionalFromApiLoading } = useCrmApi(
-    matrixCode && !isEmpty(linesAndFamilies)
-      ? [
-          customerCrmRoutes.getRegional.replace(
-            ':clientCode',
-            matrixCode,
-            linesAndFamilies
-          ),
-          regionalParams
-        ]
-      : null,
-    { params: regionalParams },
-    {
-      onSuccess(data) {
-        const regional = formRef.current.getFieldValue('regionalManager')
-
-        if (
-          first(data)?.approverCode !== regional.approverCode &&
-          !isEmpty(regional)
-        ) {
-          setDisabledButton(true)
-          setFamily([])
-          setLine('')
-          snackbar.error(t('many managers found'))
-        } else {
-          setDisabledButton(false)
-        }
-
-        if (isEmpty(regional)) {
-          formRef.current.setFieldValue('regionalManager', first(data))
-        }
-      },
-      onErrorRetry(error) {
-        if (error.response.status === 500) {
-          snackbar.error(getErrorMessage(error))
-        }
-      },
-      revalidateOnFocus: false
-    }
-  )
-
-  const { loading: representativeFromApiLoading } = useCrmApi(
-    matrixCode && !isEmpty(listByLineOfFamily)
-      ? [
-          customerCrmRoutes.getResponsible.replace(
-            ':clientCode',
-            matrixCode,
-            listByLineOfFamily
-          ),
-          respresentativeParams
-        ]
-      : null,
-    { params: respresentativeParams },
-    {
-      revalidateOnFocus: false,
-      onSuccess(data) {
-        const responsible = formRef.current.getFieldValue('responsible')
-        if (isEmpty(responsible)) {
-          formRef.current.setFieldValue('responsible', first(data))
-        }
-      },
-      onErrorRetry(error) {
-        if (error.response.status === 500) {
-          snackbar.error(getErrorMessage(error))
-        }
-      }
-    }
-  )
+  // const { loading: representativeFromApiLoading } = useCrmApi(
+  //   matrixCode && !isEmpty(listByLineOfFamily)
+  //     ? [
+  //         customerCrmRoutes.getResponsible.replace(
+  //           ':clientCode',
+  //           matrixCode,
+  //           listByLineOfFamily
+  //         ),
+  //         respresentativeParams
+  //       ]
+  //     : null,
+  //   { params: respresentativeParams },
+  //   {
+  //     revalidateOnFocus: false,
+  //     onSuccess(data) {
+  //       const responsible = formRef.current.getFieldValue('responsible')
+  //       if (isEmpty(responsible)) {
+  //         formRef.current.setFieldValue('responsible', first(data))
+  //       }
+  //     },
+  //     onErrorRetry(error) {
+  //       if (error.response.status === 500) {
+  //         snackbar.error(getErrorMessage(error))
+  //       }
+  //     }
+  //   }
+  // )
 
   const isDisabledButton = useMemo(
     () =>
       // (isEmpty(family) && isEmpty(line)) ||
-      isDisabled || disabledButton || regionalFromApiLoading,
-    [disabledButton, isDisabled, regionalFromApiLoading]
+      // isDisabled || disabledButton || regionalFromApiLoading,
+      isDisabled ||
+      disabledButton[
+        // [disabledButton, isDisabled, regionalFromApiLoading]
+        (disabledButton, isDisabled)
+      ]
   )
 
   const setNameMatrix = useCallback(
@@ -281,26 +236,6 @@ const MainData = ({
     },
     [formRef]
   )
-
-  const handleAddShareholder = () => {
-    setFamiliesByLine([
-      ...familiesByLine,
-      { line: '', family: '', responsible: '', regionalManager: '' }
-    ])
-  }
-
-  const handleRemoveLine = (idx) => () => {
-    setFamiliesByLine(familiesByLine.filter((s, sidx) => idx !== sidx))
-  }
-
-  const handleLineChange = (idx) => (evt) => {
-    const newLine = familiesByLine.map((shareholder, sidx) => {
-      if (idx !== sidx) return shareholder
-      return { ...shareholder, [evt.target.name]: evt.target.value }
-    })
-
-    setFamiliesByLine(newLine)
-  }
 
   return (
     <>
@@ -412,52 +347,59 @@ const MainData = ({
             </ul>
           </Grid>
           <Grid item sm={12} className={classes.table}>
-            {familiesByLine.map((lines, idx) => (
-              <Grid item key={idx} className={classes.flexContainer}>
-                <Grid item sm={3}>
-                  <InputSelect
-                    detached
-                    valueKey='lineDescription'
-                    idKey='lineCode'
-                    value={lines.line}
-                    loading={linesFromApiLoading}
-                    onChange={handleLineChange(idx)}
-                    name='line'
-                    label={t('line', { howMany: 1 })}
-                    id='select-line'
-                    required
-                    options={OPTIONS_LINE}
-                    disabled={isDisabled || !linesFromApi}
-                  />
+            {!isEmpty(linesBuyers) ? (
+              linesBuyers.map((lines, idx) => (
+                <Grid item key={lines.line} className={classes.flexContainer}>
+                  <Grid item sm={3}>
+                    <InputSelect
+                      detached
+                      valueKey='lineDescription'
+                      idKey='lineCode'
+                      // value={linesBuyers[idx].line}
+                      value={line}
+                      loading={linesFromApiLoading}
+                      onChange={handleLineChange(idx)}
+                      name='line'
+                      label={t('line', { howMany: 1 })}
+                      id='select-line'
+                      required
+                      options={linesFromApi}
+                      disabled={isDisabled || !linesFromApi}
+                    />
+                  </Grid>
+                  <Grid item sm={3}>
+                    <FamilyInput index={idx} />
+                  </Grid>
+                  <Grid item sm={3}>
+                    {/* <ResponsibleInput index={idx} /> */}
+                    <InputAutocomplete
+                      valueKey='approverDescription'
+                      name='responsible'
+                      label={t('responsible', { howMany: 1 })}
+                      disabled={true}
+                      // loading={representativeFromApiLoading}
+                      onChange={handleLineChange(idx)}
+                    />
+                  </Grid>
+                  <Grid item sm={3}>
+                    {/* <RegionalInput index={idx} /> */}
+                    <InputAutocomplete
+                      // loading={regionalFromApiLoading}
+                      valueKey='approverDescription'
+                      name='regionalManager'
+                      label={t('regional manager')}
+                      disabled={true}
+                      onChange={handleLineChange(idx)}
+                    />
+                  </Grid>
+                  <Button variant='text' onClick={handleRemoveLine(idx)}>
+                    X
+                  </Button>
                 </Grid>
-                <Grid item sm={3}>
-                  <FamilyInput index={idx} />
-                </Grid>
-                <Grid item sm={3}>
-                  <InputAutocomplete
-                    valueKey='approverDescription'
-                    name='responsible'
-                    label={t('responsible', { howMany: 1 })}
-                    disabled={true}
-                    loading={representativeFromApiLoading}
-                    onChange={handleLineChange(idx)}
-                  />
-                </Grid>
-                <Grid item sm={3}>
-                  <InputAutocomplete
-                    loading={regionalFromApiLoading}
-                    valueKey='approverDescription'
-                    name='regionalManager'
-                    label={t('regional manager')}
-                    disabled={true}
-                    onChange={handleLineChange(idx)}
-                  />
-                </Grid>
-                <Button variant='text' onClick={handleRemoveLine(idx)}>
-                  X
-                </Button>
-              </Grid>
-            ))}
+              ))
+            ) : (
+              <span>Vazio</span>
+            )}
           </Grid>
           <InputHidden
             name='linesFamilies'
@@ -475,7 +417,7 @@ const MainData = ({
         </Grid>
         <Grid item sm={12} md={2}>
           <IconButton
-            onClick={handleAddShareholder}
+            onClick={handleAddLine}
             // onClick={doAddItemTable}
             as={Button}
             size='small'

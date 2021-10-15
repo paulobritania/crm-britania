@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, forwardRef } from 'react'
 
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 
 import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 
-const ResponsibleInput = ({ index }) => {
+const RegionalInput = forwardRef((props, ref) => {
+  const { index } = props
   const t = useT()
   const [regionalFromApiLoading, setRegionalFromApiLoading] = useState(false)
   const [regionalFromApi, setRegionalFromApi] = useState([])
   const [regional, setRegional] = useState('')
 
-  const { loading: regionalFromApiLoading } = useCrmApi(
+  useCrmApi(
     [
       customerCrmRoutes.getRegional.replace(
         ':clientCode',
@@ -64,6 +65,6 @@ const ResponsibleInput = ({ index }) => {
       options={regionalFromApi}
     />
   )
-}
+})
 
-export default ResponsibleInput
+export default RegionalInput

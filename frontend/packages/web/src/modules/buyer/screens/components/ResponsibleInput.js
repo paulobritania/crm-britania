@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, forwardRef } from 'react'
 
 import { useT } from '@britania-crm/i18n'
 
@@ -6,7 +6,8 @@ import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 
 import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 
-const ResponsibleInput = ({ index }) => {
+const ResponsibleInput = forwardRef((props, ref) => {
+  const { index } = props
   const t = useT()
   const [responsibleFromApiLoading, setResponsibleFromApiLoading] =
     useState(false)
@@ -67,6 +68,6 @@ const ResponsibleInput = ({ index }) => {
       options={responsibleFromApi}
     />
   )
-}
+})
 
 export default ResponsibleInput
