@@ -34,6 +34,9 @@ const FamilyInput = ({
           }
         },
         {
+          onSuccess(data) {
+            const regional = formRef.current.getFieldValue('regionalManager')
+          },
           onErrorRetry(error, key, config, revalidate, { retryCount }) {
             if (error.response.status === 500 && retryCount < 5 && !isView) {
               createDialog({
