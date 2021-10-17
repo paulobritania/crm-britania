@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "Controle Upload"
+        "Controle Upload",
+        "cadastro de usuario"
     ]
 }

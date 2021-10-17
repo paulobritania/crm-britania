@@ -11,6 +11,7 @@ services:
       - "1433"
     ports:
       - "1433:1433"
+      - "9225:9229"
     networks:
       - "database"
 
@@ -25,6 +26,7 @@ services:
     ports:
       - "30101:30101"
       - "30102:30102"
+      - "9226:9229"
     environment:
       NODE_ENV: "development"
       URL: "0.0.0.0"
@@ -49,6 +51,7 @@ services:
       - "database"
     ports:
       - "30107:30107"
+      - "9227:9229"
     environment:
       UPLOAD_FOLDER: './files'
       NODE_ENV: "development"
@@ -97,6 +100,7 @@ services:
       - "database"
     ports:
       - "30117:30117"
+      - "9228:9229"
     environment:
       NODE_ENV: "development"
       URL: "0.0.0.0"
