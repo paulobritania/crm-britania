@@ -149,63 +149,65 @@ const BuyerListScreen = () => {
     (values) => {
       const linesFamilies = []
 
-      forEach(values?.linesFamilies, ({ family, lineCode, lineDescription }) =>
-        forEach(family, (item) =>
-          linesFamilies.push({
-            lineCode,
-            lineDescription,
-            ...item
-          })
-        )
-      )
+      console.log(values)
 
-      const buyer = {
-        ...values,
-        cpf: trimMask(values.cpf),
-        clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
-        clientTotvsDescription: values.clientTotvsDescription.parentCompanyName,
-        buyerAddress: {
-          ...values?.buyerAddress,
-          number: Number(values?.buyerAddress?.number)
-        },
-        parentCompanyAddress: {
-          ...values?.parentCompanyAddress,
-          number: Number(values?.parentCompanyAddress?.number)
-        },
-        telephone: trimMask(values.telephone),
-        linesFamilies,
-        regionalManagerCode: values?.regionalManager?.approverCode,
-        regionalManagerDescription:
-          values?.regionalManager?.approverDescription,
-        responsibleCode: values?.responsible?.approverCode,
-        responsibleDescription: values?.responsible?.approverDescription,
-        fileId: values?.fileId
-      }
+      // forEach(values?.linesFamilies, ({ family, lineCode, lineDescription }) =>
+      //   forEach(family, (item) =>
+      //     linesFamilies.push({
+      //       lineCode,
+      //       lineDescription,
+      //       ...item
+      //     })
+      //   )
+      // )
 
-      if (isEdit) {
-        dispatch(
-          BuyerActions.editBuyer(
-            state?.params?.id,
-            buyer,
-            onSuccessCallBack,
-            () => setLoader(false)
-          )
-        )
-      } else {
-        if (values.imageFile?.size) {
-          dispatch(
-            FileActions.uploadImage(values.fileId, saveBuyer, () =>
-              setSubmitLoading(false)
-            )
-          )
-        } else {
-          dispatch(
-            BuyerActions.saveBuyer(buyer, onSuccessCallBack, () =>
-              setLoader(false)
-            )
-          )
-        }
-      }
+      // const buyer = {
+      //   ...values,
+      //   cpf: trimMask(values.cpf),
+      //   clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
+      //   clientTotvsDescription: values.clientTotvsDescription.parentCompanyName,
+      //   buyerAddress: {
+      //     ...values?.buyerAddress,
+      //     number: Number(values?.buyerAddress?.number)
+      //   },
+      //   parentCompanyAddress: {
+      //     ...values?.parentCompanyAddress,
+      //     number: Number(values?.parentCompanyAddress?.number)
+      //   },
+      //   telephone: trimMask(values.telephone),
+      //   linesFamilies,
+      //   regionalManagerCode: values?.regionalManager?.approverCode,
+      //   regionalManagerDescription:
+      //     values?.regionalManager?.approverDescription,
+      //   responsibleCode: values?.responsible?.approverCode,
+      //   responsibleDescription: values?.responsible?.approverDescription,
+      //   fileId: fileId === null ? buyersFromApi.fileId?.id : fileId
+      // }
+
+      // if (isEdit) {
+      //   dispatch(
+      //     BuyerActions.editBuyer(
+      //       state?.params?.id,
+      //       buyer,
+      //       onSuccessCallBack,
+      //       () => setLoader(false)
+      //     )
+      //   )
+      // } else {
+      //   if (values.fileId?.size) {
+      //     dispatch(
+      //       FileActions.uploadImage(values.fileId, saveBuyer, () =>
+      //         setSubmitLoading(false)
+      //       )
+      //     )
+      //   } else {
+      //     dispatch(
+      //       BuyerActions.saveBuyer(buyer, onSuccessCallBack, () =>
+      //         setLoader(false)
+      //       )
+      //     )
+      //   }
+      // }
     },
     [dispatch, isEdit, onSuccessCallBack, state]
   )

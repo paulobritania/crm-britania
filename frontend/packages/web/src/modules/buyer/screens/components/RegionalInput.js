@@ -1,41 +1,53 @@
-import React, { useState, forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 
+import isEmpty from 'lodash/isEmpty'
+
+import { useT } from '@britania-crm/i18n'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
+import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
+import { useSnackbar } from '@britania-crm/snackbar'
 
 import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
+import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const RegionalInput = forwardRef((props, ref) => {
-  const { index } = props
+  const { index, matrixCode } = props
   const t = useT()
-  const [regionalFromApiLoading, setRegionalFromApiLoading] = useState(false)
-  const [regionalFromApi, setRegionalFromApi] = useState([])
-  const [regional, setRegional] = useState('')
+  const snackbar = useSnackbar()
+  const {
+    linesBuyers,
+    handleLineChange,
+    handleArrayRegional,
+    regionalFromApi
+  } = useLinesBuyers()
 
-  useCrmApi(
-    [
-      customerCrmRoutes.getRegional.replace(
-        ':clientCode',
-        1049,
-        linesAndFamilies
-      ),
-      {
-        page: 1,
-        pageSize: 10,
-        linesAndFamilies
-      }
-    ],
+  const line = linesBuyers[index].line
+  const family = linesBuyers[index].family
+  const responsible = linesBuyers[index].responsible
+
+  const { loading: regionalFromApiLoading } = useCrmApi(
+    matrixCode && !!responsible && isEmpty(regionalFromApi[index])
+      ? [
+          customerCrmRoutes.getRegional.replace(':clientCode', matrixCode, [
+            `${line},${family}`
+          ]),
+          {
+            page: 1,
+            pageSize: 10,
+            linesAndFamilies: [`${line},${family}`]
+          }
+        ]
+      : null,
     {
       params: {
         page: 1,
         pageSize: 10,
-        linesAndFamilies
+        linesAndFamilies: [`${line},${family}`]
       }
     },
     {
       onSuccess(data) {
-        console.log(data)
-        setRegionalFromApi(data)
-        setRegionalFromApiLoading(false)
+        handleArrayRegional(index, data)
       },
       onErrorRetry(error) {
         if (error.response.status === 500) {
@@ -48,17 +60,19 @@ const RegionalInput = forwardRef((props, ref) => {
 
   return (
     <InputSelect
+      ref={ref}
       detached
       valueKey='approverDescription'
-      disabled={isDisabled || isEmpty(regionalFromApi)}
+      idKey='approverCode'
+      disabled={isEmpty(regionalFromApi[index])}
       onChange={(e) => handleLineChange(index, e)}
       name='regionalManager'
       label={t('regional manager')}
       id='select-regional'
-      value={regional}
-      loading={regionalFromApiLoading}
+      value={linesBuyers[index].regionalManager}
       required
-      options={regionalFromApi}
+      loading={regionalFromApiLoading}
+      options={regionalFromApi[index]}
     />
   )
 })

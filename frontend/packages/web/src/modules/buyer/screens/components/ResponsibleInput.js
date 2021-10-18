@@ -1,67 +1,78 @@
-import React, { useState, forwardRef } from 'react'
+import React, { forwardRef } from 'react'
+
+import isEmpty from 'lodash/isEmpty'
 
 import { useT } from '@britania-crm/i18n'
-
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
+import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
+import { useSnackbar } from '@britania-crm/snackbar'
 
 import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
+import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const ResponsibleInput = forwardRef((props, ref) => {
-  const { index } = props
+  const { index, matrixCode } = props
   const t = useT()
-  const [responsibleFromApiLoading, setResponsibleFromApiLoading] =
-    useState(false)
-  const [responsibleFromApi, setResponsibleFromApi] = useState([])
-  const [responsible, setResponsible] = useState('')
+  const snackbar = useSnackbar()
+  const {
+    linesBuyers,
+    handleLineChange,
+    responsibleFromApi,
+    handleArrayResponsible
+  } = useLinesBuyers()
+  const line = linesBuyers[index].line
+  const family = linesBuyers[index].family
 
-  useCrmApi(
-    [
-      customerCrmRoutes.getResponsible.replace(
-        ':clientCode',
-        1049,
-        listByLineOfFamily
-      ),
-      {
-        page: 1,
-        pageSize: 10,
-        linesAndFamilies
-      }
-    ],
+  const { loading: responsibleFromApiLoading } = useCrmApi(
+    matrixCode && !!family && isEmpty(responsibleFromApi[index])
+      ? [
+          customerCrmRoutes.getResponsible.replace(':clientCode', matrixCode, [
+            `${line},${family}`
+          ]),
+          {
+            page: 1,
+            pageSize: 10,
+            linesAndFamilies: [`${line},${family}`]
+          }
+        ]
+      : null,
     {
       params: {
         page: 1,
         pageSize: 10,
-        linesAndFamilies
+        linesAndFamilies: [`${line},${family}`]
       }
     },
     {
-      revalidateOnFocus: false,
       onSuccess(data) {
-        console.log(data)
-        setResponsibleFromApi(data)
-        setResponsibleFromApiLoading(false)
+        handleArrayResponsible(index, data)
+
+        formRef.current.setFieldValue('responsible', first(data))
       },
       onErrorRetry(error) {
         if (error.response.status === 500) {
           snackbar.error(getErrorMessage(error))
         }
-      }
+      },
+      revalidateOnFocus: false
     }
   )
 
   return (
     <InputSelect
+      ref={ref}
       detached
       valueKey='approverDescription'
-      disabled={isDisabled || isEmpty(familiesFromApi)}
+      idKey='approverCode'
+      disabled={isEmpty(responsibleFromApi[index])}
       onChange={(e) => handleLineChange(index, e)}
       name='responsible'
       label={t('responsible', { howMany: 1 })}
-      value={responsible}
+      value={linesBuyers[index].responsible}
       id='select-responsible'
-      loading={responsibleFromApiLoading}
       required
-      options={responsibleFromApi}
+      loading={responsibleFromApiLoading}
+      options={responsibleFromApi[index]}
     />
   )
 })

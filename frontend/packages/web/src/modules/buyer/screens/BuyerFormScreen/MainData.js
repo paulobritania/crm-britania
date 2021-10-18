@@ -1,22 +1,16 @@
 import React, { useMemo, useCallback, useState, useContext } from 'react'
-import { useDispatch } from 'react-redux'
 
 import PropTypes from 'prop-types'
 
-import filter from 'lodash/filter'
-import find from 'lodash/find'
 import first from 'lodash/first'
-import isEmpty from 'lodash/isEmpty'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Add from '@material-ui/icons/Add'
 
-import { useDialog } from '@britania-crm/dialog'
 import { useT } from '@britania-crm/i18n'
 import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
-import { useSnackbar } from '@britania-crm/snackbar'
 import Button from '@britania-crm/web-components/Button'
 import IconButton from '@britania-crm/web-components/IconButton'
 import InputAutocomplete from '@britania-crm/web-components/InputAutocomplete'
@@ -24,16 +18,14 @@ import InputCpfCnpj from '@britania-crm/web-components/InputCpfCnpj'
 import InputDayMonth from '@britania-crm/web-components/InputDayMonth'
 import InputHidden from '@britania-crm/web-components/InputHidden'
 import InputPhone from '@britania-crm/web-components/InputPhone'
-import InputSelect from '@britania-crm/web-components/InputSelect'
 import InputText from '@britania-crm/web-components/InputText'
 import RadioGroup from '@britania-crm/web-components/RadioGroup'
 import StatusSwitch from '@britania-crm/web-components/StatusSwitch'
-import Tooltip from '@britania-crm/web-components/Tooltip'
 
 import LineInput from '../components/LineInput'
 import FamilyInput from '../components/FamilyInput'
-import RegionalInput from '../components/RegionalInput'
 import ResponsibleInput from '../components/ResponsibleInput'
+import RegionalInput from '../components/RegionalInput'
 
 import { useStyles } from './styles'
 
@@ -47,17 +39,10 @@ const MainData = ({
 }) => {
   const t = useT()
   const classes = useStyles()
-  const { createDialog } = useDialog()
-  const dispatch = useCallback(useDispatch(), [])
-  const snackbar = useSnackbar()
-
-  const [line, setLine] = useState('')
-  const [listByLineOfFamily, setListByLineOfFamily] = useState([])
+  const { linesBuyers, handleRemoveLine, handleAddLine, linesFamiliesForm } =
+    useLinesBuyers()
   const [matrixCode, setMatrixCode] = useState('')
   const [disabledButton, setDisabledButton] = useState(false)
-
-  const { linesBuyers, handleLineChange, handleRemoveLine, handleAddLine } =
-    useLinesBuyers()
 
   const mockVoltage = useMemo(
     () => [
@@ -65,17 +50,6 @@ const MainData = ({
       { id: '220', name: '220' }
     ],
     []
-  )
-
-  const handleLineFamily = useCallback(
-    (value) => {
-      setListByLineOfFamily(value)
-      if (isEmpty(value)) {
-        formRef.current.setFieldValue('responsible', {})
-        formRef.current.setFieldValue('regionalManager', {})
-      }
-    },
-    [formRef]
   )
 
   const clientParams = useMemo(
@@ -87,82 +61,12 @@ const MainData = ({
     []
   )
 
-  // const { loading: regionalFromApiLoading } = useCrmApi(
-  //   matrixCode && !isEmpty(linesAndFamilies)
-  //     ? [
-  //         customerCrmRoutes.getRegional.replace(
-  //           ':clientCode',
-  //           matrixCode,
-  //           linesAndFamilies
-  //         ),
-  //         regionalParams
-  //       ]
-  //     : null,
-  //   { params: regionalParams },
-  //   {
-  //     onSuccess(data) {
-  //       const regional = formRef.current.getFieldValue('regionalManager')
-
-  //       if (
-  //         first(data)?.approverCode !== regional.approverCode &&
-  //         !isEmpty(regional)
-  //       ) {
-  //         setDisabledButton(true)
-  //         setFamily([])
-  //         setLine('')
-  //         snackbar.error(t('many managers found'))
-  //       } else {
-  //         setDisabledButton(false)
-  //       }
-
-  //       if (isEmpty(regional)) {
-  //         formRef.current.setFieldValue('regionalManager', first(data))
-  //       }
-  //     },
-  //     onErrorRetry(error) {
-  //       if (error.response.status === 500) {
-  //         snackbar.error(getErrorMessage(error))
-  //       }
-  //     },
-  //     revalidateOnFocus: false
-  //   }
-  // )
-
-  // const { loading: representativeFromApiLoading } = useCrmApi(
-  //   matrixCode && !isEmpty(listByLineOfFamily)
-  //     ? [
-  //         customerCrmRoutes.getResponsible.replace(
-  //           ':clientCode',
-  //           matrixCode,
-  //           listByLineOfFamily
-  //         ),
-  //         respresentativeParams
-  //       ]
-  //     : null,
-  //   { params: respresentativeParams },
-  //   {
-  //     revalidateOnFocus: false,
-  //     onSuccess(data) {
-  //       const responsible = formRef.current.getFieldValue('responsible')
-  //       if (isEmpty(responsible)) {
-  //         formRef.current.setFieldValue('responsible', first(data))
-  //       }
-  //     },
-  //     onErrorRetry(error) {
-  //       if (error.response.status === 500) {
-  //         snackbar.error(getErrorMessage(error))
-  //       }
-  //     }
-  //   }
-  // )
-
   const isDisabledButton = useMemo(
     () => isDisabled || disabledButton[(disabledButton, isDisabled)]
   )
 
   const setNameMatrix = useCallback(
     (value) => {
-      setLine('')
       formRef.current.setFieldValue('clientTotvsDescription', value)
       setMatrixCode(value.parentCompanyCode)
     },
@@ -171,7 +75,6 @@ const MainData = ({
 
   const setCodeMatrix = useCallback(
     (value) => {
-      setLine('')
       formRef.current.setFieldValue('clientTotvsCode', value)
       setMatrixCode(value.parentCompanyCode)
     },
@@ -291,31 +194,25 @@ const MainData = ({
             {linesBuyers.map((lines, idx) => (
               <Grid item key={idx} className={classes.flexContainer}>
                 <Grid item sm={3}>
-                  <LineInput index={idx} matrixCode={matrixCode} />
+                  <LineInput
+                    index={idx}
+                    matrixCode={matrixCode}
+                    isView={isView}
+                  />
                 </Grid>
                 <Grid item sm={3}>
-                  <FamilyInput index={idx} matrixCode={matrixCode} />
+                  <FamilyInput
+                    index={idx}
+                    matrixCode={matrixCode}
+                    isView={isView}
+                  />
                 </Grid>
-                {/* <Grid item sm={3}>
-                    <InputAutocomplete
-                      valueKey='approverDescription'
-                      name='responsible'
-                      label={t('responsible', { howMany: 1 })}
-                      disabled={true}
-                      loading={representativeFromApiLoading}
-                      onChange={(e) => handleLineChange(idx, e)}
-                    />
-                  </Grid>
-                  <Grid item sm={3}>
-                    <InputAutocomplete
-                      loading={regionalFromApiLoading}
-                      valueKey='approverDescription'
-                      name='regionalManager'
-                      label={t('regional manager')}
-                      disabled={true}
-                      onChange={(e) => handleLineChange(idx, e)}
-                    />
-                  </Grid> */}
+                <Grid item sm={3}>
+                  <ResponsibleInput index={idx} matrixCode={matrixCode} />
+                </Grid>
+                <Grid item sm={3}>
+                  <RegionalInput index={idx} matrixCode={matrixCode} />
+                </Grid>
                 <Button variant='text' onClick={(e) => handleRemoveLine(e)}>
                   X
                 </Button>
@@ -324,7 +221,7 @@ const MainData = ({
           </Grid>
           <InputHidden
             name='linesFamilies'
-            onValueChange={handleLineFamily}
+            value={linesFamiliesForm}
             showError
           />
         </Grid>
@@ -339,11 +236,10 @@ const MainData = ({
         <Grid item sm={12} md={2}>
           <IconButton
             onClick={() => handleAddLine()}
-            // onClick={doAddItemTable}
             as={Button}
             size='small'
             variant='text'
-            // disabled={isDisabledButton}
+            disabled={isDisabledButton}
             startIcon={<Add />}
           >
             Nova Linha

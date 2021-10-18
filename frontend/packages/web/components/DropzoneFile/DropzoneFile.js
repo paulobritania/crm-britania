@@ -29,6 +29,7 @@ const DropzoneFile = ({ handleUpload, types, title, description }) => {
 
   const fileDrop = useCallback(
     (e) => {
+      console.log(e.dataTransfer.files)
       e.preventDefault()
       const files = e.dataTransfer.files
       if (files.length) {

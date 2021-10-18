@@ -12,17 +12,9 @@ import { useT } from '@britania-crm/i18n'
 
 import { useStyles } from './styles'
 
-const Lgpd = ({ formRef, modeView, isEdit, isView }) => {
+const Lgpd = () => {
   const t = useT()
   const classes = useStyles()
-
-  const fileDrop = (e) => {
-    e.preventDefault()
-    const files = e.dataTransfer.files
-    if (files.length) {
-      console.log('teste')
-    }
-  }
 
   return (
     <Grid container spacing={1} className={classes.containerMain}>
@@ -40,12 +32,10 @@ const Lgpd = ({ formRef, modeView, isEdit, isView }) => {
             <li>Tamanho máximo: 20MB</li>
           </ul>
         </Grid>
-        <Grid item sm={4} className={classes.upload} onDrop={fileDrop}>
+        <Grid item sm={4} className={classes.upload}>
           <UploadImage
             detached
             name='file'
-            onDrop={fileDrop}
-            size={68}
             title={t('login image add new file message')}
             description={''}
             types={[
