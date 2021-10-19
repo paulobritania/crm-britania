@@ -1,11 +1,11 @@
 {
   "configurations": [
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Docker: Attach to Node",
-      "remoteRoot": "/usr/src/app",
-      "localRoot": "../backend/packages"
-    }
+      {
+          "type": "node",
+          "request": "attach",
+          "name": "Docker: Attach to Node",
+          "remoteRoot": "${workspaceFolder}/usr/src/app",
+          "localRoot": "${workspaceFolder}/backend/api-gateway/src"
+      }
   ]
 }

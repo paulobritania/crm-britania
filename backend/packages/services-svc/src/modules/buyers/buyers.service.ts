@@ -255,7 +255,7 @@ export class BuyersService {
     userId: number
   ): Promise<Buyer[]> {
     const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-
+    debugger // eslint-disable-line no-debugger
     if (!clientCodes) return []
 
     if (query.clientTotvsCode && clientCodes.length) {
