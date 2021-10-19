@@ -44,7 +44,7 @@ export class BuyersService {
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) { }
+  ) {}
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -76,7 +76,7 @@ export class BuyersService {
         if (!hierarchy)
           throw new BadRequestException(
             `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
-            'não foi encontrada na hierarquia do cliente selecionado'
+              'não foi encontrada na hierarquia do cliente selecionado'
           )
         return hierarchy
       })
@@ -275,21 +275,20 @@ export class BuyersService {
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
-            clientTotvsCode: {
-              $like: `%${ query.clientTotvsCode }%`
+              clientTotvsCode: {
+                $like: `%${ query.clientTotvsCode }%`
+              }
             }
-          }
           : clientCodes.length && {
-            clientTotvsCode: {
-              $in: clientCodes
-            }
-          })
+              clientTotvsCode: {
+                $in: clientCodes
+              }
+            })
       },
       attributes: [
         'id',
         'imageId',
         'name',
-        'clientTotvsDescription',
         'active',
         'clientTotvsCode',
         'responsibleDescription',
@@ -375,8 +374,6 @@ export class BuyersService {
         linesFamilies,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clientTotvsCode,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        clientTotvsDescription,
         ...updateData
       } = data
 
@@ -513,61 +510,54 @@ export class BuyersService {
     const buyers = !clientCodes
       ? []
       : await this.buyer.findAll({
-        where: {
-          ...(query.name && {
-            name: {
-              $like: `%${ query.name }%`
-            }
-          }),
-          ...(query.active && { active: query.active }),
-          ...(query.clientTotvsCode
-            ? {
-              clientTotvsCode: {
-                $like: `%${ query.clientTotvsCode }%`
+          where: {
+            ...(query.name && {
+              name: {
+                $like: `%${ query.name }%`
               }
-            }
-            : {
-              ...(clientCodes.length && {
-                clientTotvsCode: {
-                  $in: clientCodes
+            }),
+            ...(query.active && { active: query.active }),
+            ...(query.clientTotvsCode
+              ? {
+                  clientTotvsCode: {
+                    $like: `%${ query.clientTotvsCode }%`
+                  }
                 }
-              })
-            })
-        },
-        attributes: [
-          'id',
-          'clientTotvsDescription',
-          'name',
-          'role',
-          'email',
-          'birthday'
-        ],
-        include: [
-          {
-            model: this.buyerLineFamily,
-            where: query.lineCodes && {
-              lineCode: query.lineCodes
-                .split(',')
-                .map((code) => Number(code))
-            },
-            required: !!query.lineCodes
+              : {
+                  ...(clientCodes.length && {
+                    clientTotvsCode: {
+                      $in: clientCodes
+                    }
+                  })
+                })
           },
-          {
-            model: this.buyerAddress,
-            as: 'buyerAddress',
-            attributes: [
-              'id',
-              'street',
-              'number',
-              'district',
-              'city',
-              'uf',
-              'cep'
-            ]
-          }
-        ],
-        order: [['id', 'DESC']]
-      })
+          attributes: ['id', 'name', 'role', 'email', 'birthday'],
+          include: [
+            {
+              model: this.buyerLineFamily,
+              where: query.lineCodes && {
+                lineCode: query.lineCodes
+                  .split(',')
+                  .map((code) => Number(code))
+              },
+              required: !!query.lineCodes
+            },
+            {
+              model: this.buyerAddress,
+              as: 'buyerAddress',
+              attributes: [
+                'id',
+                'street',
+                'number',
+                'district',
+                'city',
+                'uf',
+                'cep'
+              ]
+            }
+          ],
+          order: [['id', 'DESC']]
+        })
 
     const formatedBuyers = buyers.map((buyer) => {
       const { street, number, district, city, uf, cep } = buyer.buyerAddress
@@ -577,7 +567,6 @@ export class BuyersService {
       return {
         name: buyer.name,
         address,
-        company: buyer.clientTotvsDescription,
         role: buyer.role,
         email: buyer.email,
         birthday: buyer.birthday

@@ -67,7 +67,7 @@ export class Buyer extends Model<Buyer> {
   role: string;
 
   @Column({
-    type: DataType.STRING(4),
+    type: DataType.STRING(5),
     allowNull: true
   })
   birthday: string;
@@ -90,23 +90,17 @@ export class Buyer extends Model<Buyer> {
   })
   clientTotvsCode: number;
 
-  @Column({
-    type: DataType.STRING(84),
-    allowNull: false
-  })
-  clientTotvsDescription: string;
+  // @Column({
+  //   type: DataType.INTEGER,
+  //   allowNull: true
+  // })
+  // regionalManagerCode: number;
 
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true
-  })
-  regionalManagerCode: number;
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  regionalManagerDescription: string;
+  // @Column({
+  //   type: DataType.STRING(70),
+  //   allowNull: true
+  // })
+  // regionalManagerDescription: string;
 
   @Column({
     type: DataType.INTEGER,

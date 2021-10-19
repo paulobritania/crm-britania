@@ -41,11 +41,6 @@ export class UpdateBuyerDto {
   clientTotvsCode: number
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsDescription: string
-
-  @IsString()
   @IsOptional()
   @Length(3)
   @ApiProperty({ enum: VoltageEnum })

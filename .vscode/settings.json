@@ -2,5 +2,22 @@
     "conventionalCommits.scopes": [
         "Controle Upload",
         "cadastro de usuario"
+    ],
+    "sqltools.connections": [
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "crm",
+            "username": "SA",
+            "password": "BRITania@2020",
+            "database": "britania_crm_com"
+        }
     ]
 }
