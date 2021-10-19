@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Docker: Attach to Node",
+        "type": "node",
+        "request": "attach",
+        "port": 9001,
+        "runtimeArgs": [
+          "--nolazy",
+          "-r",
+          "ts-node/register",
+          "-r",
+          "tsconfig-paths/register"
+        ],
+        "remoteRoot": "/usr/src/app",
+        "sourceMaps": true,
+        "protocol": "inspector",
+        "restart": true,
+        "skipFiles": ["<node_internals>"],
+      }
+    ]
+  }
