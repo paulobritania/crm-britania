@@ -31,9 +31,11 @@ export function LinesBuyerProvider({ children }) {
     }
 
     const teste = linesFamiliesForm.map((item, index) => {
-      if (index !== idx) return [...item, { ...newObj }]
+      if (index !== idx) return [...linesFamiliesForm, { ...newObj }]
       return { ...item, ...newObj }
     })
+
+    console.log(teste)
 
     setLinesFamiliesForm(teste)
   }
