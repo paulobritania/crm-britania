@@ -22,6 +22,7 @@ const addressInitialValues = {
 }
 
 export const INITIAL_VALUES = {
+  imageId: 0,
   cpf: '',
   name: '',
   category: '',
@@ -34,7 +35,6 @@ export const INITIAL_VALUES = {
   active: false,
   parentCompanyAddress: addressInitialValues,
   buyerAddress: addressInitialValues,
-  clientTotvsDescription: {},
   clientTotvsCode: {},
   responsible: {},
   regionalManager: {}
@@ -80,6 +80,7 @@ export default ({ t }) => {
 
   return Yup.object().shape({
     active: Yup.bool(),
+    imageId: required({ t })(Yup.number()),
     cpf: flow(
       cpfCnpj({ t }),
       required({ t })
@@ -101,7 +102,6 @@ export default ({ t }) => {
     parentCompanyAddress: addressSchema(),
     buyerAddress: addressSchema(),
     clientTotvsCode: required({ t, isNotText: true })(Yup.object()),
-    clientTotvsDescription: required({ t, isNotText: true })(Yup.object()),
     responsible: Yup.object(),
     regionalManager: Yup.object()
   })

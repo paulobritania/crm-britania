@@ -39,4 +39,4 @@ WORKDIR /usr/src/app/packages/services-svc
 RUN yarn build
 
 # Starting service in production mode
-CMD npm run start:dev
+CMD npm run start:debug

@@ -116,6 +116,7 @@ services:
       - "database"
     ports:
       - "30110:30110"
+      - "9229:9229"
     environment:
       NODE_ENV: "production"
       URL: "0.0.0.0"
