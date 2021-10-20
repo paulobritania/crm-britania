@@ -21,6 +21,11 @@ const required = { required: true }
 
 export class CreateBuyerDto {
   @IsString()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
+
+  @IsString()
   @Length(11, 11)
   @IsNotEmpty()
   @ApiProperty(required)
@@ -40,11 +45,6 @@ export class CreateBuyerDto {
   @IsNotEmpty()
   @ApiProperty(required)
   clientTotvsCode: number
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsDescription: string
 
   @IsEnum(VoltageEnum)
   @IsOptional()

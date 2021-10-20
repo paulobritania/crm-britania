@@ -15,6 +15,7 @@ import { Transaction } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
 import { ClientsService } from '../clients/clients.service'
+import { File } from '../files/entities/file.entity'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
 import { HierarchyMemberClassEnum } from '../hierarchy/enums/hierarchyMemberClass.enum'
 import { HierarchyService } from '../hierarchy/hierarchy.service'
@@ -31,7 +32,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
 
 @Injectable()
 export class BuyersService {
-  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA
+  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA;
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
@@ -254,7 +255,7 @@ export class BuyersService {
     userId: number
   ): Promise<Buyer[]> {
     const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-
+    debugger // eslint-disable-line no-debugger
     if (!clientCodes) return []
 
     if (query.clientTotvsCode && clientCodes.length) {
@@ -286,14 +287,18 @@ export class BuyersService {
       },
       attributes: [
         'id',
+        'imageId',
         'name',
-        'clientTotvsDescription',
         'active',
         'clientTotvsCode',
         'responsibleDescription',
         'regionalManagerDescription'
       ],
       include: [
+        {
+          model: File,
+          attributes: ['id', 'filename', 'contentType', 'path']
+        },
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
@@ -369,8 +374,6 @@ export class BuyersService {
         linesFamilies,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clientTotvsCode,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        clientTotvsDescription,
         ...updateData
       } = data
 
@@ -528,19 +531,14 @@ export class BuyersService {
                   })
                 })
           },
-          attributes: [
-            'id',
-            'clientTotvsDescription',
-            'name',
-            'role',
-            'email',
-            'birthday'
-          ],
+          attributes: ['id', 'name', 'role', 'email', 'birthday'],
           include: [
             {
               model: this.buyerLineFamily,
               where: query.lineCodes && {
-                lineCode: query.lineCodes.split(',').map((code) => Number(code))
+                lineCode: query.lineCodes
+                  .split(',')
+                  .map((code) => Number(code))
               },
               required: !!query.lineCodes
             },
@@ -569,7 +567,6 @@ export class BuyersService {
       return {
         name: buyer.name,
         address,
-        company: buyer.clientTotvsDescription,
         role: buyer.role,
         email: buyer.email,
         birthday: buyer.birthday

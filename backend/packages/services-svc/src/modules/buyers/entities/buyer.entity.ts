@@ -4,14 +4,15 @@ import {
   HasMany,
   BelongsTo,
   Table,
-  Model
+  Model,
+  HasOne
 } from 'sequelize-typescript'
 
+import { File } from '../../files/entities/file.entity'
 import { User } from '../../users/entities/user.entity'
 import { BuyerAddress } from './buyerAddress.entity'
 // eslint-disable-next-line import/no-cycle
 import { BuyerLineFamily } from './buyerLineFamily.entity'
-
 @Table({
   modelName: 'Buyer',
   tableName: 'buyers',
@@ -27,123 +28,126 @@ export class Buyer extends Model<Buyer> {
     type: DataType.INTEGER,
     comment: 'The identifier for the Buyer record'
   })
-  id: number
+  id: number;
+
+  @Column({
+    allowNull: false,
+    type: DataType.INTEGER
+  })
+  imageId: number;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(11)
   })
-  cpf: string
+  cpf: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(200)
   })
-  name: string
+  name: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(200)
   })
-  category: string
+  category: string;
 
   @Column({
     type: DataType.STRING(3),
     allowNull: true
   })
-  voltage: string
+  voltage: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true
   })
-  role: string
+  role: string;
 
   @Column({
-    type: DataType.STRING(4),
+    type: DataType.STRING(5),
     allowNull: true
   })
-  birthday: string
+  birthday: string;
 
   @Column({
     type: DataType.STRING(40),
     allowNull: true
   })
-  email: string
+  email: string;
 
   @Column({
     type: DataType.STRING(12),
     allowNull: true
   })
-  telephone: string
+  telephone: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false
   })
-  clientTotvsCode: number
+  clientTotvsCode: number;
 
-  @Column({
-    type: DataType.STRING(84),
-    allowNull: false
-  })
-  clientTotvsDescription: string
+  // @Column({
+  //   type: DataType.INTEGER,
+  //   allowNull: true
+  // })
+  // regionalManagerCode: number;
 
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true
-  })
-  regionalManagerCode: number
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  regionalManagerDescription: string
+  // @Column({
+  //   type: DataType.STRING(70),
+  //   allowNull: true
+  // })
+  // regionalManagerDescription: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true
   })
-  responsibleCode: number
+  responsibleCode: number;
 
   @Column({
     type: DataType.STRING(70),
     allowNull: true
   })
-  responsibleDescription: string
+  responsibleDescription: string;
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
     defaultValue: false
   })
-  active: boolean
+  active: boolean;
 
   @BelongsTo(() => BuyerAddress, {
     foreignKey: 'parentCompanyAddressId',
     targetKey: 'id'
   })
-  parentCompanyAddress: BuyerAddress
+  parentCompanyAddress: BuyerAddress;
 
   @BelongsTo(() => BuyerAddress, {
     foreignKey: 'buyerAddressId',
     targetKey: 'id'
   })
-  buyerAddress: BuyerAddress
+  buyerAddress: BuyerAddress;
 
   @HasMany(() => BuyerLineFamily, { foreignKey: 'buyerId', sourceKey: 'id' })
-  buyerLinesFamilies: BuyerLineFamily[]
+  buyerLinesFamilies: BuyerLineFamily[];
+
+  @HasOne(() => File, { sourceKey: 'imageId', foreignKey: 'id' })
+  file: File;
 
   @BelongsTo(() => User, {
     foreignKey: 'createdBy',
     targetKey: 'id'
   })
-  userCreated: User
+  userCreated: User;
 
   @BelongsTo(() => User, {
     foreignKey: 'updatedBy',
     targetKey: 'id'
   })
-  userUpdated: User
+  userUpdated: User;
 }
