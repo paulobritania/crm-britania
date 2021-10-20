@@ -28,6 +28,7 @@ import { UpdateBuyerLineFamily } from './dto/update/updateBuyerLineFamily'
 import { Buyer } from './entities/buyer.entity'
 import { BuyerAddress } from './entities/buyerAddress.entity'
 import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
+import { chain, map } from 'lodash'
 
 @Injectable()
 export class BuyersService {
@@ -43,7 +44,7 @@ export class BuyersService {
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) {}
+  ) { }
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -74,8 +75,8 @@ export class BuyersService {
         })
         if (!hierarchy)
           throw new BadRequestException(
-            `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
-              'não foi encontrada na hierarquia do cliente selecionado'
+            `A relação entre a linha ${lineFamily.lineDescription} e a família ${lineFamily.familyDescription} ` +
+            'não foi encontrada na hierarquia do cliente selecionado'
           )
         return hierarchy
       })
@@ -268,21 +269,21 @@ export class BuyersService {
       where: {
         ...(query.name && {
           name: {
-            $like: `%${ query.name }%`
+            $like: `%${query.name}%`
           }
         }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
-              clientTotvsCode: {
-                $like: `%${ query.clientTotvsCode }%`
-              }
+            clientTotvsCode: {
+              $like: `%${query.clientTotvsCode}%`
             }
+          }
           : clientCodes.length && {
-              clientTotvsCode: {
-                $in: clientCodes
-              }
-            })
+            clientTotvsCode: {
+              $in: clientCodes
+            }
+          })
       },
       attributes: [
         'id',
@@ -502,77 +503,27 @@ export class BuyersService {
     userId: number,
     res: Response
   ): Promise<void> {
-    const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-
-    const buyers = !clientCodes
-      ? []
-      : await this.buyer.findAll({
-          where: {
-            ...(query.name && {
-              name: {
-                $like: `%${ query.name }%`
-              }
-            }),
-            ...(query.active && { active: query.active }),
-            ...(query.clientTotvsCode
-              ? {
-                  clientTotvsCode: {
-                    $like: `%${ query.clientTotvsCode }%`
-                  }
-                }
-              : {
-                  ...(clientCodes.length && {
-                    clientTotvsCode: {
-                      $in: clientCodes
-                    }
-                  })
-                })
-          },
-          attributes: [
-            'id',
-            'clientTotvsDescription',
-            'name',
-            'role',
-            'email',
-            'birthday'
-          ],
-          include: [
-            {
-              model: this.buyerLineFamily,
-              where: query.lineCodes && {
-                lineCode: query.lineCodes.split(',').map((code) => Number(code))
-              },
-              required: !!query.lineCodes
-            },
-            {
-              model: this.buyerAddress,
-              as: 'buyerAddress',
-              attributes: [
-                'id',
-                'street',
-                'number',
-                'district',
-                'city',
-                'uf',
-                'cep'
-              ]
-            }
-          ],
-          order: [['id', 'DESC']]
-        })
+    const buyers = await this.getAllBuyers(query, userId);
 
     const formatedBuyers = buyers.map((buyer) => {
-      const { street, number, district, city, uf, cep } = buyer.buyerAddress
-      const address = [street, number, district, `${ city }/${ uf }`, cep].join(
-        ', '
-      )
+      let listFamilyAndLine;
+      let newLinesFamilies;
+      if (!buyer.buyerLinesFamilies) {
+        newLinesFamilies = chain(buyer?.buyerLinesFamilies)
+          .groupBy('lineCode')
+          .map((value, key) => ({
+            lineCode: Number(key), lineDescription: value[0].lineDescription, family: value
+          }))
+          .value()
+      }
+      listFamilyAndLine = map(newLinesFamilies, (lineFamily) => lineFamily.lineDescription).join(', ')
       return {
         name: buyer.name,
-        address,
         company: buyer.clientTotvsDescription,
-        role: buyer.role,
-        email: buyer.email,
-        birthday: buyer.birthday
+        line: listFamilyAndLine,
+        regional: buyer.regionalManagerDescription,
+        responsible: buyer.responsibleDescription,
+        active: buyer.active ? 'Ativo' : 'Inativo'
       }
     })
     const xlsx = officegen('xlsx')
@@ -580,12 +531,12 @@ export class BuyersService {
     sheet.name = 'Officegen Excel'
 
     sheet.data[0] = []
-    sheet.data[0][0] = 'NOME COMPLETO'
-    sheet.data[0][1] = 'ENDEREÇO COMPLETO'
-    sheet.data[0][2] = 'EMPRESA'
-    sheet.data[0][3] = 'CARGO'
-    sheet.data[0][4] = 'EMAIL'
-    sheet.data[0][5] = 'ANIVERSÁRIO'
+    sheet.data[0][0] = 'NOME'
+    sheet.data[0][1] = 'MATRIZ/EMPRESA'
+    sheet.data[0][2] = 'LINHA'
+    sheet.data[0][3] = 'REGIONAL'
+    sheet.data[0][4] = 'RESPONSÁVEL'
+    sheet.data[0][5] = 'STATUS'
 
     formatedBuyers.forEach((buyer, i) => {
       i += 1
