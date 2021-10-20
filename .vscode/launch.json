@@ -5,7 +5,7 @@
         "name": "Docker: Attach to Node",
         "type": "node",
         "request": "attach",
-        "port": 9229,
+        "stopOnEntry": false,
         "runtimeArgs": [
           "--nolazy",
           "-r",

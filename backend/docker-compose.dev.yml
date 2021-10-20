@@ -80,6 +80,7 @@ services:
     image: "britania-crm-com-authentication-svc"
     build:
       context: "./packages/authentication-svc"
+      dockerfile: "Dockerfile.dev"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     container_name: britania-crm-com-authentication
@@ -99,7 +100,7 @@ services:
       DB_USER: "crm_homolog"
       DB_PASSWORD: "Br1t@n1@2020"
       BRITANIA_LOGIN_URL: "http://10.0.10.104:1939/api/v1/LoginCRM"
-      SERVICES_URL: "host.docker.internal:30107"
+      SERVICES_URL: "http://host.docker.internal:30107"
       JWT_SECRET_KEY: "jwtPrivateKey"
       JWT_EXPIRATION_TIME: "12600"
       SERVICES_SVC_URL: "host.docker.internal"
