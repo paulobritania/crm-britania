@@ -67,10 +67,6 @@ export class UpdateBuyerDto {
   @ApiProperty()
   telephone: string
 
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty()
-  regionalManagerCode: number
 
   @IsOptional()
   @IsString()
