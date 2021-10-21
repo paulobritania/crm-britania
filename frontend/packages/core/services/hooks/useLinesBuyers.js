@@ -30,14 +30,26 @@ export function LinesBuyerProvider({ children }) {
       }
     }
 
-    const teste = linesFamiliesForm.map((item, index) => {
-      if (index !== idx) return [...linesFamiliesForm, { ...newObj }]
-      return { ...item, ...newObj }
-    })
+    // const teste = linesFamiliesForm.map((line, sidx) => {
+    //   console.log(idx, sidx, newObj)
+    //   if (idx !== sidx) return [...linesFamiliesForm, { ...newObj }]
+    //   return {
+    //     ...line,
+    //     ...newObj
+    //   }
+    // })
 
-    console.log(teste)
-
-    setLinesFamiliesForm(teste)
+    // console.log(teste)
+    setLinesFamiliesForm(({ items }) => ({
+      items: [
+        ...items.slice(0, idx),
+        {
+          ...items[idx],
+          ...newObj
+        },
+        ...items.slice(2)
+      ]
+    }))
   }
 
   function handleAddLine() {
