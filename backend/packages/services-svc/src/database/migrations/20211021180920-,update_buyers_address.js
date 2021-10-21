@@ -15,7 +15,8 @@ module.exports = {
 
       queryInterface.addColumn('buyers_address', 'id_address', {
         type: Sequelize.INTEGER,
-        allowNull: false
+        autoIncrement: false,
+        primaryKey: true
       }),
 
       queryInterface.addConstraint('buyers_address', {
