@@ -73,11 +73,6 @@ export class CreateBuyerDto {
   telephone: string
 
   @IsOptional()
-  @IsNumber()
-  @ApiProperty()
-  regionalManagerCode: number
-
-  @IsOptional()
   @IsString()
   @ApiProperty()
   regionalManagerDescription: string
