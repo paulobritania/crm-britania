@@ -10,6 +10,7 @@ import maxLength from '@britania-crm/forms/validators/maxLength.validator'
 import number from '@britania-crm/forms/validators/number.validator'
 import phone from '@britania-crm/forms/validators/phone.validator'
 import required from '@britania-crm/forms/validators/required.validator'
+import file from '@britania-crm/forms/validators/file.validator'
 
 const addressInitialValues = {
   street: '',
@@ -22,7 +23,8 @@ const addressInitialValues = {
 }
 
 export const INITIAL_VALUES = {
-  imageId: 0,
+  imageFile: '',
+  imageId: null,
   cpf: '',
   name: '',
   category: '',
@@ -36,8 +38,8 @@ export const INITIAL_VALUES = {
   parentCompanyAddress: addressInitialValues,
   buyerAddress: addressInitialValues,
   clientTotvsCode: {},
-  responsible: {},
-  regionalManager: {}
+  clientTotvsDescription: '',
+  responsible: {}
 }
 
 export default ({ t }) => {
@@ -82,11 +84,9 @@ export default ({ t }) => {
 
   return Yup.object().shape({
     active: Yup.bool(),
-    imageId: Yup.number(),
     cpf: flow(cpfCnpj({ t }), required({ t }))(Yup.string()),
     name: required({ t })(Yup.string()),
     category: required({ t })(Yup.string()),
-    // linesFamilies: required({ t, isNotText: true })(Yup.array()),
     email: flow(email({ t }), required({ t }))(Yup.string()),
     telephone: flow(phone({ t }), required({ t }))(Yup.string()),
     voltage: Yup.string(),
@@ -95,7 +95,9 @@ export default ({ t }) => {
     parentCompanyAddress: addressSchema(),
     buyerAddress: addressSchema(),
     clientTotvsCode: required({ t, isNotText: true })(Yup.object()),
+    clientTotvsDescription: Yup.object(),
     responsible: Yup.object(),
-    regionalManager: Yup.object()
+    imageFile: file({ t })(Yup.mixed()),
+    imageId: Yup.number().nullable()
   })
 }

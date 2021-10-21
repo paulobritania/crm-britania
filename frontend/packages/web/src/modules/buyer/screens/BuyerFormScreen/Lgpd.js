@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import UploadImage from '@britania-crm/web-components/UploadImage'
-import InputHidden from '@britania-crm/web-components/InputHidden'
+import ImgProfilePlaceholder from '@britania-crm/styles/assets/images/profile_avatar_default.png'
 
 import { useT } from '@britania-crm/i18n'
 
@@ -34,8 +34,10 @@ const Lgpd = () => {
         </Grid>
         <Grid item sm={4} className={classes.upload}>
           <UploadImage
-            detached
-            name='file'
+            preview
+            previewStyle={{ width: '300px', height: '300px' }}
+            defaultFile={ImgProfilePlaceholder}
+            name='imageFile'
             title={t('login image add new file message')}
             description={''}
             types={[
@@ -46,7 +48,6 @@ const Lgpd = () => {
               '.docx'
             ]}
           />
-          <InputHidden name='path' />
         </Grid>
       </Grid>
     </Grid>

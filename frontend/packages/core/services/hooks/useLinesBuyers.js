@@ -11,33 +11,32 @@ export function LinesBuyerProvider({ children }) {
   const [regionalFromApi, setRegionalFromApi] = useState([])
 
   function handleLinesFamiliesForm(field, value, text, idx) {
-    var newObj = {}
+    var newItem = {}
+    const newArray = [...linesFamiliesForm]
 
     if (field == 'family') {
-      newObj = {
+      newItem = {
+        ...newArray[idx],
         familyCode: value,
         familyDescription: text
       }
     } else if (field == 'regionalManager') {
-      newObj = {
+      newItem = {
+        ...newArray[idx],
         regionalManagerCode: value,
         regionalManagerDescription: text
       }
     } else {
-      newObj = {
+      newItem = {
+        ...newArray[idx],
         lineCode: value,
         lineDescription: text
       }
     }
 
-    const temp = [...linesBuyers]
+    newArray[idx] = newItem
 
-    const linesFamiliesTemp = temp.map((item) => {
-      delete item.responsible
-      return item
-    })
-
-    setLinesFamiliesForm(linesFamiliesTemp)
+    setLinesFamiliesForm(newArray)
   }
 
   function handleAddLine() {

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "dots-env -p './env/' -c 'yarn react-app-rewired start'",
+    "start": "dots-env -p './env/' -c 'yarn react-app-rewired start --watch'",
     "build": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false dots-env -p './env/' -c 'yarn react-app-rewired build'",
     "build:hml": "yarn build -e staging",
     "serve": "ws --spa index.html -d ./build",

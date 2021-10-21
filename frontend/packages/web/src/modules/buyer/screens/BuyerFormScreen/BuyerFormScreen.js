@@ -30,6 +30,7 @@ import { CircularLoader } from '@britania-crm/web-components/Loader'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
 import { FileActions } from '@britania-crm/stores/file'
+import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 
 import Address from './Address'
 import Lgpd from './Lgpd'
@@ -51,6 +52,7 @@ const BuyerListScreen = () => {
   const [loader, setLoader] = useState(false)
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
+  const { linesFamiliesForm } = useLinesBuyers()
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
@@ -82,18 +84,18 @@ const BuyerListScreen = () => {
                 ? upperCase(_buyerFromApi.parentCompanyAddress.uf)
                 : ''
             },
-            linesFamilies: chain(_buyerFromApi?.buyerLinesFamilies)
-              .groupBy('lineCode')
-              .map((value, key) => ({
-                lineCode: Number(key),
-                lineDescription: value[0].lineDescription,
-                family: value
-              }))
-              .value(),
-            regionalManager: {
-              approverCode: _buyerFromApi?.regionalManagerCode,
-              approverDescription: _buyerFromApi?.regionalManagerDescription
-            },
+            // linesFamilies: chain(_buyerFromApi?.buyerLinesFamilies)
+            //   .groupBy('lineCode')
+            //   .map((value, key) => ({
+            //     lineCode: Number(key),
+            //     lineDescription: value[0].lineDescription,
+            //     family: value
+            //   }))
+            // .value(),
+            // regionalManager: {
+            //   approverCode: _buyerFromApi?.regionalManagerCode,
+            //   approverDescription: _buyerFromApi?.regionalManagerDescription
+            // },
             responsible: {
               code: _buyerFromApi?.responsibleCode,
               name: _buyerFromApi?.responsibleDescription
@@ -147,42 +149,54 @@ const BuyerListScreen = () => {
 
   const handleSubmit = useCallback(
     (values) => {
-      const linesFamilies = []
+      setLoader(true)
 
-      console.log(values)
+      const saveBuyer = (imageId) => {
+        const payload = {
+          ...values,
+          ...buyerFromApi,
+          cpf: trimMask(values.cpf),
+          clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
+          buyerAddress: {
+            ...values?.buyerAddress,
+            number: Number(values?.buyerAddress?.number)
+          },
+          parentCompanyAddress: {
+            ...values?.parentCompanyAddress,
+            number: Number(values?.parentCompanyAddress?.number)
+          },
+          telephone: trimMask(values.telephone),
+          linesFamilies: linesFamiliesForm,
+          regionalManagerCode: values?.regionalManager?.approverCode,
+          regionalManagerDescription:
+            values?.regionalManager?.approverDescription,
+          responsibleCode: values?.responsible?.approverCode,
+          responsibleDescription: values?.responsible?.approverDescription,
+          imageId: imageId === null ? buyerFromApi.imageId?.id : imageId
+        }
+        dispatch(
+          BuyerActions.saveBuyer(
+            payload,
+            () => {
+              onSuccess()
+              setLoader(false)
+            },
+            () => setLoader(false)
+          )
+        )
+      }
 
-      // forEach(values?.linesFamilies, ({ family, lineCode, lineDescription }) =>
-      //   forEach(family, (item) =>
-      //     linesFamilies.push({
-      //       lineCode,
-      //       lineDescription,
-      //       ...item
-      //     })
-      //   )
-      // )
-
-      // const buyer = {
-      //   ...values,
-      //   cpf: trimMask(values.cpf),
-      //   clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
-      //   clientTotvsDescription: values.clientTotvsDescription.parentCompanyName,
-      //   buyerAddress: {
-      //     ...values?.buyerAddress,
-      //     number: Number(values?.buyerAddress?.number)
-      //   },
-      //   parentCompanyAddress: {
-      //     ...values?.parentCompanyAddress,
-      //     number: Number(values?.parentCompanyAddress?.number)
-      //   },
-      //   telephone: trimMask(values.telephone),
-      //   linesFamilies,
-      //   regionalManagerCode: values?.regionalManager?.approverCode,
-      //   regionalManagerDescription:
-      //     values?.regionalManager?.approverDescription,
-      //   responsibleCode: values?.responsible?.approverCode,
-      //   responsibleDescription: values?.responsible?.approverDescription,
-      //   fileId: fileId === null ? buyersFromApi.fileId?.id : fileId
-      // }
+      if (values.imageFile?.size) {
+        dispatch(
+          FileActions.uploadImage(values.imageFile, (data) => {
+            console.log('save buyer ->>', data)
+            saveBuyer(data)
+            setLoader(false)
+          })
+        )
+      } else {
+        saveBuyer()
+      }
 
       // if (isEdit) {
       //   dispatch(
@@ -193,20 +207,6 @@ const BuyerListScreen = () => {
       //       () => setLoader(false)
       //     )
       //   )
-      // } else {
-      //   if (values.fileId?.size) {
-      //     dispatch(
-      //       FileActions.uploadImage(values.fileId, saveBuyer, () =>
-      //         setSubmitLoading(false)
-      //       )
-      //     )
-      //   } else {
-      //     dispatch(
-      //       BuyerActions.saveBuyer(buyer, onSuccessCallBack, () =>
-      //         setLoader(false)
-      //       )
-      //     )
-      //   }
       // }
     },
     [dispatch, isEdit, onSuccessCallBack, state]
@@ -274,6 +274,7 @@ const BuyerListScreen = () => {
     if (!isEmpty(buyerFromApi)) {
       formRef.current.setData({
         ...buyerFromApi,
+        imageFile: !isEmpty(buyerFromApi.file) ? buyerFromApi.file : 0,
         clientTotvsDescription: {
           parentCompanyName: buyerFromApi.clientTotvsDescription,
           parentCompanyCode: buyerFromApi.clientTotvsCode
