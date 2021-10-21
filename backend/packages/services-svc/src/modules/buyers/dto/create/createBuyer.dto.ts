@@ -20,7 +20,7 @@ import { CreateBuyerLineFamily } from './createBuyerLineFamily.dto'
 const required = { required: true }
 
 export class CreateBuyerDto {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   @ApiProperty(required)
   imageId: number

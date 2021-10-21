@@ -19,6 +19,12 @@ import { UpdateBuyerLineFamily } from './updateBuyerLineFamily'
 const required = { required: true }
 
 export class UpdateBuyerDto {
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
+
   @IsString()
   @Length(11, 11)
   @IsNotEmpty()
