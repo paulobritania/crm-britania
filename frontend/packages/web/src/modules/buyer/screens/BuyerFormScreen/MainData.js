@@ -198,6 +198,7 @@ const MainData = ({
                     index={idx}
                     matrixCode={matrixCode}
                     isView={isView}
+                    formRef={formRef}
                   />
                 </Grid>
                 <Grid item sm={3}>
@@ -205,13 +206,22 @@ const MainData = ({
                     index={idx}
                     matrixCode={matrixCode}
                     isView={isView}
+                    formRef={formRef}
                   />
                 </Grid>
                 <Grid item sm={3}>
-                  <ResponsibleInput index={idx} matrixCode={matrixCode} />
+                  <ResponsibleInput
+                    index={idx}
+                    matrixCode={matrixCode}
+                    formRef={formRef}
+                  />
                 </Grid>
                 <Grid item sm={3}>
-                  <RegionalInput index={idx} matrixCode={matrixCode} />
+                  <RegionalInput
+                    index={idx}
+                    matrixCode={matrixCode}
+                    formRef={formRef}
+                  />
                 </Grid>
                 <Button variant='text' onClick={(e) => handleRemoveLine(e)}>
                   X
@@ -220,6 +230,7 @@ const MainData = ({
             ))}
           </Grid>
         </Grid>
+        <InputHidden name='linesFamilies' />
         <Grid item sm={12} md={3} className={classes.containerRadio}>
           <RadioGroup
             name='voltage'

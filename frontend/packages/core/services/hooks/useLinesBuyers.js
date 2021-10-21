@@ -10,7 +10,7 @@ export function LinesBuyerProvider({ children }) {
   const [responsibleFromApi, setResponsibleFromApi] = useState([])
   const [regionalFromApi, setRegionalFromApi] = useState([])
 
-  function handleLinesFamiliesForm(field, value, text, idx) {
+  function handleLinesFamiliesForm(field, value, text, idx, formRef) {
     var newItem = {}
     const newArray = [...linesFamiliesForm]
 
@@ -37,6 +37,7 @@ export function LinesBuyerProvider({ children }) {
     newArray[idx] = newItem
 
     setLinesFamiliesForm(newArray)
+    formRef.current.setFieldValue('linesFamilies', newArray)
   }
 
   function handleAddLine() {
@@ -49,7 +50,7 @@ export function LinesBuyerProvider({ children }) {
     setLinesBuyers(linesBuyers.filter((s, sidx) => idx !== sidx))
   }
 
-  function handleLineChange(idx, evt) {
+  function handleLineChange(idx, evt, formRef) {
     const text = evt.nativeEvent.target.innerText
     const value = evt.target.value
     const name = evt.target.name
@@ -63,7 +64,7 @@ export function LinesBuyerProvider({ children }) {
     })
 
     setLinesBuyers(newLine)
-    handleLinesFamiliesForm(name, value, text, idx)
+    handleLinesFamiliesForm(name, value, text, idx, formRef)
   }
 
   function handleArrayLines(idx, value) {
@@ -102,7 +103,6 @@ export function LinesBuyerProvider({ children }) {
         familiesFromApi,
         responsibleFromApi,
         regionalFromApi,
-        linesFamiliesForm,
         handleAddLine,
         handleRemoveLine,
         handleLineChange,

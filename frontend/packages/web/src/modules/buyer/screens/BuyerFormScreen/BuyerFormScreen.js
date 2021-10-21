@@ -52,7 +52,6 @@ const BuyerListScreen = () => {
   const [loader, setLoader] = useState(false)
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
-  const { linesFamiliesForm } = useLinesBuyers()
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
@@ -166,7 +165,7 @@ const BuyerListScreen = () => {
             number: Number(values?.parentCompanyAddress?.number)
           },
           telephone: trimMask(values.telephone),
-          linesFamilies: linesFamiliesForm,
+          linesFamilies: values?.linesFamilies,
           regionalManagerCode: values?.regionalManager?.approverCode,
           regionalManagerDescription:
             values?.regionalManager?.approverDescription,
@@ -189,7 +188,6 @@ const BuyerListScreen = () => {
       if (values.imageFile?.size) {
         dispatch(
           FileActions.uploadImage(values.imageFile, (data) => {
-            console.log('save buyer ->>', data)
             saveBuyer(data)
             setLoader(false)
           })
@@ -274,7 +272,7 @@ const BuyerListScreen = () => {
     if (!isEmpty(buyerFromApi)) {
       formRef.current.setData({
         ...buyerFromApi,
-        imageFile: !isEmpty(buyerFromApi.file) ? buyerFromApi.file : 0,
+        imageFile: !isEmpty(buyerFromApi.file) ? buyerFromApi.file : null,
         clientTotvsDescription: {
           parentCompanyName: buyerFromApi.clientTotvsDescription,
           parentCompanyCode: buyerFromApi.clientTotvsCode

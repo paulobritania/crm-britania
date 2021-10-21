@@ -6,15 +6,30 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import UploadImage from '@britania-crm/web-components/UploadImage'
-import ImgProfilePlaceholder from '@britania-crm/styles/assets/images/profile_avatar_default.png'
+import Button from '@britania-crm/web-components/Button'
+
+import Attach from '@britania-crm/web-components/Icons/Attach'
 
 import { useT } from '@britania-crm/i18n'
 
 import { useStyles } from './styles'
 
-const Lgpd = () => {
+const Lgpd = ({ formRef }) => {
   const t = useT()
   const classes = useStyles()
+  const [fileName, setFileName] = useState('')
+  const [fileSize, setFileSize] = useState('')
+
+  const handleRemoveFile = useCallback(() => {
+    formRef.current.setFieldValue('imageFile', null)
+    setFileName('')
+    setFileSize('')
+  }, [])
+
+  const handleNameFile = useCallback(({ name, size }) => {
+    setFileName(name)
+    setFileSize(size)
+  }, [])
 
   return (
     <Grid container spacing={1} className={classes.containerMain}>
@@ -32,23 +47,46 @@ const Lgpd = () => {
             <li>Tamanho máximo: 20MB</li>
           </ul>
         </Grid>
-        <Grid item sm={4} className={classes.upload}>
-          <UploadImage
-            preview
-            previewStyle={{ width: '300px', height: '300px' }}
-            defaultFile={ImgProfilePlaceholder}
-            name='imageFile'
-            title={t('login image add new file message')}
-            description={''}
-            types={[
-              'image/jpg',
-              'image/jpeg',
-              'application/pdf',
-              '.doc',
-              '.docx'
-            ]}
-          />
-        </Grid>
+
+        {fileName ? (
+          <Grid item sm={12} md={6} className={classes.hasFile}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Attach size={24} />
+              <p>{fileName}</p>
+              <span>{fileSize} Kb</span>
+            </div>
+            <Button
+              variant='text'
+              onClick={handleRemoveFile}
+              style={{ fontSize: 16, color: '#8492a6' }}
+            >
+              x
+            </Button>
+          </Grid>
+        ) : (
+          <Grid item sm={6} md={6} className={classes.upload}>
+            <UploadImage
+              style={{ marginTop: 30 }}
+              name='imageFile'
+              title={t('login image add new file message')}
+              description={''}
+              types={[
+                'image/jpg',
+                'image/jpeg',
+                'application/pdf',
+                '.doc',
+                '.docx'
+              ]}
+              onValueChange={handleNameFile}
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   )

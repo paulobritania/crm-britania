@@ -89,18 +89,34 @@ export const useStyles = makeStyles(() => ({
   checkbox: { width: '20%' },
   flexContainer: { display: 'flex' },
   upload: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    marginRight: 16,
-    width: '100%',
-    height: '100%',
-    marginBottom: 10,
+    backgroundColor: '#F9FAFC',
     textAlign: 'center',
     border: `${colors.britPrimary2.lightest} solid 2px`,
+    borderRadius: 4,
     borderStyle: 'dashed'
+  },
+  hasFile: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 4,
+    width: '80%',
+    height: '32px',
+    marginBottom: 10,
+    textAlign: 'center',
+    color: colors.grey60,
+    fontWeight: fonts.fontWeight.semiBold,
+    fontSize: fonts.fontSize.S,
+    border: `${colors.grey10} solid 1px`,
+    '& > div': {
+      '& > p': {
+        marginRight: 10
+      },
+      '& > span': {
+        fontSize: fonts.fontSize.SSS,
+        fontWeight: fonts.fontWeight.regular
+      }
+    }
   },
   lgpdTitle: {
     fontSize: fonts.fontSize.S,

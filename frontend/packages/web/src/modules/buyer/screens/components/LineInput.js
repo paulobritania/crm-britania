@@ -14,7 +14,7 @@ import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const LineInput = forwardRef((props, ref) => {
-  const { index, matrixCode, isView } = props
+  const { index, matrixCode, isView, formRef } = props
   const t = useT()
   const dispatch = useCallback(useDispatch(), [])
   const { createDialog } = useDialog()
@@ -63,7 +63,7 @@ const LineInput = forwardRef((props, ref) => {
       idKey='lineCode'
       disabled={isEmpty(linesFromApi[index])}
       value={linesBuyers[index].line}
-      onChange={(e) => handleLineChange(index, e)}
+      onChange={(e) => handleLineChange(index, e, formRef)}
       name='line'
       label={t('line', { howMany: 1 })}
       id='select-line'

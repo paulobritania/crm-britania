@@ -10,6 +10,7 @@ import InputCEP from '@britania-crm/web-components/InputCEP'
 import InputNumber from '@britania-crm/web-components/InputNumber'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 import InputText from '@britania-crm/web-components/InputText'
+import Checkbox from '@britania-crm/web-components/Checkbox'
 
 import { useStyles } from './styles'
 
@@ -103,6 +104,16 @@ const AddressBuyer = ({
           idKey='sigla'
           options={stateOptions}
           disabled={isDisabled}
+        />
+      </Grid>
+      <Grid item sm={12}>
+        <Checkbox
+          detached
+          checked={checked}
+          onChange={handleCheckChange}
+          name='deliveryAddress'
+          color='primary'
+          label={t('login image use default')}
         />
       </Grid>
     </Grid>

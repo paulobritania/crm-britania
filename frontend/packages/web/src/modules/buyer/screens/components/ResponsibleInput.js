@@ -11,7 +11,7 @@ import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmAp
 import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const ResponsibleInput = forwardRef((props, ref) => {
-  const { index, matrixCode } = props
+  const { index, matrixCode, formRef } = props
   const t = useT()
   const snackbar = useSnackbar()
   const {
@@ -65,7 +65,7 @@ const ResponsibleInput = forwardRef((props, ref) => {
       valueKey='approverDescription'
       idKey='approverCode'
       disabled={isEmpty(responsibleFromApi[index])}
-      onChange={(e) => handleLineChange(index, e)}
+      onChange={(e) => handleLineChange(index, e, formRef)}
       name='responsible'
       label={t('responsible', { howMany: 1 })}
       value={linesBuyers[index].responsible}

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import uniqueId from 'lodash/uniqueId'
 
 import { useT } from '@britania-crm/i18n'
-import Button from '@britania-crm/web-components/Button'
 import UploadSVG from '@britania-crm/web-components/Icons/Upload'
 
 import useStyles, { AddNewImage, AddNewImageDesc, Container } from './styles'
@@ -29,7 +28,6 @@ const DropzoneFile = ({ handleUpload, types, title, description }) => {
 
   const fileDrop = useCallback(
     (e) => {
-      console.log(e.dataTransfer.files)
       e.preventDefault()
       const files = e.dataTransfer.files
       if (files.length) {

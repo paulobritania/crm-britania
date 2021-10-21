@@ -14,7 +14,7 @@ import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const FamilyInput = forwardRef((props, ref) => {
-  const { index, matrixCode, isView } = props
+  const { index, matrixCode, isView, formRef } = props
   const t = useT()
   const dispatch = useCallback(useDispatch(), [])
   const { createDialog } = useDialog()
@@ -73,7 +73,7 @@ const FamilyInput = forwardRef((props, ref) => {
       idKey='familyCode'
       disabled={isEmpty(familiesFromApi[index])}
       value={linesBuyers[index].family}
-      onChange={(e) => handleLineChange(index, e)}
+      onChange={(e) => handleLineChange(index, e, formRef)}
       name='family'
       label={t('family', { howMany: 1 })}
       id='select-family'

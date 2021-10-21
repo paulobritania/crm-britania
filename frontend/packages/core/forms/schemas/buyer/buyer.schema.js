@@ -79,7 +79,8 @@ export default ({ t }) => {
         length: 70,
         type: t('characters', { howMany: 1 }),
         field: t('city', { howMany: 1 })
-      })(Yup.string())
+      })(Yup.string()),
+      deliveryAddress: Yup.boolean()
     })
 
   return Yup.object().shape({
@@ -98,6 +99,7 @@ export default ({ t }) => {
     clientTotvsDescription: Yup.object(),
     responsible: Yup.object(),
     imageFile: file({ t })(Yup.mixed()),
-    imageId: Yup.number().nullable()
+    imageId: Yup.number().nullable(),
+    linesFamilies: required({ t, isNotText: true })(Yup.array())
   })
 }

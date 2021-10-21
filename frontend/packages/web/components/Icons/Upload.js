@@ -30,7 +30,7 @@ Upload.propTypes = {
 
 Upload.defaultProps = {
   color: colors.grey60,
-  size: 68
+  size: 24
 }
 
 export default Upload
