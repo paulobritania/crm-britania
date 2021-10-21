@@ -219,13 +219,19 @@ const MainData = ({
               </Grid>
             ))}
           </Grid>
-          <InputHidden
+          {/* <InputHidden
             name='linesFamilies'
             value={linesFamiliesForm}
             showError
-          />
+          /> */}
         </Grid>
         <Grid item sm={12} md={3} className={classes.containerRadio}>
+          <InputText
+            name='linesFamilies'
+            label={'linesFamilies'}
+            value={linesFamiliesForm}
+            inputProps={{ maxLength: 40 }}
+          />
           <RadioGroup
             name='voltage'
             label={t('voltage', { howMany: 1 })}

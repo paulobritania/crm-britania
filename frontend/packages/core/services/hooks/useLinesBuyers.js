@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react'
 const LinesBuyersContext = createContext()
 
 export function LinesBuyerProvider({ children }) {
-  const [linesFamiliesForm, setLinesFamiliesForm] = useState([{}])
+  const [linesFamiliesForm, setLinesFamiliesForm] = useState([])
   const [linesBuyers, setLinesBuyers] = useState([])
   const [linesFromApi, setLinesFromApi] = useState([])
   const [familiesFromApi, setFamiliesFromApi] = useState([])
@@ -30,26 +30,14 @@ export function LinesBuyerProvider({ children }) {
       }
     }
 
-    // const teste = linesFamiliesForm.map((line, sidx) => {
-    //   console.log(idx, sidx, newObj)
-    //   if (idx !== sidx) return [...linesFamiliesForm, { ...newObj }]
-    //   return {
-    //     ...line,
-    //     ...newObj
-    //   }
-    // })
+    const temp = [...linesBuyers]
 
-    // console.log(teste)
-    setLinesFamiliesForm(({ items }) => ({
-      items: [
-        ...items.slice(0, idx),
-        {
-          ...items[idx],
-          ...newObj
-        },
-        ...items.slice(2)
-      ]
-    }))
+    const linesFamiliesTemp = temp.map((item) => {
+      delete item.responsible
+      return item
+    })
+
+    setLinesFamiliesForm(linesFamiliesTemp)
   }
 
   function handleAddLine() {
