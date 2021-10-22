@@ -1,15 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
-import { IsString, IsNumber, Length, IsNotEmpty, IsDate } from 'class-validator'
-import { CreateBuyerDto } from './createBuyer.dto'
+import { IsString, IsNumber, Length, IsNotEmpty, IsOptional } from 'class-validator'
 
 const required = { required: true }
 
 export class CreateBuyerLineFamily {
+  @IsOptional()
   @IsString()
-  @Length(12, 12)
+  @Length(0, 12)
   @IsNotEmpty()
-  @ApiProperty(required)
+  @ApiProperty()
   familyCode: string
 
   @IsString()
@@ -40,8 +39,9 @@ export class CreateBuyerLineFamily {
   @ApiProperty(required)
   regionalManagerDescription: string
 
-  @Type(() => CreateBuyerDto)
-  @ApiProperty({ ...required, type: CreateBuyerDto })
-  buyer: CreateBuyerDto
-  
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  buyerId: number
+
 }

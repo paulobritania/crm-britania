@@ -40,8 +40,7 @@ export class BuyersService {
     @Inject('SEQUELIZE') private db: Sequelize,
     @InjectModel(Buyer) private buyer: typeof Buyer,
     @InjectModel(BuyerAddress) private buyerAddress: typeof BuyerAddress,
-    @InjectModel(BuyerLineFamily)
-    private buyerLineFamily: typeof BuyerLineFamily,
+    @InjectModel(BuyerLineFamily) private buyerLineFamily: typeof BuyerLineFamily,
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
     @InjectModel(Address) private address: typeof Address,
     @Inject(HierarchyService)
@@ -148,8 +147,8 @@ export class BuyersService {
       const addressBuyer = await this.address.create(buyerAddress, { transaction })
       const addressParent = await this.address.create(parentCompanyAddress, { transaction })
 
-      await this.buyerAddress.create({id_address: addressBuyer.id, id_buyers: buyer.id, addressType: 1, deliveryAddress: buyerAddress.delivery_address}, { transaction })
-      await this.buyerAddress.create({id_address: addressParent.id, id_buyers: buyer.id, addressType: 2, deliveryAddress: parentCompanyAddress.delivery_address}, { transaction })
+      await this.buyerAddress.create({idAddress: addressBuyer.id, idBuyers: buyer.id, addressType: 1, deliveryAddress: buyerAddress.deliveryAddress}, { transaction })
+      await this.buyerAddress.create({idAddress: addressParent.id, idBuyers: buyer.id, addressType: 2, deliveryAddress: parentCompanyAddress.deliveryAddress}, { transaction })
 
       if (linesFamilies[0]) {
         await this.validateLinesFamilies(

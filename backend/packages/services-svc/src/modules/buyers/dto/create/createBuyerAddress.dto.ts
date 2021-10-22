@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, Length, IsNumber, IsOptional, IsBoolean } from 'class-validator'
+import { IsNumber, IsOptional, IsBoolean } from 'class-validator'
 
 export class CreateBuyerAddressDto {
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
   idBuyers: number
 
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
   idAddress: number
