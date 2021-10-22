@@ -17,6 +17,7 @@ import { Sequelize } from 'sequelize-typescript'
 import { ClientsService } from '../clients/clients.service'
 import { File } from '../files/entities/file.entity'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
+import { Address } from '../address/entities/address.entity'
 import { HierarchyMemberClassEnum } from '../hierarchy/enums/hierarchyMemberClass.enum'
 import { HierarchyService } from '../hierarchy/hierarchy.service'
 import { CreateBuyerDto } from './dto/create/createBuyer.dto'
@@ -42,6 +43,7 @@ export class BuyersService {
     @InjectModel(BuyerLineFamily)
     private buyerLineFamily: typeof BuyerLineFamily,
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
+    @InjectModel(Address) private address: typeof Address,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
   ) {}
@@ -133,26 +135,22 @@ export class BuyersService {
         ...createData
       } = data
 
-      const { id: parentCompanyAddressId } = await this.buyerAddress.create(
-        parentCompanyAddress,
-        {
-          transaction
-        }
-      )
-      const { id: addressId } = await this.buyerAddress.create(buyerAddress, {
-        transaction
-      })
       const buyer = await this.buyer.create(
         {
           ...createData,
-          parentCompanyAddressId,
-          buyerAddressId: addressId,
           active: true,
           createdBy: userId,
           updatedBy: userId
         },
         { transaction }
       )
+
+      const addressBuyer = await this.address.create(buyerAddress, { transaction })
+      const addressParent = await this.address.create(parentCompanyAddress, { transaction })
+
+      await this.buyerAddress.create({id_address: addressBuyer.id, id_buyers: buyer.id, addressType: 1, deliveryAddress: buyerAddress.delivery_address}, { transaction })
+      await this.buyerAddress.create({id_address: addressParent.id, id_buyers: buyer.id, addressType: 2, deliveryAddress: parentCompanyAddress.delivery_address}, { transaction })
+
       if (linesFamilies[0]) {
         await this.validateLinesFamilies(
           linesFamilies,
@@ -375,10 +373,10 @@ export class BuyersService {
         ...updateData
       } = data
 
-      await buyer.buyerAddress.update(buyerAddress, { transaction })
-      await buyer.parentCompanyAddress.update(parentCompanyAddress, {
-        transaction
-      })
+      // await buyer.buyerAddress.update(buyerAddress, { transaction })
+      // await buyer.parentCompanyAddress.update(parentCompanyAddress, {
+      //   transaction
+      // })
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(
           (relation) =>
@@ -558,13 +556,13 @@ export class BuyersService {
         })
 
     const formatedBuyers = buyers.map((buyer) => {
-      const { street, number, district, city, uf, cep } = buyer.buyerAddress
-      const address = [street, number, district, `${ city }/${ uf }`, cep].join(
-        ', '
-      )
+      // const { street, number, district, city, uf, cep } = buyer.buyerAddress
+      // const address = [street, number, district, `${ city }/${ uf }`, cep].join(
+      //   ', '
+      // )
       return {
         name: buyer.name,
-        address,
+        // address,
         role: buyer.role,
         email: buyer.email,
         birthday: buyer.birthday

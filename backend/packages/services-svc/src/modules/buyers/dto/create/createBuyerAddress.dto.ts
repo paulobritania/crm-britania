@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, Length, IsNumber, IsOptional } from 'class-validator'
+import { IsString, Length, IsNumber, IsOptional, IsBoolean } from 'class-validator'
 
 export class CreateBuyerAddressDto {
   @IsOptional()
@@ -38,4 +38,9 @@ export class CreateBuyerAddressDto {
   @Length(8)
   @ApiProperty()
   cep: string
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty()
+  delivery_address: boolean
 }
