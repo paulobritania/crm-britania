@@ -146,12 +146,9 @@ const BuyerListScreen = () => {
     setFilters(
       omitBy(
         {
-          clientTotvsCode: values.codMatrix ? values.codMatrix : null,
           lineCodes: !isEmpty(values.lineDescription)
             ? values.lineDescription.join(',')
-            : null,
-          name: values.nameBuyer ? values.nameBuyer : null,
-          active: values.status
+            : null
         },
         isNil
       )
@@ -175,7 +172,7 @@ const BuyerListScreen = () => {
 
   return (
     <>
-      <PageFilter handleFilter={handleFilter} Form={BuyerFormFilter} />
+      {/* <PageFilter handleFilter={handleFilter} Form={BuyerFormFilter} /> */}
       <Container>
         <DataTable
           data={data}
@@ -186,6 +183,9 @@ const BuyerListScreen = () => {
             gender: 'male',
             this: t('buyer', { howMany: 1 })
           })}
+          filter
+          filterForm={BuyerFormFilter}
+          handleFilter={handleFilter}
           onAddClick={currentRoutePermissions.INCLUIR && onCreateClick}
           onEditClick={currentRoutePermissions.EDITAR && onEditClick}
           onRowClick={onRowClick}

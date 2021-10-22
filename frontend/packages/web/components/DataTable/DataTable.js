@@ -95,6 +95,9 @@ const DataTable = forwardRef((props, ref) => {
     onBindClick,
     conditionToBind,
     disableRowClick,
+    filter,
+    filterForm,
+    handleFilter,
     ...rest
   } = props
 
@@ -110,23 +113,21 @@ const DataTable = forwardRef((props, ref) => {
 
   const tableId = useMemo(() => uuid().new(), [])
 
-  const i18n = useMemo(
-    () => {
-      const translations = datagridI18(t)
-      return {
-        ...(translations || {}),
-        body: {
-          ...get(translations, 'body', {}),
-          emptyDataSourceMessage: emptyMessage || get(translations, 'body.emptyDataSourceMessage')
-        }
+  const i18n = useMemo(() => {
+    const translations = datagridI18(t)
+    return {
+      ...(translations || {}),
+      body: {
+        ...get(translations, 'body', {}),
+        emptyDataSourceMessage:
+          emptyMessage || get(translations, 'body.emptyDataSourceMessage')
       }
-    },
-    [t, emptyMessage]
-  )
+    }
+  }, [t, emptyMessage])
 
   const options = useMemo(
     () => ({
-      selectionProps (row) {
+      selectionProps(row) {
         const rowDisabled = disabledRow(row)
         const response = {
           // color: 'primary',
@@ -141,7 +142,11 @@ const DataTable = forwardRef((props, ref) => {
       ...propOptions,
       showTitle: !isEmpty(title),
       pageSize,
-      paging: isString(data) ? true : (isBoolean(MTableOptions?.paging) ? MTableOptions.paging : propOptions.paging),
+      paging: isString(data)
+        ? true
+        : isBoolean(MTableOptions?.paging)
+        ? MTableOptions.paging
+        : propOptions.paging,
       headerStyle: {
         ...get(MTableOptions, 'headerStyle', {}),
         ...get(propOptions, 'headerStyle', {})
@@ -161,282 +166,307 @@ const DataTable = forwardRef((props, ref) => {
   )
 
   const columns = useMemo(
-    () => map(propColumns, (column) => {
-      const { cellStyle = {} } = column
+    () =>
+      map(propColumns, (column) => {
+        const { cellStyle = {} } = column
 
-      let columnStyle = cellStyle
-      if (!isFunction(cellStyle)) {
-        columnStyle = () => cellStyle
-      }
+        let columnStyle = cellStyle
+        if (!isFunction(cellStyle)) {
+          columnStyle = () => cellStyle
+        }
 
-      return {
-        emptyValue: column.render ? undefined : '-',
-        ...column,
-        cellStyle (_, rowData) {
-          let rowStyle = {
-            ...(options.rowStyle || {}),
-            ...((isFunction(propOptions.rowStyle) ? propOptions.rowStyle(_, rowData) : propOptions.rowStyle) || {}),
-            ...((isFunction(column.cellStyle) ? column.cellStyle(_, rowData) : column.cellStyle) || {})
-          }
-          if (disabledRow(rowData)) {
-            rowStyle = {
-              opacity: 0.7,
+        return {
+          emptyValue: column.render ? undefined : '-',
+          ...column,
+          cellStyle(_, rowData) {
+            let rowStyle = {
+              ...(options.rowStyle || {}),
+              ...((isFunction(propOptions.rowStyle)
+                ? propOptions.rowStyle(_, rowData)
+                : propOptions.rowStyle) || {}),
+              ...((isFunction(column.cellStyle)
+                ? column.cellStyle(_, rowData)
+                : column.cellStyle) || {})
+            }
+            if (disabledRow(rowData)) {
+              rowStyle = {
+                opacity: 0.7,
+                ...rowStyle
+              }
+            }
+            return {
+              ...columnStyle(_, rowData),
               ...rowStyle
             }
           }
-          return {
-            ...columnStyle(_, rowData),
-            ...rowStyle
-          }
         }
-      }
-    }),
+      }),
     [disabledRow, options.rowStyle, propColumns, propOptions]
   )
 
   const FilterButton = useMemo(
-    () => onFilterClick && (
-      <ButtonFilterData
-        id={ `filter-${ tableId }` }
-        color="primary"
-        onClick={ onFilterClick }
-        size="small"
-        startIcon={ <icons.FilterIcon color={ colors.primary.main } /> }
-        variant="outlined"
-        disabled={ loading || disabled }
-      >
-        {addFilterTitle}
-      </ButtonFilterData>
-    ),
+    () =>
+      onFilterClick && (
+        <ButtonFilterData
+          id={`filter-${tableId}`}
+          color='primary'
+          onClick={onFilterClick}
+          size='small'
+          startIcon={<icons.FilterIcon color={colors.primary.main} />}
+          variant='outlined'
+          disabled={loading || disabled}
+        >
+          {addFilterTitle}
+        </ButtonFilterData>
+      ),
     [addFilterTitle, disabled, loading, onFilterClick, tableId]
   )
 
   const AddButton = useMemo(
-    () => onAddClick && (
-      <ButtonAddNew
-        id={ `new-${ tableId }` }
-        color="warning"
-        onClick={ onAddClick }
-        size="small"
-        startIcon={ <icons.Add /> }
-        variant="outlined"
-        disabled={ loading || disabled }
-      >
-        {addTitle}
-      </ButtonAddNew>
-    ),
+    () =>
+      onAddClick && (
+        <ButtonAddNew
+          id={`new-${tableId}`}
+          color='warning'
+          onClick={onAddClick}
+          size='small'
+          startIcon={<icons.Add />}
+          variant='outlined'
+          disabled={loading || disabled}
+        >
+          {addTitle}
+        </ButtonAddNew>
+      ),
     [addTitle, disabled, loading, onAddClick, tableId]
   )
 
-  const actions = useMemo(
-    () => {
-      let newActions = []
+  const actions = useMemo(() => {
+    let newActions = []
 
-      if (onDeleteClick) {
-        const DeleteIcon = icons.Delete
-        newActions = [
-          (row) => {
-            const canDelete = conditionToDelete(row)
-            return {
-              icon: DeleteIcon,
-              tooltip: t('datagrid body delete tooltip'),
-              hidden: !canDelete,
-              onClick: onDeleteClick,
-              disabled: loading || disabled || !canDelete,
-              iconButtonProps: {
-                size: 'small',
-                color: 'default'
-              },
-              position: 'row'
-            }
-          },
-          ...newActions
-        ]
-      }
-
-      if (onDownloadClick) {
-        const DownloadIcon = icons.Download
-        newActions = [
-          (row) => {
-            const canDownload = conditionToDownload(row)
-            return {
-              icon: DownloadIcon,
-              tooltip: t('datagrid body dowload tooltip'),
-              hidden: !canDownload,
-              onClick: onDownloadClick,
-              disabled: loading || disabled || !canDownload,
-              iconButtonProps: {
-                size: 'small',
-                color: 'default'
-              },
-              position: 'row'
-            }
-          },
-          ...newActions
-        ]
-      }
-
-      if (onRedirectClick) {
-        const RedirectIcon = icons.Redirect
-        newActions = [
-          (row) => {
-            const canRedirect = conditionToRedirect(row)
-            return {
-              icon: RedirectIcon,
-              tooltip: t('datagrid body redirect tooltip'),
-              hidden: !canRedirect,
-              onClick: onRedirectClick,
-              disabled: loading || disabled || !canRedirect,
-              iconButtonProps: {
-                size: 'small',
-                color: 'default'
-              },
-              position: 'row'
-            }
-          },
-          ...newActions
-        ]
-      }
-
-      if (onEditClick) {
-        const EditIcon = icons.Edit
-        newActions = [
-          (row) => {
-            const canEdit = conditionToEdit(row)
-            return {
-              icon: EditIcon,
-              tooltip: t('datagrid body edit tooltip'),
-              hidden: !canEdit,
-              onClick: onEditClick,
-              disabled: loading || disabled || !canEdit,
-              iconButtonProps: {
-                size: 'small',
-                color: 'default'
-              },
-              position: 'row'
-            }
-          },
-          ...newActions
-        ]
-      }
-
-      if (!isEmpty(addMicroActions)) {
-        newActions = [
-          ...newActions,
-          (row) => ({
-            icon: () => (
-              <Popover
-                style={ { width: '100%' } }
-                popoverId={ `microactions-${ tableId }-${ row.id }` }
-                Component={ ({ popupState, ...iconProps }) => (
-                  <icons.Menu
-                    { ...iconProps }
-                    style={ {
-                      ...(iconProps.style || {}),
-                      color: popupState.isOpen ? colors.white : colors.secondary.main,
-                      backgroundColor: popupState.isOpen ? colors.secondary.main : 'transparent',
-
-                      borderRadius: '50%',
-                      fontSize: 20
-
-                    } }
-                  />
-                ) }
-                popoverStyle={ {
-                  maxWidth: 250,
-                  zIndex: 9999
-                } }
-              >
-                <>
-                  {map(addMicroActions, (option) => (
-                    <PopoverItem
-                      key={ option.title }
-                      onClick={ () => option.action(row) }
-                    >
-                      { option.title }
-                    </PopoverItem>
-                  ))}
-                </>
-              </Popover>
-            ),
-            isFreeAction: false,
-            iconProps: { size: 10 },
-            iconButtonProps: {
-              style: {
-                width: 20,
-                height: 20,
-                border: `2px solid ${ colors.secondary.main }`
-                // padding: 0
-              },
-              position: 'row'
-            }
-          })
-        ]
-      }
-
-      if (onBindClick) {
-        const BindIcon = icons.LinkIcon
-        newActions = [
-          (row) => {
-            const canBind = conditionToBind(row)
-            return {
-              icon: BindIcon,
-              tooltip: t('datagrid body bind tooltip'),
-              onClick: onBindClick,
-              disabled: loading || disabled || !canBind,
-              iconButtonProps: {
-                size: 'small',
-                color: 'default'
-              },
-              position: 'row'
-            }
-          },
-          ...newActions
-        ]
-      }
-
-      if (onRowClick) {
-        newActions = [
-          {
-            icon: icons.AccessRow,
-            tooltip: t('datagrid body access tooltip'),
-            onClick: onRowClick,
-            disabled: loading || disabled,
+    if (onDeleteClick) {
+      const DeleteIcon = icons.Delete
+      newActions = [
+        (row) => {
+          const canDelete = conditionToDelete(row)
+          return {
+            icon: DeleteIcon,
+            tooltip: t('datagrid body delete tooltip'),
+            hidden: !canDelete,
+            onClick: onDeleteClick,
+            disabled: loading || disabled || !canDelete,
             iconButtonProps: {
               size: 'small',
               color: 'default'
             },
             position: 'row'
-          },
-          ...newActions
-        ]
-      }
-
-      return map(
-        [...propActions, ...newActions],
-        (action) => {
-          if (isFunction(action)) return action
-          return {
-            ...action,
-            onClick: action.position === 'toolbarOnSelect'
-              ? () => action.onClick(filteredRows)
-              : action.onClick
           }
-        }
-      )
-    },
-    [addMicroActions, conditionToBind, conditionToDelete, conditionToDownload, conditionToEdit, conditionToRedirect, disabled, filteredRows, loading, onBindClick, onDeleteClick, onDownloadClick, onEditClick, onRowClick, propActions, onRedirectClick, t, tableId]
-  )
+        },
+        ...newActions
+      ]
+    }
+
+    if (onDownloadClick) {
+      const DownloadIcon = icons.Download
+      newActions = [
+        (row) => {
+          const canDownload = conditionToDownload(row)
+          return {
+            icon: DownloadIcon,
+            tooltip: t('datagrid body dowload tooltip'),
+            hidden: !canDownload,
+            onClick: onDownloadClick,
+            disabled: loading || disabled || !canDownload,
+            iconButtonProps: {
+              size: 'small',
+              color: 'default'
+            },
+            position: 'row'
+          }
+        },
+        ...newActions
+      ]
+    }
+
+    if (onRedirectClick) {
+      const RedirectIcon = icons.Redirect
+      newActions = [
+        (row) => {
+          const canRedirect = conditionToRedirect(row)
+          return {
+            icon: RedirectIcon,
+            tooltip: t('datagrid body redirect tooltip'),
+            hidden: !canRedirect,
+            onClick: onRedirectClick,
+            disabled: loading || disabled || !canRedirect,
+            iconButtonProps: {
+              size: 'small',
+              color: 'default'
+            },
+            position: 'row'
+          }
+        },
+        ...newActions
+      ]
+    }
+
+    if (onEditClick) {
+      const EditIcon = icons.Edit
+      newActions = [
+        (row) => {
+          const canEdit = conditionToEdit(row)
+          return {
+            icon: EditIcon,
+            tooltip: t('datagrid body edit tooltip'),
+            hidden: !canEdit,
+            onClick: onEditClick,
+            disabled: loading || disabled || !canEdit,
+            iconButtonProps: {
+              size: 'small',
+              color: 'default'
+            },
+            position: 'row'
+          }
+        },
+        ...newActions
+      ]
+    }
+
+    if (!isEmpty(addMicroActions)) {
+      newActions = [
+        ...newActions,
+        (row) => ({
+          icon: () => (
+            <Popover
+              style={{ width: '100%' }}
+              popoverId={`microactions-${tableId}-${row.id}`}
+              Component={({ popupState, ...iconProps }) => (
+                <icons.Menu
+                  {...iconProps}
+                  style={{
+                    ...(iconProps.style || {}),
+                    color: popupState.isOpen
+                      ? colors.white
+                      : colors.secondary.main,
+                    backgroundColor: popupState.isOpen
+                      ? colors.secondary.main
+                      : 'transparent',
+
+                    borderRadius: '50%',
+                    fontSize: 20
+                  }}
+                />
+              )}
+              popoverStyle={{
+                maxWidth: 250,
+                zIndex: 9999
+              }}
+            >
+              <>
+                {map(addMicroActions, (option) => (
+                  <PopoverItem
+                    key={option.title}
+                    onClick={() => option.action(row)}
+                  >
+                    {option.title}
+                  </PopoverItem>
+                ))}
+              </>
+            </Popover>
+          ),
+          isFreeAction: false,
+          iconProps: { size: 10 },
+          iconButtonProps: {
+            style: {
+              width: 20,
+              height: 20,
+              border: `2px solid ${colors.secondary.main}`
+              // padding: 0
+            },
+            position: 'row'
+          }
+        })
+      ]
+    }
+
+    if (onBindClick) {
+      const BindIcon = icons.LinkIcon
+      newActions = [
+        (row) => {
+          const canBind = conditionToBind(row)
+          return {
+            icon: BindIcon,
+            tooltip: t('datagrid body bind tooltip'),
+            onClick: onBindClick,
+            disabled: loading || disabled || !canBind,
+            iconButtonProps: {
+              size: 'small',
+              color: 'default'
+            },
+            position: 'row'
+          }
+        },
+        ...newActions
+      ]
+    }
+
+    if (onRowClick) {
+      newActions = [
+        {
+          icon: icons.AccessRow,
+          tooltip: t('datagrid body access tooltip'),
+          onClick: onRowClick,
+          disabled: loading || disabled,
+          iconButtonProps: {
+            size: 'small',
+            color: 'default'
+          },
+          position: 'row'
+        },
+        ...newActions
+      ]
+    }
+
+    return map([...propActions, ...newActions], (action) => {
+      if (isFunction(action)) return action
+      return {
+        ...action,
+        onClick:
+          action.position === 'toolbarOnSelect'
+            ? () => action.onClick(filteredRows)
+            : action.onClick
+      }
+    })
+  }, [
+    addMicroActions,
+    conditionToBind,
+    conditionToDelete,
+    conditionToDownload,
+    conditionToEdit,
+    conditionToRedirect,
+    disabled,
+    filteredRows,
+    loading,
+    onBindClick,
+    onDeleteClick,
+    onDownloadClick,
+    onEditClick,
+    onRowClick,
+    propActions,
+    onRedirectClick,
+    t,
+    tableId
+  ])
 
   const enableToolbar = useMemo(
-    () => !!(
-      options.search ||
-      title ||
-      AddButton ||
-      FilterButton ||
-      onExportClick ||
-      onGoBack
-    ),
+    () =>
+      !!(
+        options.search ||
+        title ||
+        AddButton ||
+        FilterButton ||
+        onExportClick ||
+        onGoBack
+      ),
     [AddButton, FilterButton, onExportClick, onGoBack, options.search, title]
   )
 
@@ -501,15 +531,15 @@ const DataTable = forwardRef((props, ref) => {
         if (!isEmpty(queryParams)) {
           requestQueryParams = {
             ...requestQueryParams,
-            ...omitBy(queryParams, (param) => !isBoolean(param) && param !== 0 && isEmpty(param))
+            ...omitBy(
+              queryParams,
+              (param) => !isBoolean(param) && param !== 0 && isEmpty(param)
+            )
           }
         }
 
         const {
-          data: {
-            data: datagridData,
-            totalRegisters
-          }
+          data: { data: datagridData, totalRegisters }
         } = await api.get(data, {
           params: {
             ...params,
@@ -533,37 +563,51 @@ const DataTable = forwardRef((props, ref) => {
   )
 
   const realData = useMemo(
-    () => isString(data) ? asyncData : data,
+    () => (isString(data) ? asyncData : data),
     [asyncData, data]
   )
 
   const components = useMemo(
     () => ({
       Header: (headerProps) => (
-        <Header
-          { ...headerProps }
-          tableHeaderClassName={ tableHeaderClassName }
-        />
+        <Header {...headerProps} tableHeaderClassName={tableHeaderClassName} />
       ),
-      Toolbar: (toolbarProps) => enableToolbar && (
-        <HeaderToolbar
-          { ...toolbarProps }
-          id={ tableId }
-          searchFieldAlignment={ searchFieldAlignment }
-          titleProps={ titleProps }
-          FilterButton={ FilterButton }
-          AddButton={ AddButton }
-          searchPlaceholder={ searchPlaceholder }
-          onGoBack={ onGoBack }
-          exportCsv={ onExportClick }
-          minimalistToolbar={ minimalistToolbar }
-        />
-      ),
+      Toolbar: (toolbarProps) =>
+        enableToolbar && (
+          <HeaderToolbar
+            {...toolbarProps}
+            id={tableId}
+            searchFieldAlignment={searchFieldAlignment}
+            titleProps={titleProps}
+            FilterButton={FilterButton}
+            AddButton={AddButton}
+            searchPlaceholder={searchPlaceholder}
+            onGoBack={onGoBack}
+            exportCsv={onExportClick}
+            minimalistToolbar={minimalistToolbar}
+            filter
+            filterForm={filterForm}
+            handleFilter={handleFilter}
+          />
+        ),
       Table,
       Pagination,
       ...propComponents
     }),
-    [AddButton, FilterButton, enableToolbar, minimalistToolbar, onExportClick, onGoBack, propComponents, searchFieldAlignment, searchPlaceholder, tableHeaderClassName, tableId, titleProps]
+    [
+      AddButton,
+      FilterButton,
+      enableToolbar,
+      minimalistToolbar,
+      onExportClick,
+      onGoBack,
+      propComponents,
+      searchFieldAlignment,
+      searchPlaceholder,
+      tableHeaderClassName,
+      tableId,
+      titleProps
+    ]
   )
 
   useEffect(
@@ -576,43 +620,39 @@ const DataTable = forwardRef((props, ref) => {
     [data, urlParams, queryParams, tableRef, asyncData]
   )
 
-  useEffect(
-    () => {
-      mounted.current = true
-      return () => {
-        mounted.current = false
-      }
-    },
-    []
-  )
+  useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+    }
+  }, [])
 
   useImperativeHandle(ref, () => tableRef.current)
 
   return (
-    <ThemeProvider theme={ createTheme({ dividerColor, backgroundColor }) }>
-      <Card style={ style }>
+    <ThemeProvider theme={createTheme({ dividerColor, backgroundColor })}>
+      <Card style={style}>
         <CardContent>
           <MaterialTable
-            { ...rest }
-            tableRef={ tableRef }
-            id={ tableId }
-            icons={ icons }
-            options={ options }
-            columns={ columns }
-            data={ realData }
-            localization={ i18n }
-            onRowClick={ !disableRowClick ? onRowClick : undefined }
-            title={ title }
-            actions={ actions }
-            style={ { boxShadow: 'none' } }
-            isLoading={ isString(data) ? undefined : loading }
-            components={ components }
-            onSelectionChange={ handleSelectionChange }
+            {...rest}
+            tableRef={tableRef}
+            id={tableId}
+            icons={icons}
+            options={options}
+            columns={columns}
+            data={realData}
+            localization={i18n}
+            onRowClick={!disableRowClick ? onRowClick : undefined}
+            title={title}
+            actions={actions}
+            style={{ boxShadow: 'none' }}
+            isLoading={isString(data) ? undefined : loading}
+            components={components}
+            onSelectionChange={handleSelectionChange}
           />
         </CardContent>
       </Card>
     </ThemeProvider>
-
   )
 })
 
@@ -622,10 +662,7 @@ DataTable.propTypes = {
   /** actions by material-table */
   actions: PropTypes.array,
   /** data by material-table */
-  data: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.string
-  ]),
+  data: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   /** options by material-table */
   options: PropTypes.object,
   /** params to inject into request */
@@ -639,60 +676,30 @@ DataTable.propTypes = {
   /** set style props to table title */
   titleProps: PropTypes.object,
   /* Enable Add button, and set the callback called when this button is clicked */
-  onAddClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onAddClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /* Enable Filter button, and set the callback called when this button is clicked */
-  onFilterClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onFilterClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** tooltip for add button */
   addTooltip: PropTypes.string,
   /** title for filter button */
   addFilterTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   /** title for add button */
   addTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  onSelectionChange: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onSelectionChange: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Edit button, and set the callback called when this button is clicked */
-  onEditClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onEditClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable redirect button, and set the callback called when this button is clicked */
-  onRedirectClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onRedirectClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Delete button, and set the callback called when this button is clicked */
-  onDeleteClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onDeleteClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Download button, and set the callback called when this button is clicked */
-  onDownloadClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onDownloadClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Bind button, and set the callback called when this button is clicked */
-  onBindClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onBindClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Export button, and set the callback called when this button is clicked */
-  onExportClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onExportClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** Enable Row click */
-  onRowClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onRowClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /** datagrid is loading */
   loading: PropTypes.bool,
   /** disable all actions */
@@ -707,10 +714,7 @@ DataTable.propTypes = {
   tableHeaderClassName: PropTypes.string,
   components: PropTypes.object,
   searchPlaceholder: PropTypes.string,
-  onGoBack: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.bool
-  ]),
+  onGoBack: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   style: PropTypes.object,
   filters: PropTypes.object,
   backgroundColor: PropTypes.string,
@@ -729,7 +733,10 @@ DataTable.propTypes = {
   conditionToBind: PropTypes.func,
   addMicroActions: PropTypes.array,
   api: PropTypes.any,
-  disableRowClick: PropTypes.bool
+  disableRowClick: PropTypes.bool,
+  filter: PropTypes.bool,
+  filterForm: PropTypes.element,
+  handleFilter: PropTypes.func
 }
 
 DataTable.defaultProps = {
@@ -778,7 +785,8 @@ DataTable.defaultProps = {
   onDownloadClick: null,
   addMicroActions: [],
   api: crmApi,
-  disableRowClick: false
+  disableRowClick: false,
+  filter: false
 }
 
 export default DataTable

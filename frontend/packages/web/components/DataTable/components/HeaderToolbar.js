@@ -23,6 +23,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
+import InputSelect from '@britania-crm/web-components/InputSelect'
 
 import { withT } from '@britania-crm/i18n'
 import colors from '@britania-crm/styles/colors'
@@ -50,6 +51,8 @@ export class MTableToolbar extends React.Component {
     this.props.dataManager.changeSearchText(searchText)
     this.setState({ searchText }, this.props.onSearchChanged(searchText))
   }
+
+  handleFilterChange = () => {}
 
   getTableData = () => {
     const columns = this.props.columns
@@ -183,6 +186,7 @@ export class MTableToolbar extends React.Component {
           <span>
             <Tooltip title={localization.showColumnsTitle}>
               <IconButton
+                classes={classes.tableButton}
                 color='inherit'
                 onClick={(event) =>
                   this.setState({ columnsButtonAnchorEl: event.currentTarget })
@@ -352,6 +356,7 @@ export class MTableToolbar extends React.Component {
         : this.props.showTitle
         ? this.props.title
         : null
+    const filter = this.props
     return (
       <Toolbar
         className={classNames(
@@ -375,20 +380,18 @@ export class MTableToolbar extends React.Component {
               marginBottom: 10
             }}
           >
-            {/* <Grid item xs={2}> */}
             {this.props.onGoBack && this.renderGoBack()}
             {title && this.renderToolbarTitle(title)}
-            {/* </Grid> */}
-            {/* <Grid item xs={10}> */}
             {this.renderActions()}
-            {/* {this.props.toolbarButtonAlignment === 'right' &&
-                this.renderActions()}
-              {this.props.toolbarButtonAlignment === 'left' &&
-                this.renderActions()} */}
-            {/* </Grid> */}
           </Grid>
           {this.props.searchFieldAlignment === 'left' && this.renderSearch()}
           {this.props.searchFieldAlignment === 'right' && this.renderSearch()}
+          {this.props.filter ? (
+            <PageFilter
+              handleFilter={this.props.handleFilter}
+              Form={this.props.filterForm}
+            />
+          ) : null}
         </Grid>
       </Toolbar>
     )
@@ -465,7 +468,10 @@ MTableToolbar.propTypes = {
   AddButton: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   searchPlaceholder: PropTypes.string,
   onGoBack: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  minimalistToolbar: PropTypes.bool
+  minimalistToolbar: PropTypes.bool,
+  filter: PropTypes.bool,
+  filterForm: PropTypes.element,
+  handleFilter: PropTypes.func
 }
 
 export const styles = (theme) => ({
@@ -496,7 +502,11 @@ export const styles = (theme) => ({
   FilterButton: false,
   AddButton: false,
   searchPlaceholder: undefined,
-  minimalistToolbar: { minHeight: 20 }
+  minimalistToolbar: { minHeight: 20 },
+  tableButton: {
+    backgroundColor: '#1F2D3D',
+    color: '#EFF2F7'
+  }
 })
 
 export default flow(withT, withStyles(styles))(MTableToolbar)
