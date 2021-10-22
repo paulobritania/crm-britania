@@ -41,11 +41,6 @@ export class UpdateBuyerLineFamily extends CreateBuyerLineFamily {
   @ApiProperty(required)
   regionalManagerDescription: string
 
-  @IsDate()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  updatedAt: Date
-
   @Type(() => CreateBuyerDto)
   @ApiProperty({ ...required, type: CreateBuyerDto })
   buyer: CreateBuyerDto
