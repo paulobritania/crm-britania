@@ -52,8 +52,6 @@ export class MTableToolbar extends React.Component {
     this.setState({ searchText }, this.props.onSearchChanged(searchText))
   }
 
-  handleFilterChange = () => {}
-
   getTableData = () => {
     const columns = this.props.columns
       .filter(
@@ -386,7 +384,7 @@ export class MTableToolbar extends React.Component {
           </Grid>
           {this.props.searchFieldAlignment === 'left' && this.renderSearch()}
           {this.props.searchFieldAlignment === 'right' && this.renderSearch()}
-          {this.props.filter ? (
+          {this.props.hasFilter ? (
             <PageFilter
               handleFilter={this.props.handleFilter}
               Form={this.props.filterForm}

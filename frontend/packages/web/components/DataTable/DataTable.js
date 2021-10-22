@@ -95,7 +95,7 @@ const DataTable = forwardRef((props, ref) => {
     onBindClick,
     conditionToBind,
     disableRowClick,
-    filter,
+    hasFilter,
     filterForm,
     handleFilter,
     ...rest
@@ -585,7 +585,7 @@ const DataTable = forwardRef((props, ref) => {
             onGoBack={onGoBack}
             exportCsv={onExportClick}
             minimalistToolbar={minimalistToolbar}
-            filter
+            hasFilter
             filterForm={filterForm}
             handleFilter={handleFilter}
           />

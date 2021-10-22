@@ -183,7 +183,7 @@ const BuyerListScreen = () => {
             gender: 'male',
             this: t('buyer', { howMany: 1 })
           })}
-          filter
+          hasFilter
           filterForm={BuyerFormFilter}
           handleFilter={handleFilter}
           onAddClick={currentRoutePermissions.INCLUIR && onCreateClick}
