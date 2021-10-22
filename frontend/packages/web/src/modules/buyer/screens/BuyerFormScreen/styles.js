@@ -93,7 +93,8 @@ export const useStyles = makeStyles(() => ({
     textAlign: 'center',
     border: `${colors.britPrimary2.lightest} solid 2px`,
     borderRadius: 4,
-    borderStyle: 'dashed'
+    borderStyle: 'dashed',
+    paddingTop: 30
   },
   hasFile: {
     display: 'flex',
