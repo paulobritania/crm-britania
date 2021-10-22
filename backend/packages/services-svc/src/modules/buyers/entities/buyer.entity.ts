@@ -32,12 +32,6 @@ export class Buyer extends Model<Buyer> {
 
   @Column({
     allowNull: false,
-    type: DataType.INTEGER
-  })
-  imageId: number;
-
-  @Column({
-    allowNull: false,
     type: DataType.STRING(11)
   })
   cpf: string;
@@ -85,22 +79,17 @@ export class Buyer extends Model<Buyer> {
   telephone: string;
 
   @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  })
+  active: boolean;
+
+  @Column({
     type: DataType.INTEGER,
     allowNull: false
   })
   clientTotvsCode: number;
-
-  // @Column({
-  //   type: DataType.INTEGER,
-  //   allowNull: true
-  // })
-  // regionalManagerCode: number;
-
-  // @Column({
-  //   type: DataType.STRING(70),
-  //   allowNull: true
-  // })
-  // regionalManagerDescription: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -115,29 +104,22 @@ export class Buyer extends Model<Buyer> {
   responsibleDescription: string;
 
   @Column({
-    type: DataType.BOOLEAN,
     allowNull: false,
-    defaultValue: false
+    type: DataType.INTEGER
   })
-  active: boolean;
-
-  @BelongsTo(() => BuyerAddress, {
-    foreignKey: 'parentCompanyAddressId',
-    targetKey: 'id'
-  })
-  parentCompanyAddress: BuyerAddress;
-
-  @BelongsTo(() => BuyerAddress, {
-    foreignKey: 'buyerAddressId',
-    targetKey: 'id'
-  })
-  buyerAddress: BuyerAddress;
+  imageId: number;
 
   @HasMany(() => BuyerLineFamily, { foreignKey: 'buyerId', sourceKey: 'id' })
   buyerLinesFamilies: BuyerLineFamily[];
 
-  @HasOne(() => File, { sourceKey: 'imageId', foreignKey: 'id' })
-  file: File;
+  // @HasMany(() => BuyerAddress, { foreignKey: 'buyerId', sourceKey: 'id_buyers' })
+  // buyerAddresses: BuyerAddress[];
+
+  @BelongsTo(() => File, {
+    foreignKey: 'imageId',
+    targetKey: 'id'
+  })
+  file: File
 
   @BelongsTo(() => User, {
     foreignKey: 'createdBy',

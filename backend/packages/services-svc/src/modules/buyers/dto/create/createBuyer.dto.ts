@@ -20,11 +20,6 @@ import { CreateBuyerLineFamily } from './createBuyerLineFamily.dto'
 const required = { required: true }
 
 export class CreateBuyerDto {
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  imageId: number
-
   @IsString()
   @Length(11, 11)
   @IsNotEmpty()
@@ -40,11 +35,6 @@ export class CreateBuyerDto {
   @IsNotEmpty()
   @ApiProperty(required)
   category: string
-
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsCode: number
 
   @IsEnum(VoltageEnum)
   @IsOptional()
@@ -72,10 +62,10 @@ export class CreateBuyerDto {
   @ApiProperty()
   telephone: string
 
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  regionalManagerDescription: string
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  clientTotvsCode: number
 
   @IsOptional()
   @IsNumber()
@@ -86,6 +76,11 @@ export class CreateBuyerDto {
   @IsString()
   @ApiProperty()
   responsibleDescription: string
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
 
   @ValidateNested({ each: true })
   @Type(() => CreateBuyerAddressDto)
