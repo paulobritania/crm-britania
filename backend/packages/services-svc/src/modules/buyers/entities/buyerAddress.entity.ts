@@ -1,4 +1,6 @@
-import { Table, Model, Column, DataType } from 'sequelize-typescript'
+import { Table, Model, Column, DataType, HasOne } from 'sequelize-typescript'
+import { Address } from '../../address/entities/address.entity';
+import { Buyer } from './buyer.entity';
 
 @Table({
   modelName: 'BuyerAddress',
@@ -35,5 +37,11 @@ export class BuyerAddress extends Model<BuyerAddress> {
     type: DataType.INTEGER,
     allowNull: true
   })
-  deliveryAddress: number
+  deliveryAddress: number;
+
+  @HasOne(() => Buyer, { sourceKey: 'idBuyers', foreignKey: 'id' })
+  buyer: Buyer;
+
+  @HasOne(() => Address, { sourceKey: 'idAddress', foreignKey: 'id' })
+  address: Address;
 }
