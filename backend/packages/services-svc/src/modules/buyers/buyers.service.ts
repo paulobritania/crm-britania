@@ -145,8 +145,8 @@ export class BuyersService {
         { transaction }
       )
 
-      const addressBuyer = await this.address.create(buyerAddress)
-      const addressParent = await this.address.create(parentCompanyAddress)
+      const addressBuyer = await this.address.create(buyerAddress, { transaction })
+      const addressParent = await this.address.create(parentCompanyAddress, { transaction })
 
       await this.buyerAddress.create({id_address: addressBuyer.id, id_buyers: buyer.id, addressType: 1, deliveryAddress: buyerAddress.delivery_address}, { transaction })
       await this.buyerAddress.create({id_address: addressParent.id, id_buyers: buyer.id, addressType: 2, deliveryAddress: parentCompanyAddress.delivery_address}, { transaction })
