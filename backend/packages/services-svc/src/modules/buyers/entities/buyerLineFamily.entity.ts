@@ -16,7 +16,10 @@ import { Buyer } from './buyer.entity'
   tableName: 'buyers_lines_families',
   underscored: true,
   version: false,
-  timestamps: true
+  timestamps: true,
+  paranoid: false,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 })
 export class BuyerLineFamily extends Model<BuyerLineFamily> {
   @Column({
@@ -52,15 +55,18 @@ export class BuyerLineFamily extends Model<BuyerLineFamily> {
   })
   lineDescription: string
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  regionalManagerCode: number
+
+  @Column({
+    type: DataType.STRING(70),
+    allowNull: false
+  })
+  regionalManagerDescription: string
+
   @BelongsTo(() => Buyer, { foreignKey: 'buyerId', targetKey: 'id' })
   buyer: Buyer
-
-  @HasOne(() => Hierarchy, { sourceKey: 'lineCode', foreignKey: 'lineCode' })
-  hierarchyLine: Hierarchy
-
-  @HasOne(() => Hierarchy, {
-    sourceKey: 'lineCode',
-    foreignKey: 'lineCode'
-  })
-  hierarchyFamily: Hierarchy
 }
