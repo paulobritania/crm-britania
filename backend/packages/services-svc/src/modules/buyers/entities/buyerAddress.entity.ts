@@ -11,51 +11,29 @@ export class BuyerAddress extends Model<BuyerAddress> {
   @Column({
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true,
+    autoIncrement: false,
+    type: DataType.INTEGER,
+  })
+  idBuyers: number;
+
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: false,
     type: DataType.INTEGER,
     comment: 'The identifier for the BuyerAddress record'
   })
-  id: number
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  street: string
+  idAddress: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true
   })
-  number: number
+  addressType: number;
 
   @Column({
-    type: DataType.STRING(40),
+    type: DataType.INTEGER,
     allowNull: true
   })
-  district: string
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  complement: string
-
-  @Column({
-    type: DataType.STRING(40),
-    allowNull: true
-  })
-  city: string
-
-  @Column({
-    type: DataType.STRING(2),
-    allowNull: true
-  })
-  uf: string
-
-  @Column({
-    type: DataType.STRING(8),
-    allowNull: true
-  })
-  cep: string
+  deliveryAddress: number
 }
