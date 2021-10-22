@@ -2,45 +2,22 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsString, Length, IsNumber, IsOptional, IsBoolean } from 'class-validator'
 
 export class CreateBuyerAddressDto {
-  @IsOptional()
-  @IsString()
+  @IsNumber()
   @ApiProperty()
-  street: string
+  idBuyers: number
 
-  @IsOptional()
-  @IsString()
+  @IsNumber()
   @ApiProperty()
-  complement: string
+  idAddress: number
 
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  number: number
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  district: string
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  city: string
-
-  @IsOptional()
-  @IsString()
-  @Length(2, 2)
-  @ApiProperty()
-  uf: string
-
-  @IsOptional()
-  @IsString()
-  @Length(8)
-  @ApiProperty()
-  cep: string
+  addressType: number
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  delivery_address: boolean
+  deliveryAddress: boolean
+
 }
