@@ -7,29 +7,29 @@ import {
   BadRequestException,
   UnauthorizedException,
   HttpException,
-  ForbiddenException
-} from '@nestjs/common'
-import { InjectModel } from '@nestjs/sequelize'
-import officegen from 'officegen'
-import { Transaction } from 'sequelize'
-import { Sequelize } from 'sequelize-typescript'
+  ForbiddenException,
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import officegen from "officegen";
+import { Transaction } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 
-import { ClientsService } from '../clients/clients.service'
-import { File } from '../files/entities/file.entity'
-import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
-import { Address } from '../address/entities/address.entity'
-import { HierarchyMemberClassEnum } from '../hierarchy/enums/hierarchyMemberClass.enum'
-import { HierarchyService } from '../hierarchy/hierarchy.service'
-import { CreateBuyerDto } from './dto/create/createBuyer.dto'
-import { CreateBuyerLineFamily } from './dto/create/createBuyerLineFamily.dto'
-import { FindAllBuyersQueryDto } from './dto/find/findAllBuyersQuery.dto'
-import { FindMatrixDto } from './dto/find/findMatrixQuery.dto'
-import { FindMatrixReturnDto } from './dto/find/findMatrixReturn.dto'
-import { UpdateBuyerDto } from './dto/update/updateBuyer.dto'
-import { UpdateBuyerLineFamily } from './dto/update/updateBuyerLineFamily'
-import { Buyer } from './entities/buyer.entity'
-import { BuyerAddress } from './entities/buyerAddress.entity'
-import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
+import { ClientsService } from "../clients/clients.service";
+import { File } from "../files/entities/file.entity";
+import { Hierarchy } from "../hierarchy/entities/hierarchy.entity";
+import { Address } from "../address/entities/address.entity";
+import { HierarchyMemberClassEnum } from "../hierarchy/enums/hierarchyMemberClass.enum";
+import { HierarchyService } from "../hierarchy/hierarchy.service";
+import { CreateBuyerDto } from "./dto/create/createBuyer.dto";
+import { CreateBuyerLineFamily } from "./dto/create/createBuyerLineFamily.dto";
+import { FindAllBuyersQueryDto } from "./dto/find/findAllBuyersQuery.dto";
+import { FindMatrixDto } from "./dto/find/findMatrixQuery.dto";
+import { FindMatrixReturnDto } from "./dto/find/findMatrixReturn.dto";
+import { UpdateBuyerDto } from "./dto/update/updateBuyer.dto";
+import { UpdateBuyerLineFamily } from "./dto/update/updateBuyerLineFamily";
+import { Buyer } from "./entities/buyer.entity";
+import { BuyerAddress } from "./entities/buyerAddress.entity";
+import { BuyerLineFamily } from "./entities/buyerLineFamily.entity";
 
 @Injectable()
 export class BuyersService {
@@ -37,14 +37,15 @@ export class BuyersService {
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
-    @Inject('SEQUELIZE') private db: Sequelize,
+    @Inject("SEQUELIZE") private db: Sequelize,
     @InjectModel(Buyer) private buyer: typeof Buyer,
     @InjectModel(BuyerAddress) private buyerAddress: typeof BuyerAddress,
-    @InjectModel(BuyerLineFamily) private buyerLineFamily: typeof BuyerLineFamily,
+    @InjectModel(BuyerLineFamily)
+    private buyerLineFamily: typeof BuyerLineFamily,
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
     @InjectModel(Address) private address: typeof Address,
     @Inject(HierarchyService)
-    private readonly hierarchyService: HierarchyService
+    private readonly hierarchyService: HierarchyService,
   ) {}
 
   /**
@@ -57,7 +58,7 @@ export class BuyersService {
   async validateLinesFamilies(
     data: CreateBuyerLineFamily[],
     clientCode: number,
-    transaction?: Transaction
+    transaction?: Transaction,
   ): Promise<void> {
     const relations = await Promise.all(
       data.map(async (lineFamily) => {
@@ -66,37 +67,37 @@ export class BuyersService {
             clientCode,
             lineCode: lineFamily.lineCode,
             materialFamilyCode: {
-              $or: [lineFamily.familyCode, '']
+              $or: [lineFamily.familyCode, ""],
             },
-            memberClassCode: HierarchyMemberClassEnum.REGIONAL_MANAGER
+            memberClassCode: HierarchyMemberClassEnum.REGIONAL_MANAGER,
           },
-          attributes: ['id', 'memberCode'],
+          attributes: ["id", "memberCode"],
           transaction,
-          raw: true
-        })
+          raw: true,
+        });
         if (!hierarchy)
           throw new BadRequestException(
-            `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
-              'não foi encontrada na hierarquia do cliente selecionado'
-          )
-        return hierarchy
-      })
-    )
+            `A relação entre a linha ${lineFamily.lineDescription} e a família ${lineFamily.familyDescription} ` +
+              "não foi encontrada na hierarquia do cliente selecionado",
+          );
+        return hierarchy;
+      }),
+    );
 
-    const regionalsSet: Set<number> = new Set()
+    const regionalsSet: Set<number> = new Set();
     const hierarchies = relations.reduce(
       (hierarchies, relation) => [...hierarchies, ...relation],
-      []
-    )
+      [],
+    );
 
     hierarchies.forEach((relation) => {
       if (!regionalsSet.has(relation.memberCode) && regionalsSet.size > 0)
         throw new BadRequestException(
-          'As linhas e famílias informadas correspondem a mais de um regional na hierarquia do cliente selecionado'
-        )
+          "As linhas e famílias informadas correspondem a mais de um regional na hierarquia do cliente selecionado",
+        );
 
-      regionalsSet.add(relation.memberCode)
-    })
+      regionalsSet.add(relation.memberCode);
+    });
   }
 
   /**
@@ -107,24 +108,24 @@ export class BuyersService {
   async createBuyer(
     data: CreateBuyerDto,
     userId: number,
-    trx?: Transaction
+    trx?: Transaction,
   ): Promise<number> {
     if (
       !(await this.hierarchyService.checkIfUserHasAccessToAClient(
         userId,
-        data.clientTotvsCode
+        data.clientTotvsCode,
       ))
     )
-      throw new ForbiddenException()
+      throw new ForbiddenException();
 
     if (await this.getExistenceBuyerByCpf(data.cpf))
       throw new BadRequestException(
-        'Já existe um comprador cadastrado com o CPF informado'
-      )
+        "Já existe um comprador cadastrado com o CPF informado",
+      );
 
-    await this.validateLinesFamilies(data.linesFamilies, data.clientTotvsCode)
+    await this.validateLinesFamilies(data.linesFamilies, data.clientTotvsCode);
 
-    const transaction = trx || (await this.db.transaction())
+    const transaction = trx || (await this.db.transaction());
 
     try {
       const {
@@ -132,47 +133,67 @@ export class BuyersService {
         parentCompanyAddress,
         linesFamilies,
         ...createData
-      } = data
+      } = data;
 
       const buyer = await this.buyer.create(
         {
           ...createData,
           active: true,
           createdBy: userId,
-          updatedBy: userId
+          updatedBy: userId,
         },
-        { transaction }
-      )
+        { transaction },
+      );
 
-      const addressBuyer = await this.address.create(buyerAddress, { transaction })
-      const addressParent = await this.address.create(parentCompanyAddress, { transaction })
+      const addressBuyer = await this.address.create(buyerAddress, {
+        transaction,
+      });
+      const addressParent = await this.address.create(parentCompanyAddress, {
+        transaction,
+      });
 
-      await this.buyerAddress.create({idAddress: addressBuyer.id, idBuyers: buyer.id, addressType: 1, deliveryAddress: buyerAddress.deliveryAddress}, { transaction })
-      await this.buyerAddress.create({idAddress: addressParent.id, idBuyers: buyer.id, addressType: 2, deliveryAddress: parentCompanyAddress.deliveryAddress}, { transaction })
+      await this.buyerAddress.create(
+        {
+          idAddress: addressBuyer.id,
+          idBuyers: buyer.id,
+          addressType: 1,
+          deliveryAddress: buyerAddress.deliveryAddress,
+        },
+        { transaction },
+      );
+      await this.buyerAddress.create(
+        {
+          idAddress: addressParent.id,
+          idBuyers: buyer.id,
+          addressType: 2,
+          deliveryAddress: parentCompanyAddress.deliveryAddress,
+        },
+        { transaction },
+      );
 
       if (linesFamilies[0]) {
         await this.validateLinesFamilies(
           linesFamilies,
           data.clientTotvsCode,
-          transaction
-        )
+          transaction,
+        );
         await this.multipleCreateLineFamily(
           buyer.id,
           linesFamilies,
-          transaction
-        )
+          transaction,
+        );
       }
 
-      if (!trx) await transaction.commit()
+      if (!trx) await transaction.commit();
 
-      return buyer.id
+      return buyer.id;
     } catch (err) {
-      if (!trx) await transaction.rollback()
-      if (err instanceof HttpException) throw err
+      if (!trx) await transaction.rollback();
+      if (err instanceof HttpException) throw err;
 
       throw new InternalServerErrorException(
-        'Ocorreu um erro durante a criação do comprador'
-      )
+        "Ocorreu um erro durante a criação do comprador",
+      );
     }
   }
 
@@ -185,41 +206,41 @@ export class BuyersService {
    */
   async getMatrix(
     query: FindMatrixDto,
-    authToken: string
+    authToken: string,
   ): Promise<FindMatrixReturnDto[]> {
     try {
       if (!query.clientTotvsCode && !query.cnpj && !query.name) {
         throw new BadRequestException(
-          'Informe o nome, CNPJ ou o código do cliente'
-        )
+          "Informe o nome, CNPJ ou o código do cliente",
+        );
       }
 
       const queryGetClient = {
-        q: 'cnpj, nomeCliente, codigoCliente, razaoSocial',
+        q: "cnpj, nomeCliente, codigoCliente, razaoSocial",
         nomeCliente: query.name,
         cnpj: query.cnpj,
         somenteMatriz: true,
-        codigoMatriz: query.clientTotvsCode?.toString()
-      }
+        codigoMatriz: query.clientTotvsCode?.toString(),
+      };
 
       const listOfMatrix = await this.clientsService.getClients(
         queryGetClient,
-        authToken
-      )
+        authToken,
+      );
 
       return listOfMatrix.clientes.map((cliente) => ({
         code: cliente.codigocliente,
         cnpj: cliente.cnpj,
         name: cliente.nomecliente.trim(),
-        socialReason: cliente.razaosocial.trim()
-      }))
+        socialReason: cliente.razaosocial.trim(),
+      }));
     } catch (error) {
-      if (error?.response?.status === 401) throw new UnauthorizedException()
-      if (error instanceof HttpException) throw error
+      if (error?.response?.status === 401) throw new UnauthorizedException();
+      if (error instanceof HttpException) throw error;
 
       throw new InternalServerErrorException(
-        'Ocorreu um erro de comunicação com o serviço de clientes'
-      )
+        "Ocorreu um erro de comunicação com o serviço de clientes",
+      );
     }
   }
 
@@ -233,11 +254,11 @@ export class BuyersService {
       where: {
         cpf,
         active: true,
-        ...(id && { id: { $ne: id } })
+        ...(id && { id: { $ne: id } }),
       },
-      attributes: ['id']
-    })
-    return !!buyer
+      attributes: ["id"],
+    });
+    return !!buyer;
   }
 
   /**
@@ -249,63 +270,116 @@ export class BuyersService {
    */
   async getAllBuyers(
     query: FindAllBuyersQueryDto,
-    userId: number
+    userId: number,
   ): Promise<Buyer[]> {
-    const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-    if (!clientCodes) return []
+    const clientCodes = await this.hierarchyService.getUserClientCodes(userId);
+    if (!clientCodes) return [];
 
     if (query.clientTotvsCode && clientCodes.length) {
       const codeExists = clientCodes.find(
-        (clientCode) => clientCode === Number(query.clientTotvsCode)
-      )
-      if (!codeExists) return []
+        (clientCode) => clientCode === Number(query.clientTotvsCode),
+      );
+      if (!codeExists) return [];
     }
 
     const buyers = await this.buyer.findAll({
       where: {
         ...(query.name && {
           name: {
-            $like: `%${ query.name }%`
-          }
+            $like: `%${query.name}%`,
+          },
         }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
               clientTotvsCode: {
-                $like: `%${ query.clientTotvsCode }%`
-              }
+                $like: `%${query.clientTotvsCode}%`,
+              },
             }
           : clientCodes.length && {
               clientTotvsCode: {
-                $in: clientCodes
-              }
-            })
+                $in: clientCodes,
+              },
+            }),
+        ...(query.birthday && {
+          birthday: {
+            $like: `%${query.birthday}%`,
+          },
+        }),
+        ...(query.category && {
+          category: {
+            $like: `%${query.category}%`,
+          },
+        }),
+        ...(query.cpf && {
+          cpf: {
+            $like: `%${query.cpf}%`,
+          },
+        }),
+        ...(query.email && {
+          email: {
+            $like: `%${query.email}%`,
+          },
+        }),
+        ...(query.imageId && {
+          imageId: {
+            $like: `%${query.imageId}%`,
+          },
+        }),
+        ...(query.responsibleCode && {
+          responsibleCode: {
+            $like: `%${query.responsibleCode}%`,
+          },
+        }),
+        ...(query.role && {
+          role: {
+            $like: `%${query.role}%`,
+          },
+        }),
+        ...(query.telephone && {
+        telephone: {
+            $like: `%${query.telephone}%`,
+          },
+        }),
+        ...(query.voltage && {
+          voltage: {
+            $like: `%${query.voltage}%`,
+          },
+        }),
       },
       attributes: [
-        'id',
-        'imageId',
-        'name',
-        'active',
-        'clientTotvsCode',
-        'responsibleDescription',
+        "id",
+        "name",
+        'cpf',
+        'role',
+        'voltage',
+        'category',
+        'email',
+        "active",
+        "birthday",
+        'telephone',
+        "clientTotvsCode",
+        'responsibleCode',
+        "responsibleDescription",
+        "imageId",
       ],
       include: [
         {
           model: File,
-          attributes: ['id', 'filename', 'contentType', 'path']
+          attributes: ["id", "filename", "contentType", "path"],
         },
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
-            lineCode: query.lineCodes.split(',').map((code) => Number(code))
+            lineCode: query.lineCodes.split(",").map((code) => Number(code)),
           },
           required: !!query.lineCodes,
-          attributes: ['lineDescription']
-        }
+          attributes: ["lineDescription"],
+        },
       ],
-      order: [['id', 'DESC']]
-    })
-    return buyers
+      order: [["id", "DESC"]],
+    });
+    return buyers;
   }
 
   /**
@@ -320,31 +394,31 @@ export class BuyersService {
     data: UpdateBuyerDto,
     buyerId: number,
     userId: number,
-    trx?: Transaction
+    trx?: Transaction,
   ): Promise<number> {
-    const transaction = trx || (await this.db.transaction())
+    const transaction = trx || (await this.db.transaction());
 
     try {
       const buyer = await this.buyer.findByPk(buyerId, {
-        attributes: ['id', 'clientTotvsCode'],
+        attributes: ["id", "clientTotvsCode"],
         include: [
           {
             model: this.buyerAddress,
-            as: 'buyerAddress',
-            attributes: ['id']
+            as: "buyerAddress",
+            attributes: ["id"],
           },
           {
             model: this.buyerAddress,
-            as: 'parentCompanyAddress',
-            attributes: ['id']
+            as: "parentCompanyAddress",
+            attributes: ["id"],
           },
           {
             model: this.buyerLineFamily,
-            attributes: ['id']
-          }
-        ]
-      })
-      if (!buyer) throw new BadRequestException('Comprador não encontrado')
+            attributes: ["id"],
+          },
+        ],
+      });
+      if (!buyer) throw new BadRequestException("Comprador não encontrado");
 
       if (
         data.active &&
@@ -352,16 +426,16 @@ export class BuyersService {
         (await this.getExistenceBuyerByCpf(data.cpf, buyerId))
       )
         throw new BadRequestException(
-          'Já existe um comprador cadastrado com o CPF informado'
-        )
+          "Já existe um comprador cadastrado com o CPF informado",
+        );
 
       if (
         !(await this.hierarchyService.checkIfUserHasAccessToAClient(
           userId,
-          buyer.clientTotvsCode
+          buyer.clientTotvsCode,
         ))
       )
-        throw new ForbiddenException()
+        throw new ForbiddenException();
 
       const {
         buyerAddress,
@@ -370,7 +444,7 @@ export class BuyersService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clientTotvsCode,
         ...updateData
-      } = data
+      } = data;
 
       // await buyer.buyerAddress.update(buyerAddress, { transaction })
       // await buyer.parentCompanyAddress.update(parentCompanyAddress, {
@@ -379,80 +453,80 @@ export class BuyersService {
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(
           (relation) =>
-            !linesFamilies.find((lineFamily) => lineFamily.id === relation.id)
+            !linesFamilies.find((lineFamily) => lineFamily.id === relation.id),
         )
-        .map((lineFamily) => lineFamily.id)
+        .map((lineFamily) => lineFamily.id);
       if (linesFamiliesDeleteIds[0]) {
         await this.buyerLineFamily.destroy({
           where: {
             id: {
-              $in: linesFamiliesDeleteIds
-            }
-          }
-        })
+              $in: linesFamiliesDeleteIds,
+            },
+          },
+        });
       }
       const linesFamiliesToCreate = linesFamilies.filter(
-        (lineFamily) => !lineFamily.id
-      )
+        (lineFamily) => !lineFamily.id,
+      );
       if (linesFamiliesToCreate[0]) {
         await this.validateLinesFamilies(
           linesFamiliesToCreate,
           data.clientTotvsCode,
-          transaction
-        )
+          transaction,
+        );
         await this.multipleCreateLineFamily(
           buyerId,
           linesFamiliesToCreate,
-          transaction
-        )
+          transaction,
+        );
       }
       const linesFamiliesToUpdate = linesFamilies.filter(
-        (lineFamily) => lineFamily.id
-      )
+        (lineFamily) => lineFamily.id,
+      );
       if (linesFamiliesToUpdate[0]) {
         await this.validateLinesFamilies(
           linesFamiliesToUpdate,
           buyer.clientTotvsCode,
-          transaction
-        )
-        await this.multipleUpdateLineFamily(linesFamiliesToUpdate, transaction)
+          transaction,
+        );
+        await this.multipleUpdateLineFamily(linesFamiliesToUpdate, transaction);
       }
-      await buyer.update({ ...updateData, updatedBy: userId }, { transaction })
-      if (!trx) await transaction.commit()
-      return buyer.id
+      await buyer.update({ ...updateData, updatedBy: userId }, { transaction });
+      if (!trx) await transaction.commit();
+      return buyer.id;
     } catch (err) {
-      if (!trx) await transaction.rollback()
-      if (err instanceof HttpException) throw err
+      if (!trx) await transaction.rollback();
+      if (err instanceof HttpException) throw err;
 
       throw new InternalServerErrorException(
-        'Ocorreu um erro ao atualizar comprador'
-      )
+        "Ocorreu um erro ao atualizar comprador",
+      );
     }
   }
 
   async multipleCreateLineFamily(
     buyerId: number,
     data: CreateBuyerLineFamily[],
-    transaction: Transaction
+    transaction: Transaction,
   ): Promise<void> {
-    const insert = data.map((value) => ({ buyerId, ...value }))
-    await this.buyerLineFamily.bulkCreate(insert, { transaction })
+    const insert = data.map((value) => ({ buyerId, ...value }));
+    await this.buyerLineFamily.bulkCreate(insert, { transaction });
   }
 
   async multipleUpdateLineFamily(
     data: UpdateBuyerLineFamily[],
-    transaction: Transaction
+    transaction: Transaction,
   ): Promise<void> {
     await Promise.all(
       data.map(async (value) => {
         await this.buyerLineFamily.update(value, {
           where: {
-            id: value.id
+            id: value.id,
           },
-          transaction
-        })
-      })
-    )
+          transaction,
+        });
+      }),
+    );
   }
 
   /**
@@ -465,28 +539,28 @@ export class BuyersService {
       include: [
         {
           model: this.buyerLineFamily,
-          required: false
+          required: false,
         },
         {
           model: this.buyerAddress,
-          as: 'parentCompanyAddress'
+          as: "parentCompanyAddress",
         },
         {
           model: this.buyerAddress,
-          as: 'buyerAddress'
-        }
-      ]
-    })
-    if (!buyer) return null
+          as: "buyerAddress",
+        },
+      ],
+    });
+    if (!buyer) return null;
 
     if (
       !(await this.hierarchyService.checkIfUserHasAccessToAClient(
         userId,
-        buyer.clientTotvsCode
+        buyer.clientTotvsCode,
       ))
     )
-      throw new ForbiddenException()
-    return buyer
+      throw new ForbiddenException();
+    return buyer;
   }
 
   /**
@@ -498,9 +572,9 @@ export class BuyersService {
   async generateReport(
     query: FindAllBuyersQueryDto,
     userId: number,
-    res: Response
+    res: Response,
   ): Promise<void> {
-    const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
+    const clientCodes = await this.hierarchyService.getUserClientCodes(userId);
 
     const buyers = !clientCodes
       ? []
@@ -508,51 +582,51 @@ export class BuyersService {
           where: {
             ...(query.name && {
               name: {
-                $like: `%${ query.name }%`
-              }
+                $like: `%${query.name}%`,
+              },
             }),
             ...(query.active && { active: query.active }),
             ...(query.clientTotvsCode
               ? {
                   clientTotvsCode: {
-                    $like: `%${ query.clientTotvsCode }%`
-                  }
+                    $like: `%${query.clientTotvsCode}%`,
+                  },
                 }
               : {
                   ...(clientCodes.length && {
                     clientTotvsCode: {
-                      $in: clientCodes
-                    }
-                  })
-                })
+                      $in: clientCodes,
+                    },
+                  }),
+                }),
           },
-          attributes: ['id', 'name', 'role', 'email', 'birthday'],
+          attributes: ["id", "name", "role", "email", "birthday"],
           include: [
             {
               model: this.buyerLineFamily,
               where: query.lineCodes && {
                 lineCode: query.lineCodes
-                  .split(',')
-                  .map((code) => Number(code))
+                  .split(",")
+                  .map((code) => Number(code)),
               },
-              required: !!query.lineCodes
+              required: !!query.lineCodes,
             },
             {
               model: this.buyerAddress,
-              as: 'buyerAddress',
+              as: "buyerAddress",
               attributes: [
-                'id',
-                'street',
-                'number',
-                'district',
-                'city',
-                'uf',
-                'cep'
-              ]
-            }
+                "id",
+                "street",
+                "number",
+                "district",
+                "city",
+                "uf",
+                "cep",
+              ],
+            },
           ],
-          order: [['id', 'DESC']]
-        })
+          order: [["id", "DESC"]],
+        });
 
     const formatedBuyers = buyers.map((buyer) => {
       // const { street, number, district, city, uf, cep } = buyer.buyerAddress
@@ -564,28 +638,28 @@ export class BuyersService {
         // address,
         role: buyer.role,
         email: buyer.email,
-        birthday: buyer.birthday
-      }
-    })
-    const xlsx = officegen('xlsx')
-    const sheet = xlsx.makeNewSheet()
-    sheet.name = 'Officegen Excel'
+        birthday: buyer.birthday,
+      };
+    });
+    const xlsx = officegen("xlsx");
+    const sheet = xlsx.makeNewSheet();
+    sheet.name = "Officegen Excel";
 
-    sheet.data[0] = []
-    sheet.data[0][0] = 'NOME COMPLETO'
-    sheet.data[0][1] = 'ENDEREÇO COMPLETO'
-    sheet.data[0][2] = 'EMPRESA'
-    sheet.data[0][3] = 'CARGO'
-    sheet.data[0][4] = 'EMAIL'
-    sheet.data[0][5] = 'ANIVERSÁRIO'
+    sheet.data[0] = [];
+    sheet.data[0][0] = "NOME COMPLETO";
+    sheet.data[0][1] = "ENDEREÇO COMPLETO";
+    sheet.data[0][2] = "EMPRESA";
+    sheet.data[0][3] = "CARGO";
+    sheet.data[0][4] = "EMAIL";
+    sheet.data[0][5] = "ANIVERSÁRIO";
 
     formatedBuyers.forEach((buyer, i) => {
-      i += 1
-      sheet.data[i] = []
+      i += 1;
+      sheet.data[i] = [];
       Object.values(buyer).forEach((value, x) => {
-        sheet.data[i][x] = value
-      })
-    })
-    await xlsx.generate(res)
+        sheet.data[i][x] = value;
+      });
+    });
+    await xlsx.generate(res);
   }
 }
