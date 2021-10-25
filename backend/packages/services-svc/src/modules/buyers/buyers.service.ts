@@ -405,12 +405,7 @@ export class BuyersService {
           {
             model: this.buyerAddress,
             as: "buyerAddress",
-            attributes: ["id"],
-          },
-          {
-            model: this.buyerAddress,
-            as: "parentCompanyAddress",
-            attributes: ["id"],
+            attributes: ["idBuyers", "idAddress"],
           },
           {
             model: this.buyerLineFamily,
@@ -441,15 +436,45 @@ export class BuyersService {
         buyerAddress,
         parentCompanyAddress,
         linesFamilies,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clientTotvsCode,
         ...updateData
       } = data;
 
-      // await buyer.buyerAddress.update(buyerAddress, { transaction })
-      // await buyer.parentCompanyAddress.update(parentCompanyAddress, {
-      //   transaction
-      // })
+      await buyer.buyerAddress.forEach((buyerAddress) => {
+        this.buyerAddress.destroy({
+          where: {
+            idBuyers: buyerAddress.idBuyers,
+            idAddress: buyerAddress.idAddress
+          },
+        })
+      })
+
+      const addressBuyer = await this.address.create(buyerAddress, {
+        transaction,
+      });
+      const addressParent = await this.address.create(parentCompanyAddress, {
+        transaction,
+      });
+
+      await this.buyerAddress.create(
+        {
+          idAddress: addressBuyer.id,
+          idBuyers: buyer.id,
+          addressType: 1,
+          deliveryAddress: buyerAddress.deliveryAddress,
+        },
+        { transaction },
+      );
+      await this.buyerAddress.create(
+        {
+          idAddress: addressParent.id,
+          idBuyers: buyer.id,
+          addressType: 2,
+          deliveryAddress: parentCompanyAddress.deliveryAddress,
+        },
+        { transaction },
+      );
+
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(
           (relation) =>
@@ -574,92 +599,40 @@ export class BuyersService {
     userId: number,
     res: Response,
   ): Promise<void> {
-    const clientCodes = await this.hierarchyService.getUserClientCodes(userId);
+    const buyers:any = await this.getAllBuyers(query, userId);
+    const formatedBuyers = [];
+    buyers.forEach((buyer) => {
+      buyers.buyerLinesFamilies.forEach(element => {
+        const newObject = {
+          name: buyer.name,
+          role: buyer.role,
+          line: element.lineDescription,
+          regionalManager: element.regionalManagerDescription,
+          responsible: buyer.responsibleDescription,
+          active: buyer.active ? 'Ativo' : 'Inativo'
+        }
+       formatedBuyers.push(newObject);
+      });
+    })
+    const xlsx = officegen('xlsx')
+    const sheet = xlsx.makeNewSheet()
+    sheet.name = 'Officegen Excel'
 
-    const buyers = !clientCodes
-      ? []
-      : await this.buyer.findAll({
-          where: {
-            ...(query.name && {
-              name: {
-                $like: `%${query.name}%`,
-              },
-            }),
-            ...(query.active && { active: query.active }),
-            ...(query.clientTotvsCode
-              ? {
-                  clientTotvsCode: {
-                    $like: `%${query.clientTotvsCode}%`,
-                  },
-                }
-              : {
-                  ...(clientCodes.length && {
-                    clientTotvsCode: {
-                      $in: clientCodes,
-                    },
-                  }),
-                }),
-          },
-          attributes: ["id", "name", "role", "email", "birthday"],
-          include: [
-            {
-              model: this.buyerLineFamily,
-              where: query.lineCodes && {
-                lineCode: query.lineCodes
-                  .split(",")
-                  .map((code) => Number(code)),
-              },
-              required: !!query.lineCodes,
-            },
-            {
-              model: this.buyerAddress,
-              as: "buyerAddress",
-              attributes: [
-                "id",
-                "street",
-                "number",
-                "district",
-                "city",
-                "uf",
-                "cep",
-              ],
-            },
-          ],
-          order: [["id", "DESC"]],
-        });
-
-    const formatedBuyers = buyers.map((buyer) => {
-      // const { street, number, district, city, uf, cep } = buyer.buyerAddress
-      // const address = [street, number, district, `${ city }/${ uf }`, cep].join(
-      //   ', '
-      // )
-      return {
-        name: buyer.name,
-        // address,
-        role: buyer.role,
-        email: buyer.email,
-        birthday: buyer.birthday,
-      };
-    });
-    const xlsx = officegen("xlsx");
-    const sheet = xlsx.makeNewSheet();
-    sheet.name = "Officegen Excel";
-
-    sheet.data[0] = [];
-    sheet.data[0][0] = "NOME COMPLETO";
-    sheet.data[0][1] = "ENDEREÇO COMPLETO";
-    sheet.data[0][2] = "EMPRESA";
-    sheet.data[0][3] = "CARGO";
-    sheet.data[0][4] = "EMAIL";
-    sheet.data[0][5] = "ANIVERSÁRIO";
+    sheet.data[0] = []
+    sheet.data[0][0] = 'NOME'
+    sheet.data[0][1] = 'MATRIZ/EMPRESA'
+    sheet.data[0][2] = 'LINHA'
+    sheet.data[0][3] = 'REGIONAL'
+    sheet.data[0][4] = 'RESPONSÁVEL'
+    sheet.data[0][5] = 'STATUS'
 
     formatedBuyers.forEach((buyer, i) => {
-      i += 1;
-      sheet.data[i] = [];
+      i += 1
+      sheet.data[i] = []
       Object.values(buyer).forEach((value, x) => {
-        sheet.data[i][x] = value;
-      });
-    });
-    await xlsx.generate(res);
+        sheet.data[i][x] = value
+      })
+    })
+    await xlsx.generate(res)
   }
 }
