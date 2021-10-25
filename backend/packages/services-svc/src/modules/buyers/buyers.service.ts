@@ -483,8 +483,11 @@ export class BuyersService {
       if (linesFamiliesDeleteIds[0]) {
         await this.buyerLineFamily.destroy({
           where: {
-            id: {
+            lineCode: {
               $in: linesFamiliesDeleteIds
+            },
+            buyerId: {
+              $eq: buyer.id
             }
           }
         })
