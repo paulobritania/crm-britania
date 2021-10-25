@@ -113,7 +113,7 @@ const AddressBuyer = ({
           onChange={handleCheckChange}
           name='deliveryAddress'
           color='primary'
-          label={t('login image use default')}
+          label={t('use as delivery address')}
         />
       </Grid>
     </Grid>

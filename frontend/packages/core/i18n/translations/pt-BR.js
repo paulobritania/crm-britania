@@ -209,6 +209,7 @@ export default {
   'login image use default': 'Utilizar Imagem Padrão',
   'login image save': 'Concluir alteração',
   'login last change': 'Login última alteração',
+  'use as delivery address': 'Usar esse endereço para entrega',
   'date last edit': 'Data última alteração',
   'last change': 'Última alteração',
   'change saved successfully': 'Alteração salva com sucesso',

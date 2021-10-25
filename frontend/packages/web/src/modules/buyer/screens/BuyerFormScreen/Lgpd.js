@@ -27,6 +27,7 @@ const Lgpd = ({ formRef }) => {
   }, [])
 
   const handleNameFile = useCallback(({ name, size }) => {
+    console.log(name, size)
     setFileName(name)
     setFileSize(size)
   }, [])

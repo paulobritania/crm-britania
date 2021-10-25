@@ -185,6 +185,8 @@ const BuyerListScreen = () => {
         )
       }
 
+      console.log('IMAGE ->>>', values.imageFile)
+
       if (values.imageFile?.size) {
         dispatch(
           FileActions.uploadImage(values.imageFile, (data) => {
