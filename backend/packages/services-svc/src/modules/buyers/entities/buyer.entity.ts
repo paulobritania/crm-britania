@@ -10,6 +10,7 @@ import {
 
 import { File } from '../../files/entities/file.entity'
 import { User } from '../../users/entities/user.entity'
+// eslint-disable-next-line import/no-cycle
 import { BuyerAddress } from './buyerAddress.entity'
 // eslint-disable-next-line import/no-cycle
 import { BuyerLineFamily } from './buyerLineFamily.entity'

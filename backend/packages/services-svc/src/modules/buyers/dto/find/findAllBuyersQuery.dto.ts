@@ -16,6 +16,12 @@ import { VoltageEnum } from '../../enum/Voltage.enum'
 const notRequired = { required: false }
 
 export class FindAllBuyersQueryDto {
+
+  @IsNumberString()
+  @IsOptional()
+  @ApiProperty(notRequired)
+  id: number;
+
   @IsNumberString()
   @IsOptional()
   @ApiProperty(notRequired)

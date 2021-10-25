@@ -1,6 +1,8 @@
 import { Table, Model, Column, DataType, HasOne } from 'sequelize-typescript'
 
+// eslint-disable-next-line import/no-cycle
 import { Address } from '../../address/entities/address.entity'
+// eslint-disable-next-line import/no-cycle
 import { Buyer } from './buyer.entity'
 
 @Table({

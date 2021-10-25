@@ -4,11 +4,8 @@ import {
   DataType,
   BelongsTo,
   Table,
-  Model,
-  HasOne
-} from 'sequelize-typescript'
+  Model} from 'sequelize-typescript'
 
-import { Hierarchy } from '../../hierarchy/entities/hierarchy.entity'
 import { Buyer } from './buyer.entity'
 
 @Table({

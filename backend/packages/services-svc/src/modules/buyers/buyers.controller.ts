@@ -135,16 +135,4 @@ export class BuyersController {
     return this.buyersService.update(data, buyerId, userId)
   }
 
-  /**
-   * Irá buscar o comprador
-   * @param userId userId
-   * @param buyerId number
-   */
-  @Get(':buyerId')
-  findOneBuyer(
-    @Param('buyerId') buyerId: number,
-    @BritaniaAuth(['userId']) userId: number
-  ): Promise<Buyer> {
-    return this.buyersService.getBuyer(userId, buyerId)
-  }
 }

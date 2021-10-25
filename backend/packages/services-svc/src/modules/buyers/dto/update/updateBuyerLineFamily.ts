@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsDate, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator'
-
-import { isNumber } from 'lodash'
+import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator'
 
 import { CreateBuyerDto } from '../create/createBuyer.dto'
 import { CreateBuyerLineFamily } from '../create/createBuyerLineFamily.dto'
