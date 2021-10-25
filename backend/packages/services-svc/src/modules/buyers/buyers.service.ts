@@ -345,7 +345,12 @@ export class BuyersService {
           voltage: {
             $like: `%${ query.voltage }%`
           }
-        })
+        }),
+        ...(query.id && {
+          id: {
+              $like: `%${ query.id }%`
+            }
+          }),
       },
       attributes: [
         'id',
