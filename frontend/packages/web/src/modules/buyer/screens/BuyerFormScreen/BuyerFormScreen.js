@@ -13,6 +13,8 @@ import upperCase from 'lodash/upperCase'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import Attach from '@britania-crm/web-components/Icons/Attach'
+import InputHidden from '@britania-crm/web-components/InputHidden'
 
 import { useDialog } from '@britania-crm/dialog'
 import { useFormEffect } from '@britania-crm/forms'
@@ -28,12 +30,12 @@ import Button from '@britania-crm/web-components/Button'
 import Form from '@britania-crm/web-components/Form'
 import { CircularLoader } from '@britania-crm/web-components/Loader'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
+import UploadImage from '@britania-crm/web-components/UploadImage'
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
 import { FileActions } from '@britania-crm/stores/file'
 import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 
 import Address from './Address'
-import Lgpd from './Lgpd'
 import MainData from './MainData'
 import { useStyles } from './styles'
 
@@ -52,6 +54,7 @@ const BuyerListScreen = () => {
   const [loader, setLoader] = useState(false)
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
+  const [image, setImage] = useState()
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
@@ -64,6 +67,19 @@ const BuyerListScreen = () => {
     {},
     { revalidateOnFocus: false }
   )
+
+  const handleNameFile = useCallback(
+    (value) => {
+      formRef.current.setFieldValue('imageFile', value)
+      setImage(value)
+    },
+    [formRef]
+  )
+
+  const handleRemoveFile = useCallback(() => {
+    formRef.current.setFieldValue('imageFile', '')
+    setImage()
+  }, [formRef])
 
   const buyerFromApi = useMemo(
     () =>
@@ -166,9 +182,6 @@ const BuyerListScreen = () => {
           },
           telephone: trimMask(values.telephone),
           linesFamilies: values?.linesFamilies,
-          regionalManagerCode: values?.regionalManager?.approverCode,
-          regionalManagerDescription:
-            values?.regionalManager?.approverDescription,
           responsibleCode: values?.responsible?.approverCode,
           responsibleDescription: values?.responsible?.approverDescription,
           imageId: imageId === null ? buyerFromApi.imageId?.id : imageId
@@ -184,8 +197,6 @@ const BuyerListScreen = () => {
           )
         )
       }
-
-      console.log('IMAGE ->>>', values.imageFile)
 
       if (values.imageFile?.size) {
         dispatch(
@@ -313,14 +324,65 @@ const BuyerListScreen = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Lgpd
-            formRef={formRef}
-            modeView={
-              modeView || loader || loading || existenceBuyerFromApiLoading
-            }
-            isEdit={isEdit}
-            isView={modeView}
-          ></Lgpd>
+          <Grid container spacing={1} className={classes.containerMain}>
+            <Grid item className={classes.header} sm={12}>
+              <Typography className={classes.title}>LGPD</Typography>
+            </Grid>
+            <Grid item sm={12} className={classes.flexContainer}>
+              <Grid item sm={8} className={classes.lgpdTitle}>
+                Você só poderá seguir com o cadastro se adicionar o documento de
+                consentimento do Comprador.
+                <ul className={classes.lgpdText}>
+                  <li>
+                    Recomendação: Use arquivos .jpg de alta qualidade, PDF ou
+                    .docx.
+                  </li>
+                  <li>Tamanho máximo: 20MB</li>
+                </ul>
+              </Grid>
+
+              {image ? (
+                <Grid item sm={12} md={6} className={classes.hasFile}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Attach size={24} />
+                    <p>{image.name}</p>
+                    <span>{image.size} Kb</span>
+                  </div>
+                  <Button
+                    variant='text'
+                    onClick={handleRemoveFile}
+                    style={{ fontSize: 16, color: '#8492a6' }}
+                  >
+                    x
+                  </Button>
+                </Grid>
+              ) : (
+                <Grid item sm={6} md={6} className={classes.upload}>
+                  <UploadImage
+                    name='imageTemp'
+                    style={{ marginTop: 30 }}
+                    title={t('login image add new file message')}
+                    description={''}
+                    types={[
+                      'image/jpg',
+                      'image/jpeg',
+                      'application/pdf',
+                      '.doc',
+                      '.docx'
+                    ]}
+                    onValueChange={handleNameFile}
+                  />
+                </Grid>
+              )}
+              <InputHidden name='imageFile' value={image} />
+            </Grid>
+          </Grid>
           <MainData
             formRef={formRef}
             isDisabled={

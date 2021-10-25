@@ -99,6 +99,7 @@ export default ({ t }) => {
     clientTotvsDescription: Yup.object(),
     responsible: Yup.object(),
     imageFile: file({ t })(Yup.mixed()),
+    imageTemp: file({ t })(Yup.mixed()),
     imageId: Yup.number().nullable(),
     linesFamilies: required({ t, isNotText: true })(Yup.array())
   })

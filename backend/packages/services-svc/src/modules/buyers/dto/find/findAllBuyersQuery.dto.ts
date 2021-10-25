@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger'
 import {
   IsBooleanString,
   IsEmail,
@@ -7,13 +7,13 @@ import {
   IsOptional,
   IsString,
   Length,
-  Validate,
-} from "class-validator";
+  Validate
+} from 'class-validator'
 
-import { IsStringifiedNumberArray } from "../../../../utils/validations/isStringifiedNumberArrayValidator";
-import { VoltageEnum } from "../../enum/Voltage.enum";
+import { IsStringifiedNumberArray } from '../../../../utils/validations/isStringifiedNumberArrayValidator'
+import { VoltageEnum } from '../../enum/Voltage.enum'
 
-const notRequired = { required: false };
+const notRequired = { required: false }
 
 export class FindAllBuyersQueryDto {
   @IsNumberString()

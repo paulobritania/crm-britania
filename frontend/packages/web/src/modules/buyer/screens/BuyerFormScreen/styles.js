@@ -128,26 +128,3 @@ export const useStyles = makeStyles(() => ({
     fontWeight: fonts.fontWeight.regular
   }
 }))
-
-export const ShadowBox = styled.div`
-  display: flex;
-  background-color: ${colors.white5};
-  margin: 32;
-  width: 100%;
-  height: 100%;
-  justify-content: space-between;
-  padding: 32px;
-  border-radius: 25px;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none;
-`
-
-export const ContentBox = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-`
