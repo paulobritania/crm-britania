@@ -403,12 +403,12 @@ export class BuyersService {
         attributes: ["id", "clientTotvsCode"],
         include: [
           {
-            model: this.buyerAddress,
+            model: this.address,
             as: "buyerAddress",
             attributes: ["id"],
           },
           {
-            model: this.buyerAddress,
+            model: this.address,
             as: "parentCompanyAddress",
             attributes: ["id"],
           },
@@ -450,6 +450,14 @@ export class BuyersService {
       // await buyer.parentCompanyAddress.update(parentCompanyAddress, {
       //   transaction
       // })
+
+      // await this.buyerAddress.update(buyerAddress, {
+      //   where: {
+      //     id_buyer: 1,
+      //     id_address: 3.
+      //   }
+      // })
+
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(
           (relation) =>
