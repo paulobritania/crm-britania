@@ -403,14 +403,9 @@ export class BuyersService {
         attributes: ["id", "clientTotvsCode"],
         include: [
           {
-            model: this.address,
+            model: this.buyerAddress,
             as: "buyerAddress",
-            attributes: ["id"],
-          },
-          {
-            model: this.address,
-            as: "parentCompanyAddress",
-            attributes: ["id"],
+            attributes: ["idBuyers", "idAddress"],
           },
           {
             model: this.buyerLineFamily,
@@ -441,22 +436,44 @@ export class BuyersService {
         buyerAddress,
         parentCompanyAddress,
         linesFamilies,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clientTotvsCode,
         ...updateData
       } = data;
 
-      // await buyer.buyerAddress.update(buyerAddress, { transaction })
-      // await buyer.parentCompanyAddress.update(parentCompanyAddress, {
-      //   transaction
-      // })
+      await buyer.buyerAddress.forEach((buyerAddress) => {
+        this.buyerAddress.destroy({
+          where: {
+            idBuyers: buyerAddress.idBuyers,
+            idAddress: buyerAddress.idAddress
+          },
+        })
+      })
 
-      // await this.buyerAddress.update(buyerAddress, {
-      //   where: {
-      //     id_buyer: 1,
-      //     id_address: 3.
-      //   }
-      // })
+      const addressBuyer = await this.address.create(buyerAddress, {
+        transaction,
+      });
+      const addressParent = await this.address.create(parentCompanyAddress, {
+        transaction,
+      });
+
+      await this.buyerAddress.create(
+        {
+          idAddress: addressBuyer.id,
+          idBuyers: buyer.id,
+          addressType: 1,
+          deliveryAddress: buyerAddress.deliveryAddress,
+        },
+        { transaction },
+      );
+      await this.buyerAddress.create(
+        {
+          idAddress: addressParent.id,
+          idBuyers: buyer.id,
+          addressType: 2,
+          deliveryAddress: parentCompanyAddress.deliveryAddress,
+        },
+        { transaction },
+      );
 
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(

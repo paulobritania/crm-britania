@@ -112,6 +112,9 @@ export class Buyer extends Model<Buyer> {
   @HasMany(() => BuyerLineFamily, { foreignKey: 'buyerId', sourceKey: 'id' })
   buyerLinesFamilies: BuyerLineFamily[];
 
+  @HasMany(() => BuyerAddress, { foreignKey: 'idBuyers', sourceKey: 'id' })
+  buyerAddress: BuyerAddress[];
+
   @HasOne(() => File, { sourceKey: 'imageId', foreignKey: 'id' })
   ranking: File
 
