@@ -46,7 +46,7 @@ const BuyerListScreen = () => {
         width: 250
       },
       {
-        title: t('matrix or company'),
+        title: t('company'),
         field: 'clientTotvsDescription'
       },
       {
@@ -81,37 +81,12 @@ const BuyerListScreen = () => {
         }
       },
       {
-        title: t('regional', { howMany: 1 }),
-        field: 'regionalManagerDescription'
-      },
-      {
         title: t('responsible', { howMany: 1 }),
         field: 'responsibleDescription'
       },
       {
-        title: t('status'),
-        field: 'active',
-        render: (row) => (
-          <Checkbox
-            detached
-            readOnly
-            style={{ color: colors.black2 }}
-            label={row.active ? t('active') : t('inactive')}
-            value={row.active}
-            icon={
-              <FiberManualRecordIcon
-                fontSize='small'
-                htmlColor={colors.error.main}
-              />
-            }
-            checkedIcon={
-              <FiberManualRecordIcon
-                fontSize='small'
-                htmlColor={colors.success.main}
-              />
-            }
-          />
-        )
+        title: t('regional', { howMany: 1 }),
+        field: 'regionalManagerDescription'
       }
     ],
     [t]

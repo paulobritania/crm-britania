@@ -471,7 +471,7 @@ MTableToolbar.propTypes = {
   onGoBack: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   minimalistToolbar: PropTypes.bool,
   filter: PropTypes.bool,
-  filterForm: PropTypes.element,
+  filterForm: PropTypes.object,
   handleFilter: PropTypes.func
 }
 

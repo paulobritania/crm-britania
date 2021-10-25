@@ -44,12 +44,23 @@ const PageFilter = ({ Form, handleFilter, filters }) => {
   )
 
   return (
-    <Form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      filterEmptyValues
-      filters={filters}
-    />
+    <Grid item style={{ display: 'flex' }}>
+      <Form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        filterEmptyValues
+        filters={filters}
+      />
+      <I18n
+        className={classes.buttonClear}
+        as={Button}
+        variant='text'
+        color='secondary'
+        onClick={handleClearForm}
+      >
+        cleanFilter
+      </I18n>
+    </Grid>
   )
 }
 

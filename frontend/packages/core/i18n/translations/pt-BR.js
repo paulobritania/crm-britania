@@ -70,6 +70,7 @@ export default {
   confirm: 'Confirmar',
   save: 'Salvar',
   filter: 'Filtrar',
+  cleanFilter: 'Limpar filtros',
   'message boards': 'Mural de Recados',
   'add new message': 'Adicionar Novo Recado',
   'edit message board': 'Editar Recado',

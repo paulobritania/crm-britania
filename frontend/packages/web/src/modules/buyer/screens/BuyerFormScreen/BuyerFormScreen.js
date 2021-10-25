@@ -55,17 +55,27 @@ const BuyerListScreen = () => {
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
   const [image, setImage] = useState()
+  const [_buyerFromApi, set_buyerFromApi] = useState()
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
   const isEdit = useMemo(() => mode === 'edit', [mode])
 
-  const { data: _buyerFromApi, loading } = useCrmApi(
-    state?.params?.id
-      ? [`${buyersCrmRoutes.getOne}/${state?.params?.id}`, state]
+  const { loading } = useCrmApi(
+    isEmpty(_buyerFromApi) && state?.params?.id
+      ? [buyersCrmRoutes.getAll]
       : null,
-    {},
-    { revalidateOnFocus: false }
+    {
+      params: {
+        id: state?.params?.id
+      }
+    },
+    {
+      onSuccess(data) {
+        set_buyerFromApi(data[0])
+      },
+      revalidateOnFocus: false
+    }
   )
 
   const handleNameFile = useCallback(

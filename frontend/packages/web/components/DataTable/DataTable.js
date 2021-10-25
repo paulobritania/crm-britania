@@ -735,7 +735,7 @@ DataTable.propTypes = {
   api: PropTypes.any,
   disableRowClick: PropTypes.bool,
   filter: PropTypes.bool,
-  filterForm: PropTypes.element,
+  filterForm: PropTypes.object,
   handleFilter: PropTypes.func
 }
 
