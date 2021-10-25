@@ -10,6 +10,10 @@ import { ApiProperty } from '@nestjs/swagger'
 // }
 
 export class FindAllBuyerReturnDto {
+  
+  @ApiProperty()
+  id: number;
+  
   @ApiProperty()
   clientTotvsCode: number;
 

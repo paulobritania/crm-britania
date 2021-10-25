@@ -345,7 +345,12 @@ export class BuyersService {
           voltage: {
             $like: `%${ query.voltage }%`
           }
-        })
+        }),
+        ...(query.id && {
+          id: {
+              $like: `%${ query.id }%`
+            }
+          }),
       },
       attributes: [
         'id',
@@ -554,40 +559,6 @@ export class BuyersService {
         })
       })
     )
-  }
-
-  /**
-   * Irá retornar o comprador e suas relações
-   * @param buyerId number
-   * @param userId number
-   */
-  async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
-    const buyer = await Buyer.findByPk(buyerId, {
-      include: [
-        {
-          model: this.buyerLineFamily,
-          required: false
-        },
-        {
-          model: this.buyerAddress,
-          as: 'parentCompanyAddress'
-        },
-        {
-          model: this.buyerAddress,
-          as: 'buyerAddress'
-        }
-      ]
-    })
-    if (!buyer) return null
-
-    if (
-      !(await this.hierarchyService.checkIfUserHasAccessToAClient(
-        userId,
-        buyer.clientTotvsCode
-      ))
-    )
-      throw new ForbiddenException()
-    return buyer
   }
 
   /**
