@@ -17,7 +17,6 @@ import { FileActions } from '@britania-crm/stores/file'
 import colors from '@britania-crm/styles/colors'
 import Checkbox from '@britania-crm/web-components/Checkbox'
 import DataTable from '@britania-crm/web-components/DataTable'
-import PageFilter from '@britania-crm/web-components/PageFilter'
 import Tooltip from '@britania-crm/web-components/Tooltip'
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
 
@@ -172,17 +171,17 @@ const BuyerListScreen = () => {
 
   return (
     <>
-      {/* <PageFilter handleFilter={handleFilter} Form={BuyerFormFilter} /> */}
       <Container>
         <DataTable
           data={data}
           columns={columns}
           loading={loading || !!error || downloadLoading}
           title={t('buyer', { howMany: 2 })}
-          addTitle={t('add new {this}', {
+          addTitle={t('new {this}', {
             gender: 'male',
             this: t('buyer', { howMany: 1 })
           })}
+          searchText='Pesquise pelo comprador ou nome da matriz'
           hasFilter
           filterForm={BuyerFormFilter}
           handleFilter={handleFilter}

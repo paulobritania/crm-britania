@@ -14,14 +14,12 @@ module.exports = {
         defaultValue: 0
       }),
       queryInterface.addColumn('buyers_lines_families', 'created_at', {
-        type: Sequelize.DATE(6),
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)')
+        type: Sequelize.DATE,
+        allowNull: true,
       }),
       queryInterface.addColumn('buyers_lines_families', 'updated_at', {
-        type: Sequelize.DATE(6),
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)')
+        type: Sequelize.DATE,
+        allowNull: true,
       }),
     ])
   },

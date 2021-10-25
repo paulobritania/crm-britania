@@ -20,10 +20,18 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn('buyers', 'image_id'),
-      queryInterface.addColumn('buyers', 'parent_company_address_id'),
-      queryInterface.addColumn('buyers', 'buyer_address_id'),
-      queryInterface.addColumn('buyers', 'client_totvs_description'),
-      queryInterface.addColumn('buyers', 'regional_manager_description'),
+      queryInterface.addColumn('buyers', 'parent_company_address_id', {
+        type: Sequelize.INTEGER,
+      }),
+      queryInterface.addColumn('buyers', 'buyer_address_id', {
+        type: Sequelize.INTEGER,
+      }),
+      queryInterface.addColumn('buyers', 'client_totvs_description', {
+        type: Sequelize.STRING(80),
+      }),
+      queryInterface.addColumn('buyers', 'regional_manager_description', {
+        type: Sequelize.STRING(80),
+      }),
       queryInterface.addColumn('buyers', 'regional_manager_code', {
         type: Sequelize.INTEGER
       }),

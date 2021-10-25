@@ -1,4 +1,12 @@
 module.exports = {
+  primaryNew: {
+    main: '#1F2D3D',
+    text: '#EFF2F7'
+  },
+  secondaryNew: {
+    main: '#3C4858',
+    text: '#3C4858'
+  },
   primary: {
     main: '#152942',
     light: '#5B697B',
@@ -47,6 +55,7 @@ module.exports = {
   grey20: '#c2cedb',
   grey40: '#8492a6',
   grey60: '#3C4858',
+  grey80: '#1F2D3D',
 
   black: '#1D1D1B',
   black2: '#101213',

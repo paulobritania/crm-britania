@@ -8,12 +8,14 @@ export default {
   'datagrid body redirect tooltip': 'Redirecionar',
   'datagrid body dowload tooltip': 'Download',
   'datagrid body bind tooltip': 'Vínculos',
-  'datagrid body edit row delete text': 'Você tem certeza que deseja deletar esse registro?',
+  'datagrid body edit row delete text':
+    'Você tem certeza que deseja deletar esse registro?',
   'datagrid body edit row cancel tooltip': 'Cancelar',
   'datagrid body edit row save tooltip': 'Salvar',
   'datagrid body filter row filter tooltip': 'Filtro',
   'datagrid grouping grouped by': 'Agrupado por:',
-  'datagrid grouping placeholder': 'Arraste colunas para cá para agrupar o resultado',
+  'datagrid grouping placeholder':
+    'Arraste colunas para cá para agrupar o resultado',
   'datagrid header actions': 'Ações',
   'datagrid pagination label displayed rows': '{from}-{to} de {count}',
   'datagrid pagination label rows select': 'registros',
@@ -54,7 +56,8 @@ export default {
   task: '{howMany, plural, one {Tarefa} other {Tarefas}}',
   request: '{howMany, plural, one {Solicitação} other {Solicitações}}',
   'request number': 'Número da Solicitação',
-  'service order': '{howMany, plural, one {Ordem de serviço} other {Ordens de serviço}}',
+  'service order':
+    '{howMany, plural, one {Ordem de serviço} other {Ordens de serviço}}',
   occurrence: '{howMany, plural, one {Ocorrência} other {Ocorrências}}',
   account: '{howMany, plural, one {Conta} other {Contas}}',
   user: '{howMany, plural, one {Usuário} other {Usuários}}',
@@ -81,9 +84,12 @@ export default {
   actions: 'Ações',
   message: 'Recado',
   'message label': 'Mensagem',
-  'link profile': '{howMany, plural, one {Vincular Perfil} other {Vincular Perfis}}',
-  'link representative': '{howMany, plural, one {Vincular Representante} other {Vincular Representantes}}',
-  'select representative': '{howMany, plural, one {Selecionar Representante} other {Selecionar Representantes}}',
+  'link profile':
+    '{howMany, plural, one {Vincular Perfil} other {Vincular Perfis}}',
+  'link representative':
+    '{howMany, plural, one {Vincular Representante} other {Vincular Representantes}}',
+  'select representative':
+    '{howMany, plural, one {Selecionar Representante} other {Selecionar Representantes}}',
   'linked profiles': 'Perfis Vinculados',
   'message board title': 'Título do Recado',
   'home screen': 'Recado na tela inicial',
@@ -91,12 +97,18 @@ export default {
   'tilte modal filter': 'Filtros',
   'customers consultation': 'Consulta de Clientes',
   'customers group': 'Grupo do cliente',
-  'matrix code': '{abbreviation, select , true {Cód. Matriz} false {Código da matriz}}',
-  'code of matrix': '{abbreviation, select , true {Cód. Matriz} false {Código da matriz}}',
-  'logistical information': '{abbreviation, select , true {Inf. logística} false {Informação logística}}',
-  'credit status': '{abbreviation, select , true {Sit. Crédito} false {Situação de crédito}}',
-  'letter of regime': '{abbreviation, select , true {Cart. Regime} false {Carta regime}}',
-  'days without billing': '{abbreviation, select , true {Dias sem fat.} false {Dias sem faturamento}}',
+  'matrix code':
+    '{abbreviation, select , true {Cód. Matriz} false {Código da matriz}}',
+  'code of matrix':
+    '{abbreviation, select , true {Cód. Matriz} false {Código da matriz}}',
+  'logistical information':
+    '{abbreviation, select , true {Inf. logística} false {Informação logística}}',
+  'credit status':
+    '{abbreviation, select , true {Sit. Crédito} false {Situação de crédito}}',
+  'letter of regime':
+    '{abbreviation, select , true {Cart. Regime} false {Carta regime}}',
+  'days without billing':
+    '{abbreviation, select , true {Dias sem fat.} false {Dias sem faturamento}}',
   'companys branch': 'Filial',
   'companys branch code': 'Cód. Filial',
   company: 'Empresa',
@@ -169,7 +181,8 @@ export default {
   welcome: 'Bem Vindo!',
   'control of {this}': 'Controle de {this}',
   conditional: 'Condicional',
-  response: '{requiresJustification, select, true {Resposta - com Justificativa} other {Resposta}}',
+  response:
+    '{requiresJustification, select, true {Resposta - com Justificativa} other {Resposta}}',
   'add conditional': ' Adicionar Condicional',
   'add response': ' Adicionar Resposta',
   'profiles control': 'Controle de Perfis',
@@ -200,14 +213,16 @@ export default {
   'last change': 'Última alteração',
   'change saved successfully': 'Alteração salva com sucesso',
   'read more': 'Ler mais ...',
-  'add new {this}': 'Adicionar {gender, select, male {novo} female {nova}} {this}',
+  'add new {this}':
+    'Adicionar {gender, select, male {novo} female {nova}} {this}',
   'new {this}': '{gender, select, male {Novo} female {Nova}} {this}',
   'editing {this}': 'Editando {this}',
   name: '{howMany, plural, one {Nome} other {Nomes}}',
   phone: '{howMany, plural, one {Telefone} other {Telefones}}',
   alternate: '{howMany, plural, one {Suplente} other {Suplentes}}',
   period: '{howMany, plural, one {Período} other {Períodos}}',
-  representative: '{howMany, plural, one {Representante} other {Representantes}}',
+  representative:
+    '{howMany, plural, one {Representante} other {Representantes}}',
   consultant: '{howMany, plural, one {Consultor} other {Consultores}}',
   search: 'Pesquisar',
   'search by {this}': 'Busque por {this}',
@@ -226,7 +241,8 @@ export default {
   'system profile': 'Perfil do sistema',
   'sla time': 'Prazo dias úteis',
   'task and response registration': 'Cadastro de Tarefas e Respostas',
-  'the title entered already exists in another task': 'O título informado já existe em outra tarefa',
+  'the title entered already exists in another task':
+    'O título informado já existe em outra tarefa',
   historic: 'Histórico',
   'workflow history': 'Histórico do Workflow',
   'changed field': 'Campo alterado:',
@@ -237,13 +253,16 @@ export default {
   'required field': 'Este é um campo obrigatório',
   inactivate: 'Inativar',
   'must be a number': 'Valor precisa ser um número',
-  'end date must be higher than start date': 'Data final deve ser maior ou igual à data inicial',
-  'end time should be greater than today': 'Data final deve ser maior do que hoje',
+  'end date must be higher than start date':
+    'Data final deve ser maior ou igual à data inicial',
+  'end time should be greater than today':
+    'Data final deve ser maior do que hoje',
   'Do you want to delete the registration?': 'Deseja excluir o cadastro?',
   'Do you want to cancel the registration?': 'Deseja cancelar o cadastro?',
   'Do you want to cancel editing?': 'Deseja cancelar a edição?',
   '5 characters min length': 'O tamanho mínimo é 5 caracteres',
-  'Do you want to deactivate the workflow?': 'Deseja inativar o fluxo de tarefas?',
+  'Do you want to deactivate the workflow?':
+    'Deseja inativar o fluxo de tarefas?',
   messages: 'Recados',
   'enable all hierarchy clients': 'Liberar todos os clientes da hierarquia',
   'drag n drop to add': 'Arraste e solte para adicionar',
@@ -270,11 +289,15 @@ export default {
   client: '{howMany, plural, one {Cliente} other {Clientes}}',
   '{this} register': 'cadastro {this}',
   buyer: '{howMany, plural, one {Comprador} other {Compradores}}',
-  '{this} datagrid body empty data source message': 'Não existem {this} cadastrados no sistema',
-  'buyer datagrid body empty data source message': 'Não existem compradores cadastrados no sistema',
-  'equalization datagrid body empty data source message': 'Não existem solicitações de equalização no sistema',
+  '{this} datagrid body empty data source message':
+    'Não existem {this} cadastrados no sistema',
+  'buyer datagrid body empty data source message':
+    'Não existem compradores cadastrados no sistema',
+  'equalization datagrid body empty data source message':
+    'Não existem solicitações de equalização no sistema',
   'register of {this}': 'Cadastro de {this}',
   line: 'Linha',
+  allLines: 'Todas as Linhas',
   'master line': 'Linha master',
   matrix: 'Matriz',
   'matrix or company': 'Matriz/Empresa',
@@ -283,11 +306,14 @@ export default {
   'Export as CSV': 'Exportar como CSV',
   'main data': 'Dados Principais',
   address: 'Endereço',
-  'address of {this}': 'Endereço {gender, select, male {de} female {da} other {do}} {this}',
+  'address of {this}':
+    'Endereço {gender, select, male {de} female {da} other {do}} {this}',
   category: '{howMany, plural, one {Categoria} other {Categorias}}',
   family: '{howMany, plural, one {Família} other {Famílias}}',
-  'exception family': '{howMany, plural, one {Exceção de família} other {Exceções de famílias}}',
-  'exception line': '{howMany, plural, one {Exceção de linha} other {Exceções de linhas}}',
+  'exception family':
+    '{howMany, plural, one {Exceção de família} other {Exceções de famílias}}',
+  'exception line':
+    '{howMany, plural, one {Exceção de linha} other {Exceções de linhas}}',
   responsible: '{howMany, plural, one {Responsável} other {Responsáveis}}',
   regional: '{howMany, plural, one {Regional} other {Regionais}}',
   voltage: '{howMany, plural, one {Voltagem} other {Voltagens}}',
@@ -310,8 +336,10 @@ export default {
   'regional manager': 'Gerente regional',
   'responsible service': 'Responsável atendimento',
   'Customer Ranking': 'Ranking de Clientes',
-  'an error occurred while updating ranking': 'ocorreu um erro ao atualizar ranking',
-  'Do you want to change the Customer Ranking Goals Register?': 'Deseja alterar o Cadastro de Metas de Ranking de Clientes?',
+  'an error occurred while updating ranking':
+    'ocorreu um erro ao atualizar ranking',
+  'Do you want to change the Customer Ranking Goals Register?':
+    'Deseja alterar o Cadastro de Metas de Ranking de Clientes?',
   state: 'Estado',
   'cd code': '{abbreviation, select , true {Cód. CD} false {Código CD}}',
   situation: 'Situação',
@@ -331,9 +359,12 @@ export default {
   characters: 'caracteres',
   digits: 'dígitos',
   '{this} must have {length} digits': '{this} deve conter {length} dígitos',
-  '{this} must have a max of {length} {type}': '{this} deve conter no máximo {length} {type}',
-  '{this} must have a min of {length} {type}': '{this} deve conter no mínimo {length} {type}',
-  '{this} must have a max of {length} digits': '{this} deve conter no máximo {length} dígitos',
+  '{this} must have a max of {length} {type}':
+    '{this} deve conter no máximo {length} {type}',
+  '{this} must have a min of {length} {type}':
+    '{this} deve conter no mínimo {length} {type}',
+  '{this} must have a max of {length} digits':
+    '{this} deve conter no máximo {length} dígitos',
   '{this} must not exceed {size}': '{this} não deve exceder {length}',
   'invalid password': 'Senha inválida',
   'invalid phone': 'Telefone inválido',
@@ -348,17 +379,25 @@ export default {
   both: 'Ambos',
   'advanced search': 'Busca avançada',
   'view more': 'Ver mais',
-  'search error customer': 'Obtivemos um erro ao buscar informações do cliente. Deseja refazer a busca?',
-  'matrix fill information': 'Preencher os campos somente se já existir matriz cadastrada na Britânia.',
-  'search error buyer': 'Obtivemos um erro ao buscar informações do comprador. Deseja refazer a busca?',
-  'search error line': 'Obtivemos um erro ao buscar informações das linhas. Deseja refazer a busca?',
-  'search error family': 'Obtivemos um erro ao buscar informações das famílias. Deseja refazer a busca?',
+  'search error customer':
+    'Obtivemos um erro ao buscar informações do cliente. Deseja refazer a busca?',
+  'matrix fill information':
+    'Preencher os campos somente se já existir matriz cadastrada na Britânia.',
+  'search error buyer':
+    'Obtivemos um erro ao buscar informações do comprador. Deseja refazer a busca?',
+  'search error line':
+    'Obtivemos um erro ao buscar informações das linhas. Deseja refazer a busca?',
+  'search error family':
+    'Obtivemos um erro ao buscar informações das famílias. Deseja refazer a busca?',
   'current ranking': 'Ranking Atual:',
   'previous ranking': 'Ranking Anterior:',
-  'maximum number of attempts reached': 'Máximo de tentativas atingido. Por gentileza entre em contato com o administrador do sistema',
+  'maximum number of attempts reached':
+    'Máximo de tentativas atingido. Por gentileza entre em contato com o administrador do sistema',
   'unfilled cnpj': 'É necessário preencher o campo de CNPJ',
-  'cnpj does not match matrix': 'Este CNPJ não corresponde a nenhuma matriz cadastrada',
-  'CPF already registered in another Matrix': 'CPF já cadastrado em outra Matriz',
+  'cnpj does not match matrix':
+    'Este CNPJ não corresponde a nenhuma matriz cadastrada',
+  'CPF already registered in another Matrix':
+    'CPF já cadastrado em outra Matriz',
   'negotiation number': 'Número da negociação',
   'type of funds': 'Tipo de verba',
   'type of payment': 'Tipo de pagamento',
@@ -446,7 +485,8 @@ export default {
   'risk class': 'Classe de risco',
   'customer group': 'Grupo do cliente',
   intermediary: 'Intermediador',
-  'base {first} establishment {second}': 'Base {first} - Estabelecimento {second}',
+  'base {first} establishment {second}':
+    'Base {first} - Estabelecimento {second}',
   code: 'Código',
   'do not retain icms': 'Não retém ICMS',
   'icms substitute': 'Substituto ICMS',
@@ -479,7 +519,8 @@ export default {
   'syntactic query': 'Consulta Sintegra',
   others: 'Outros',
   'contractual alteration': 'Alteração contratual',
-  'payment slips or invoices from other suppliers': 'Boletos ou NFs de outros Fornecedores',
+  'payment slips or invoices from other suppliers':
+    'Boletos ou NFs de outros Fornecedores',
   invoice: 'Relação de faturamento',
   'state registration': 'Inscrição estadual',
   'billing phone': 'Telefone cobrança',
@@ -510,7 +551,8 @@ export default {
   maintenance: 'Manutenção',
   'commission percentage': 'Percentual de comissão',
   'name representative': 'Nome contato representante',
-  'click here to select a new document': 'Clique aqui para selecionar um novo documento',
+  'click here to select a new document':
+    'Clique aqui para selecionar um novo documento',
   approved: 'Aprovado',
   disapproved: 'Reprovado',
   workflow: 'Fluxo',
@@ -524,7 +566,8 @@ export default {
   'request change': 'Solicitar alteração',
   change: 'Alteração',
   'detailed history': 'Histórico detalhado',
-  'nds may be less then total value': 'O valor da solicitação do VPC é menor que o valor das NDs',
+  'nds may be less then total value':
+    'O valor da solicitação do VPC é menor que o valor das NDs',
   'sintegra consultation': 'Consulta Sintegra',
   'billing email': 'E-mail cobrança',
   'invoice shipping email': 'E-mail envio de NF',
@@ -534,8 +577,10 @@ export default {
   'number of employers': 'Número de funcionários',
   'suggested limit': 'Limite sugerido',
   'social capital': 'Capital social',
-  'commercial reference': '{howMany, plural, one {Referência comercial} other {Referências comerciais}}',
-  'bank reference': '{howMany, plural, one {Referência bancária} other {Referências bancárias}}',
+  'commercial reference':
+    '{howMany, plural, one {Referência comercial} other {Referências comerciais}}',
+  'bank reference':
+    '{howMany, plural, one {Referência bancária} other {Referências bancárias}}',
   'goods list': 'Relação de Bens',
   revenue: '{howMany, plural, one {Faturamento} other {Faturamentos}}',
   counter: '{howMany, plural, one {Contador} other {Contadores}}',
@@ -545,13 +590,17 @@ export default {
   month: 'Mês',
   year: 'Ano',
   crc: 'CRC',
-  'form contain errors. please review the data': 'Formulário contém erros. Por favor revise as informações.',
-  'occurred an error when execute the operation': 'Ocorreu um erro ao realizar a solicitação',
-  'material good': '{howMany, plural, one {Bem material} other {Bens materiais}}',
+  'form contain errors. please review the data':
+    'Formulário contém erros. Por favor revise as informações.',
+  'occurred an error when execute the operation':
+    'Ocorreu um erro ao realizar a solicitação',
+  'material good':
+    '{howMany, plural, one {Bem material} other {Bens materiais}}',
   'material good relation localization': 'Localização relação de bens',
   'companies holding participation': 'Participações em outras empresas',
   participation: '{howMany, plural, one {Participação} other {Participações}}',
-  'activity branch': '{howMany, plural, one {Ramo de atividade} other {Ramo de atividades}}',
+  'activity branch':
+    '{howMany, plural, one {Ramo de atividade} other {Ramo de atividades}}',
   'special tax substitution regime': 'Regime especial substituição tributária',
   'client from MG': 'Cliente estado Mato Grosso',
   item: '{howMany, plural, one {Item} other {Itens}}',
@@ -663,7 +712,8 @@ export default {
   'current fan': 'FAN atual',
   'last fan': 'FAN anterior',
   'there is no previous FAN': 'Não há FAN anterior',
-  'more than one regional manager can be included.': 'Pode ser incluso mais de um gerente regional.',
+  'more than one regional manager can be included.':
+    'Pode ser incluso mais de um gerente regional.',
   'calculation basis': 'Base de cálculo',
   discount: 'Desconto',
   'basis of calculation': 'Base apuração',
@@ -680,7 +730,8 @@ export default {
 
   // Relatórios
   report: '{howMany, plural, one {Relatório} other {Relatórios}}',
-  'report of {this}': '{howMany, plural, one {Relatório {this}} other {Relatórios {this}}}',
+  'report of {this}':
+    '{howMany, plural, one {Relatório {this}} other {Relatórios {this}}}',
   contract: '{howMany, plural, one {Contrato} other {Contratos}}',
   'store actions': 'Ações de loja',
   bonus: 'Bonificação',
@@ -688,7 +739,10 @@ export default {
   flow: 'Escoamento',
   presidency: 'Presidência',
   'contract percentage': 'Porcentagem por contrato',
-  'no request was found for the given number!': 'Não foi encontrado pedido para o numero informado!',
-  'no product was found for the given number!': 'Não foi encontrado produto para o numero informado!',
-  'many managers found': 'Foram encontrados mais de um gerente regional para as linhas/famílias selecionadas',
+  'no request was found for the given number!':
+    'Não foi encontrado pedido para o numero informado!',
+  'no product was found for the given number!':
+    'Não foi encontrado produto para o numero informado!',
+  'many managers found':
+    'Foram encontrados mais de um gerente regional para as linhas/famílias selecionadas'
 }

@@ -227,11 +227,11 @@ const DataTable = forwardRef((props, ref) => {
       onAddClick && (
         <ButtonAddNew
           id={`new-${tableId}`}
-          color='warning'
+          color='primary'
           onClick={onAddClick}
           size='small'
           startIcon={<icons.Add />}
-          variant='outlined'
+          variant='contained'
           disabled={loading || disabled}
         >
           {addTitle}

@@ -1,17 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNumber, Length, IsNotEmpty } from 'class-validator'
+import { IsString, IsNumber, Length, IsNotEmpty, IsOptional } from 'class-validator'
 
 const required = { required: true }
 
 export class CreateBuyerLineFamily {
+  @IsOptional()
   @IsString()
+  @Length(0, 12)
   @IsNotEmpty()
-  @ApiProperty(required)
+  @ApiProperty()
   familyCode: string
 
   @IsString()
+  @Length(3, 200)
   @IsNotEmpty()
-  @Length(1, 200)
   @ApiProperty(required)
   familyDescription: string
 
@@ -21,8 +23,25 @@ export class CreateBuyerLineFamily {
   lineCode: number
 
   @IsString()
+  @Length(3, 200)
   @IsNotEmpty()
-  @Length(1, 200)
   @ApiProperty(required)
   lineDescription: string
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  regionalManagerCode: number
+
+  @IsString()
+  @Length(3, 70)
+  @IsNotEmpty()
+  @ApiProperty(required)
+  regionalManagerDescription: string
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  buyerId: number
+
 }

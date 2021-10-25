@@ -4,6 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize'
 import { DatabaseProvider } from '../../database/database.provider'
 import { ClientsModule } from '../clients/clients.module'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
+import { Address } from '../address/entities/address.entity'
 import { HierarchyModule } from '../hierarchy/hierarchy.module'
 import { User } from '../users/entities/user.entity'
 import { UserRepresentativeCode } from '../users/entities/userRepresentativeCode.entity'
@@ -17,6 +18,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
   imports: [
     HttpModule,
     SequelizeModule.forFeature([
+      Address,
       Buyer,
       BuyerAddress,
       BuyerLineFamily,

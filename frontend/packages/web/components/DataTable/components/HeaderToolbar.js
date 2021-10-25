@@ -24,6 +24,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import InputSelect from '@britania-crm/web-components/InputSelect'
+import PageFilter from '@britania-crm/web-components/PageFilter'
 
 import { withT } from '@britania-crm/i18n'
 import colors from '@britania-crm/styles/colors'
@@ -243,13 +244,15 @@ export class MTableToolbar extends React.Component {
           components={this.props.components}
           size='small'
         />
+        {this.props.FilterButton}
+        {this.props.AddButton}
         {this.props.exportCsv && (
           <ButtonDownload
             id='download-file'
             className={classes.downloadButton}
             onClick={this.props.exportCsv}
             size='small'
-            color='warning'
+            color='primary'
             startIcon={<this.props.icons.Export />}
             variant='outlined'
             disabled={false}
@@ -257,8 +260,6 @@ export class MTableToolbar extends React.Component {
             {localization.exportTitle}
           </ButtonDownload>
         )}
-        {this.props.FilterButton}
-        {this.props.AddButton}
       </div>
     )
   }
@@ -384,12 +385,14 @@ export class MTableToolbar extends React.Component {
           </Grid>
           {this.props.searchFieldAlignment === 'left' && this.renderSearch()}
           {this.props.searchFieldAlignment === 'right' && this.renderSearch()}
-          {this.props.hasFilter ? (
-            <PageFilter
-              handleFilter={this.props.handleFilter}
-              Form={this.props.filterForm}
-            />
-          ) : null}
+          <Grid item sm={4} style={{ marginLeft: 20 }}>
+            {this.props.hasFilter ? (
+              <PageFilter
+                handleFilter={this.props.handleFilter}
+                Form={this.props.filterForm}
+              />
+            ) : null}
+          </Grid>
         </Grid>
       </Toolbar>
     )
