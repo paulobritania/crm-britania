@@ -350,7 +350,7 @@ export class BuyersService {
           id: {
               $like: `%${ query.id }%`
             }
-          }),
+          })
       },
       attributes: [
         'id',
