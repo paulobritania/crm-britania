@@ -92,7 +92,7 @@ const AddressBuyer = ({
       </Grid>
       <Grid item sm={2}>
         <InputSelect
-          name='uf'
+          name='state'
           label='UF'
           valueKey='sigla'
           idKey='sigla'

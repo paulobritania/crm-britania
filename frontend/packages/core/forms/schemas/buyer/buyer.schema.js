@@ -73,7 +73,7 @@ export default ({ t }) => {
         type: t('characters', { howMany: 1 }),
         field: t('city', { howMany: 1 })
       })(Yup.string()),
-      uf: Yup.string(),
+      state: Yup.string(),
       complement: maxLength({
         t,
         length: 70,

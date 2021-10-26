@@ -99,8 +99,8 @@ const BuyerListScreen = () => {
             ..._buyerFromApi,
             buyerAddress: {
               ..._buyerFromApi.buyerAddress[0].address,
-              uf: _buyerFromApi.buyerAddress[0].address.uf
-                ? upperCase(_buyerFromApi.buyerAddress[0].address.uf)
+              state: _buyerFromApi.buyerAddress[0].address.state
+                ? upperCase(_buyerFromApi.buyerAddress[0].address.state)
                 : '',
               deliveryAddress: _buyerFromApi.buyerAddress[0].deliveryAddress
                 ? _buyerFromApi.buyerAddress[0].deliveryAddress
@@ -108,8 +108,8 @@ const BuyerListScreen = () => {
             },
             parentCompanyAddress: {
               ..._buyerFromApi.buyerAddress[1].address,
-              uf: _buyerFromApi.buyerAddress[1].address.uf
-                ? upperCase(_buyerFromApi.buyerAddress[1].address.uf)
+              state: _buyerFromApi.buyerAddress[1].address.state
+                ? upperCase(_buyerFromApi.buyerAddress[1].address.state)
                 : '',
               deliveryAddress: _buyerFromApi.buyerAddress[1].deliveryAddress
                 ? _buyerFromApi.buyerAddress[1].deliveryAddress
@@ -167,10 +167,9 @@ const BuyerListScreen = () => {
     (values) => {
       setLoader(true)
 
-      const saveBuyer = (imageId) => {
+      const saveBuyer = (imageId = null) => {
         const payload = {
           ...values,
-          ...buyerFromApi,
           cpf: trimMask(values.cpf),
           clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
           buyerAddress: {
@@ -185,7 +184,7 @@ const BuyerListScreen = () => {
           linesFamilies: values?.linesFamilies,
           responsibleCode: values?.responsible?.approverCode,
           responsibleDescription: values?.responsible?.approverDescription,
-          imageId: imageId === null ? buyerFromApi.imageFile.id : imageId
+          imageId: imageId === null ? buyerFromApi.imageId : imageId
         }
 
         if (isEdit) {
@@ -203,8 +202,8 @@ const BuyerListScreen = () => {
               payload,
               () => {
                 onSuccess()
-                setLinesBuyers([])
                 setLoader(false)
+                setLinesBuyers([])
               },
               () => setLoader(false)
             )
@@ -213,12 +212,12 @@ const BuyerListScreen = () => {
       }
 
       if (values.imageFile?.size) {
-        dispatch(
-          FileActions.uploadImage(values.imageFile, (data) => {
-            saveBuyer(data)
-            setLoader(false)
-          })
-        )
+        // dispatch(
+        //   FileActions.uploadImage(values.imageFile, (data) => {
+        //     saveBuyer(data)
+        //     setLoader(false)
+        //   })
+        // )
       } else {
         saveBuyer()
       }
@@ -236,8 +235,10 @@ const BuyerListScreen = () => {
         clientTotvsDescription: clientTotvs,
         clientTotvsCode: clientTotvs
       })
+      setLinesBuyers([])
     } else {
       formRef.current.reset()
+      setLinesBuyers([])
     }
   }, [isEdit])
 
