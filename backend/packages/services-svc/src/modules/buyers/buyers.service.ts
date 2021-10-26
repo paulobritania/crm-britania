@@ -12,7 +12,6 @@ import {
 import { InjectModel } from '@nestjs/sequelize'
 import officegen from 'officegen'
 import { Transaction } from 'sequelize'
-import sequelize = require('sequelize')
 import { Sequelize } from 'sequelize-typescript'
 
 import { Address } from '../address/entities/address.entity'

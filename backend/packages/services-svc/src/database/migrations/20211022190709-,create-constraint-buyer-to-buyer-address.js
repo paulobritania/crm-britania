@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const constraint = {
   fields: ['id_buyers'],
@@ -12,10 +12,10 @@ const constraint = {
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('buyers_address', constraint)
+    queryInterface.addConstraint('buyers_address', constraint)
   },
 
   down: async (queryInterface, Sequelize) => {
     return queryInterface.removeConstraint('buyers_address', constraint.name)
   }
-};
+}

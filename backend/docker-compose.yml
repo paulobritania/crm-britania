@@ -95,10 +95,10 @@ services:
       DB_USER: 'crm_homolog'
       DB_PASSWORD: 'Br1t@n1@2020'
       BRITANIA_LOGIN_URL: 'http://10.0.10.104:1939/api/v1/LoginCRM'
-      SERVICES_URL: 'http://britania-crm-com-api-services:30107'
+      SERVICES_URL: 'http://host.docker.internal:30107'
       JWT_SECRET_KEY: 'jwtPrivateKey'
       JWT_EXPIRATION_TIME: '12600'
-      SERVICES_SVC_URL: 'britania-crm-com-api-services'
+      SERVICES_SVC_URL: 'host.docker.internal'
       SERVICES_SVC_PORT: '30107'
       INTERNAL_JWT_SECRET_KEY: 'jwtInternalPrivateKey'
       INTERNAL_JWT_EXPIRATION_TIME: '600'
@@ -129,7 +129,7 @@ services:
       LOGGER_PORT: '30102'
       AUTHENTICATION_SVC_URL: 'britania-crm-com-authentication-svc'
       AUTHENTICATION_SVC_PORT: '30117'
-      SERVICES_SVC_URL: 'britania-crm-com-api-services'
+      SERVICES_SVC_URL: 'host.docker.internal'
       SERVICES_SVC_PORT: '30107'
     depends_on:
       - britania-crm-com-logs-svc
