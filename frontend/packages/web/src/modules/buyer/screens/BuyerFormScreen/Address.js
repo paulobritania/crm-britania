@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 
 import PropTypes from 'prop-types'
 
@@ -19,10 +19,25 @@ const AddressBuyer = ({
   formRef,
   isDisabled,
   stateOptions,
-  objFather
+  objFather,
+  otherObj
 }) => {
   const t = useT()
   const classes = useStyles()
+
+  const handleChangeCheck = useCallback(
+    (e) => {
+      formRef.current.setFieldValue(
+        `${objFather}.deliveryAddress`,
+        !!e.target.value
+      )
+      formRef.current.setFieldValue(
+        `${otherObj}.deliveryAddress`,
+        !e.target.value
+      )
+    },
+    [formRef]
+  )
 
   const handleChangeCep = useCallback(
     (values) => {
@@ -105,6 +120,7 @@ const AddressBuyer = ({
           name='deliveryAddress'
           color='primary'
           label={t('use as delivery address')}
+          onChange={(e) => handleChangeCheck(e)}
         />
       </Grid>
     </Grid>

@@ -412,6 +412,7 @@ const BuyerListScreen = () => {
                 isDisabled={modeView || isDisabled}
                 stateOptions={stateOptions}
                 objFather='buyerAddress'
+                otherObj='parentCompanyAddress'
               />
             </Scope>
             <Scope path='parentCompanyAddress'>
@@ -421,6 +422,7 @@ const BuyerListScreen = () => {
                 isDisabled={modeView || isDisabled}
                 stateOptions={stateOptions}
                 objFather='parentCompanyAddress'
+                otherObj='buyerAddress'
               />
             </Scope>
           </Grid>

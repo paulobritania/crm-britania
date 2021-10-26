@@ -17,7 +17,7 @@ const addressInitialValues = {
   number: '',
   district: '',
   city: '',
-  uf: '',
+  state: '',
   cep: '',
   complement: ''
 }
@@ -38,7 +38,7 @@ export const INITIAL_VALUES = {
   parentCompanyAddress: addressInitialValues,
   buyerAddress: addressInitialValues,
   clientTotvsCode: {},
-  clientTotvsDescription: '',
+  clientTotvsDescription: {},
   responsible: {}
 }
 
@@ -96,7 +96,7 @@ export default ({ t }) => {
     parentCompanyAddress: addressSchema(),
     buyerAddress: addressSchema(),
     clientTotvsCode: required({ t, isNotText: true })(Yup.object()),
-    clientTotvsDescription: Yup.object(),
+    clientTotvsDescription: required({ t, isNotText: true })(Yup.object()),
     responsible: Yup.object(),
     imageFile: file({ t })(Yup.mixed()),
     imageTemp: file({ t })(Yup.mixed()),
