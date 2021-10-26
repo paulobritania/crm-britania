@@ -538,9 +538,7 @@ const DataTable = forwardRef((props, ref) => {
           }
         }
 
-        const {
-          data: { data: datagridData, totalRegisters }
-        } = await api.get(data, {
+        const result = await api.get(data, {
           params: {
             ...params,
             ...filters,
@@ -549,9 +547,9 @@ const DataTable = forwardRef((props, ref) => {
         })
 
         return {
-          data: datagridData,
+          data: result.data,
           page,
-          totalCount: totalRegisters || 0
+          totalCount: result.data.length || 0
         }
       } catch (e) {
         // eslint-disable-next-line no-console

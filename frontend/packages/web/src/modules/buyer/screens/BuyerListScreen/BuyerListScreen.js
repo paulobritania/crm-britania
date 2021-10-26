@@ -8,14 +8,11 @@ import isNil from 'lodash/isNil'
 import map from 'lodash/map'
 import omitBy from 'lodash/omitBy'
 
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 import { FileActions } from '@britania-crm/stores/file'
-import colors from '@britania-crm/styles/colors'
-import Checkbox from '@britania-crm/web-components/Checkbox'
 import DataTable from '@britania-crm/web-components/DataTable'
 import Tooltip from '@britania-crm/web-components/Tooltip'
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
@@ -147,8 +144,10 @@ const BuyerListScreen = () => {
   return (
     <>
       <Container>
-        <DataTable
-          data={data}
+        {data && <DataTable
+          options={ { search: false } }
+          data={buyersCrmRoutes.getAll}
+          filters={ filters }
           columns={columns}
           loading={loading || !!error || downloadLoading}
           title={t('buyer', { howMany: 2 })}
@@ -169,7 +168,8 @@ const BuyerListScreen = () => {
             this: t('buyer', { howMany: 1 })
           })}
           searchFieldAlignment='left'
-        />
+        /> }
+        
       </Container>
     </>
   )

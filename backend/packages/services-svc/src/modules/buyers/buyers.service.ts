@@ -391,7 +391,7 @@ export class BuyersService {
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
-      order: [['id', 'DESC']],
+      order: [['id', 'DESC']]
     })
 
     return buyers
@@ -597,7 +597,7 @@ export class BuyersService {
           {
             model: this.buyerLineFamily,
             required: false
-          },
+          }
         ]
       })
       if (!buyer) return null
