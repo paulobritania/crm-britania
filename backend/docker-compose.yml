@@ -1,140 +1,140 @@
-version: "3"
+version: '3'
 
 volumes:
   britania_crm_com_attachments_dev:
 
 services:
   britania-crm-com-logs-svc:
-    image: "britania-crm-com-logger-svc"
+    image: 'britania-crm-com-logger-svc'
     build:
-      context: "./packages/logs-svc"
+      context: './packages/logs-svc'
     container_name: britania-crm-com-logs
     networks:
-      - "backend-com"
-      - "database"
+      - 'backend-com'
+      - 'database'
     ports:
-      - "30101:30101"
-      - "30102:30102"
+      - '30101:30101'
+      - '30102:30102'
     environment:
-      NODE_ENV: "development"
-      URL: "0.0.0.0"
-      PORT: "30102"
-      HTTP_PORT: "30101"
-      DB_HOST: "pr-s187.ad.britania.com.br"
-      DB_PORT: "1433"
-      DB_USER: "crm_homolog"
-      DB_PASSWORD: "Br1t@n1@2020"
-      DB_NAME: "DinamoCRMCOM_dev"
-      JWT_SECRET_KEY: "jwtPrivateKey"
-    restart: "on-failure"
+      NODE_ENV: 'staging'
+      URL: '0.0.0.0'
+      PORT: '30102'
+      HTTP_PORT: '30101'
+      DB_HOST: 'pr-s187.ad.britania.com.br'
+      DB_PORT: '1433'
+      DB_USER: 'crm_homolog'
+      DB_PASSWORD: 'Br1t@n1@2020'
+      DB_NAME: 'DinamoCRMCOM_homolog2'
+      JWT_SECRET_KEY: 'jwtPrivateKey'
+    restart: 'on-failure'
 
   britania-crm-com-api-services:
-    image: "britania-crm-com-api-services"
+    image: 'britania-crm-com-api-services'
     build:
-      context: "."
-      dockerfile: "./packages/services-svc/Dockerfile"
+      context: '.'
+      dockerfile: './packages/services-svc/Dockerfile'
     container_name: britania-crm-com-api-services
     networks:
-      - "backend-com"
-      - "database"
+      - 'backend-com'
+      - 'database'
     ports:
-      - "30107:30107"
+      - '30107:30107'
     environment:
       UPLOAD_FOLDER: './files'
-      NODE_ENV: "development"
-      URL: "0.0.0.0"
-      PORT: "30107"
-      LOG_HOST: "britania-crm-com-logs-svc"
-      LOG_PORT: "30102"
-      DB_HOST: "pr-s187.ad.britania.com.br"
-      DB_PORT: "1433"
-      DB_USER: "crm_homolog"
-      DB_PASSWORD: "Br1t@n1@2020"
-      DB_NAME: "DinamoCRMCOM_dev"
-      API_TOVTS: "http://10.0.10.131:8080/dts/datasul-rest/resources/"
-      API_TOVTS_LOGIN: "super"
-      API_TOVTS_PASS: "Cxy1LZCHUb8HQ0SqMjU3AfN%2FB1A%3D"
-      BRITANIA_REPRESENTANTE_URL: "http://10.0.10.85:45897"
-      BRITANIA_CLIENTE_URL: "http://10.0.10.85:45898"
-      BRITANIA_LOGIN_URL: "http://10.0.10.104:1452/Usuario/PostUsuario"
-      BRITANIA_CLIENTE_HIERARQUIA: "http://10.0.10.85:45899"
-      BRITANIA_TABELA_PRECO_URL: "http://10.0.10.85:45900"
-      BRITANIA_EMPRESA_URL: "http://10.0.10.85:45903"
-      BRITANIA_INTEGRACOES_TOTVS_URL: "http://10.0.10.133:8180/dts/datasul-rest/resources/prg/WSRest/v1"
-      BRITANIA_NATUREZA_OPERACAO_URL: "http://10.0.10.85:45904"
-      BRITANIA_PEDIDO_URL: "http://10.0.10.85:45905"
-      BRITANIA_CONTRATO_VERBA_URL: "http://10.0.10.85:45910"
-      JWT_SECRET_KEY: "jwtPrivateKey"
-      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
-      MAIL_HOST: "smtp.office365.com"
-      MAIL_USER: "dinamo.crm@britania.com.br"
-      MAIL_PORT: "587"
-      MAIL_PASSWORD: "Axv#631bx"
-      MAIL_FROM: "\"Dínamo CRM Comercial\" <dinamo.crm@britania.com.br>"
-    restart: "on-failure"
+      NODE_ENV: 'staging'
+      URL: '0.0.0.0'
+      PORT: '30107'
+      LOG_HOST: 'britania-crm-com-logs-svc'
+      LOG_PORT: '30102'
+      DB_HOST: 'pr-s187.ad.britania.com.br'
+      DB_PORT: '1433'
+      DB_USER: 'crm_homolog'
+      DB_PASSWORD: 'Br1t@n1@2020'
+      DB_NAME: 'DinamoCRMCOM_homolog2'
+      API_TOVTS: 'http://10.0.10.131:8080/dts/datasul-rest/resources/'
+      API_TOVTS_LOGIN: 'super'
+      API_TOVTS_PASS: 'Cxy1LZCHUb8HQ0SqMjU3AfN%2FB1A%3D'
+      BRITANIA_REPRESENTANTE_URL: 'http://10.0.8.19:45897'
+      BRITANIA_CLIENTE_URL: 'http://10.0.8.19:45898'
+      BRITANIA_LOGIN_URL: 'http://10.0.10.104:1452/Usuario/PostUsuario'
+      BRITANIA_CLIENTE_HIERARQUIA: 'http://10.0.8.19:45899'
+      BRITANIA_TABELA_PRECO_URL: 'http://10.0.8.19:45900'
+      BRITANIA_EMPRESA_URL: 'http://10.0.8.19:45903'
+      BRITANIA_INTEGRACOES_TOTVS_URL: 'http://10.0.10.133:8180/dts/datasul-rest/resources/prg/WSRest/v1'
+      BRITANIA_NATUREZA_OPERACAO_URL: 'http://10.0.8.19:45904'
+      BRITANIA_PEDIDO_URL: 'http://10.0.8.19:45905'
+      BRITANIA_CONTRATO_VERBA_URL: 'http://10.0.8.19:45910'
+      JWT_SECRET_KEY: 'jwtPrivateKey'
+      INTERNAL_JWT_SECRET_KEY: 'jwtInternalPrivateKey'
+      MAIL_HOST: 'smtp.office365.com'
+      MAIL_USER: 'dinamo.crm@britania.com.br'
+      MAIL_PORT: '587'
+      MAIL_PASSWORD: 'Axv#631bx'
+      MAIL_FROM: '"Dínamo CRM Comercial" <dinamo.crm@britania.com.br>'
+    restart: 'on-failure'
     volumes:
       - britania_crm_com_attachments_dev:/usr/src/app/packages/services-svc/files
 
   britania-crm-com-authentication-svc:
-    image: "britania-crm-com-authentication-svc"
+    image: 'britania-crm-com-authentication-svc'
     build:
-      context: "./packages/authentication-svc"
+      context: './packages/authentication-svc'
     container_name: britania-crm-com-authentication
     networks:
-      - "backend-com"
-      - "database"
+      - 'backend-com'
+      - 'database'
     ports:
-      - "30117:30117"
+      - '30117:30117'
     environment:
-      NODE_ENV: "development"
-      URL: "0.0.0.0"
-      PORT: "30117"
-      DB_HOST: "pr-s187.ad.britania.com.br"
-      DB_PORT: "1433"
-      DB_NAME: "DinamoCRMCOM_dev"
-      DB_USER: "crm_homolog"
-      DB_PASSWORD: "Br1t@n1@2020"
-      BRITANIA_LOGIN_URL:  "http://10.0.10.104:1939/api/v1/LoginCRM"
-      SERVICES_URL:  "http://britania-crm-com-api-services:30107"
-      JWT_SECRET_KEY: "jwtPrivateKey"
-      JWT_EXPIRATION_TIME: "12600"
-      SERVICES_SVC_URL: "britania-crm-com-api-services"
-      SERVICES_SVC_PORT: "30107"
-      INTERNAL_JWT_SECRET_KEY: "jwtInternalPrivateKey"
-      INTERNAL_JWT_EXPIRATION_TIME: "600"
+      NODE_ENV: 'staging'
+      URL: '0.0.0.0'
+      PORT: '30117'
+      DB_HOST: 'pr-s187.ad.britania.com.br'
+      DB_PORT: '1433'
+      DB_NAME: 'DinamoCRMCOM_homolog2'
+      DB_USER: 'crm_homolog'
+      DB_PASSWORD: 'Br1t@n1@2020'
+      BRITANIA_LOGIN_URL: 'http://10.0.10.104:1939/api/v1/LoginCRM'
+      SERVICES_URL: 'http://britania-crm-com-api-services:30107'
+      JWT_SECRET_KEY: 'jwtPrivateKey'
+      JWT_EXPIRATION_TIME: '12600'
+      SERVICES_SVC_URL: 'britania-crm-com-api-services'
+      SERVICES_SVC_PORT: '30107'
+      INTERNAL_JWT_SECRET_KEY: 'jwtInternalPrivateKey'
+      INTERNAL_JWT_EXPIRATION_TIME: '600'
     depends_on:
       - britania-crm-com-api-services
-    restart: "on-failure"
+    restart: 'on-failure'
 
   britania-crm-com-api-gateway:
-    image: "britania-crm-com-api-gateway"
+    image: 'britania-crm-com-api-gateway'
     build:
-      context: "./packages/api-gateway"
+      context: './packages/api-gateway'
     container_name: britania-crm-com-api-gateway
     networks:
-      - "backend-com"
-      - "database"
+      - 'backend-com'
+      - 'database'
     ports:
-      - "30110:30110"
-      - "9229:9229"
+      - '30110:30110'
+      - '9229:9229'
     environment:
-      NODE_ENV: "production"
-      URL: "0.0.0.0"
-      PORT: "30110"
-      DB_HOST: "pr-s187.ad.britania.com.br"
-      DB_PORT: "1433"
-      DB_USER: "crm_homolog"
-      DB_PASSWORD: "Br1t@n1@2020"
-      DB_NAME: "DinamoCRMCOM_dev"
-      LOGGER_PORT: "30102"
-      AUTHENTICATION_SVC_URL: "britania-crm-com-authentication-svc"
-      AUTHENTICATION_SVC_PORT: "30117"
-      SERVICES_SVC_URL: "britania-crm-com-api-services"
-      SERVICES_SVC_PORT: "30107"
+      NODE_ENV: 'staging'
+      URL: '0.0.0.0'
+      PORT: '30110'
+      DB_HOST: 'pr-s187.ad.britania.com.br'
+      DB_PORT: '1433'
+      DB_USER: 'crm_homolog'
+      DB_PASSWORD: 'Br1t@n1@2020'
+      DB_NAME: 'DinamoCRMCOM_homolog2'
+      LOGGER_PORT: '30102'
+      AUTHENTICATION_SVC_URL: 'britania-crm-com-authentication-svc'
+      AUTHENTICATION_SVC_PORT: '30117'
+      SERVICES_SVC_URL: 'britania-crm-com-api-services'
+      SERVICES_SVC_PORT: '30107'
     depends_on:
       - britania-crm-com-logs-svc
       - britania-crm-com-api-services
-    restart: "on-failure"
+    restart: 'on-failure'
 
 networks:
   backend-com:

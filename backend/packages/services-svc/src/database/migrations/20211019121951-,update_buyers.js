@@ -8,8 +8,6 @@ module.exports = {
       queryInterface.removeColumn('buyers', 'parent_company_address_id'),
       queryInterface.removeColumn('buyers', 'regional_manager_code'),
       queryInterface.removeColumn('buyers', 'regional_manager_description'),
-      queryInterface.removeColumn('buyers', 'responsible_code'),
-      queryInterface.removeColumn('buyers', 'responsible_description'),
 
       queryInterface.addColumn('buyers', 'image_id', {
         type: Sequelize.INTEGER,
@@ -36,12 +34,6 @@ module.exports = {
       }),
       queryInterface.addColumn('buyers', 'regional_manager_code', {
         type: Sequelize.INTEGER
-      }),
-      queryInterface.addColumn('buyers', 'responsible_code', {
-        type: Sequelize.INTEGER
-      }),
-      queryInterface.addColumn('buyers', 'responsible_description', {
-        type: Sequelize.STRING(80)
       })
     ])
   }
