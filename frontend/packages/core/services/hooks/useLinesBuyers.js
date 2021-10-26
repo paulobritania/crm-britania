@@ -8,8 +8,10 @@ export function LinesBuyerProvider({ children }) {
   const [familiesFromApi, setFamiliesFromApi] = useState([])
   const [responsibleFromApi, setResponsibleFromApi] = useState([])
   const [regionalFromApi, setRegionalFromApi] = useState([])
+  const [disableButton, setDisabledButton] = useState(true)
 
   function handleAddLine() {
+    setDisabledButton(true)
     setLinesBuyers((prevLines) => {
       return [...prevLines, {}]
     })
@@ -17,6 +19,7 @@ export function LinesBuyerProvider({ children }) {
 
   function handleRemoveLine(idx) {
     setLinesBuyers(linesBuyers.filter((s, sidx) => idx !== sidx))
+    setDisabledButton(false)
   }
 
   function handleLineChange(idx, evt, formRef) {
@@ -35,6 +38,12 @@ export function LinesBuyerProvider({ children }) {
 
     setLinesBuyers(newLine)
     formRef.current.setFieldValue('linesFamilies', newLine)
+
+    if (Object.keys(newLine[idx]).length < 8) {
+      setDisabledButton(true)
+    } else {
+      setDisabledButton(false)
+    }
   }
 
   function handleArrayLines(idx, value) {
@@ -73,6 +82,7 @@ export function LinesBuyerProvider({ children }) {
         familiesFromApi,
         responsibleFromApi,
         regionalFromApi,
+        disableButton,
         handleAddLine,
         handleRemoveLine,
         handleLineChange,
@@ -80,7 +90,8 @@ export function LinesBuyerProvider({ children }) {
         handleArrayFamilies,
         handleArrayResponsible,
         handleArrayRegional,
-        setLinesBuyers
+        setLinesBuyers,
+        setDisabledButton
       }}
     >
       {children}

@@ -2,8 +2,6 @@ import React, { useMemo, useCallback, useState } from 'react'
 
 import PropTypes from 'prop-types'
 
-import first from 'lodash/first'
-
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Add from '@material-ui/icons/Add'
@@ -39,9 +37,14 @@ const MainData = ({
 }) => {
   const t = useT()
   const classes = useStyles()
-  const { linesBuyers, handleRemoveLine, handleAddLine } = useLinesBuyers()
+  const {
+    linesBuyers,
+    handleRemoveLine,
+    handleAddLine,
+    disableButton,
+    setDisabledButton
+  } = useLinesBuyers()
   const [matrixCode, setMatrixCode] = useState('')
-  const [disabledButton, setDisabledButton] = useState(false)
 
   const mockVoltage = useMemo(
     () => [
@@ -60,14 +63,11 @@ const MainData = ({
     []
   )
 
-  const isDisabledButton = useMemo(
-    () => isDisabled || disabledButton[(disabledButton, isDisabled)]
-  )
-
   const setNameMatrix = useCallback(
     (value) => {
       formRef.current.setFieldValue('clientTotvsDescription', value)
       setMatrixCode(value.parentCompanyCode)
+      if (!!value?.parentCompanyCode) setDisabledButton(false)
     },
     [formRef]
   )
@@ -76,6 +76,7 @@ const MainData = ({
     (value) => {
       formRef.current.setFieldValue('clientTotvsCode', value)
       setMatrixCode(value.parentCompanyCode)
+      if (!!value?.parentCompanyCode) setDisabledButton(false)
     },
     [formRef]
   )
@@ -157,7 +158,7 @@ const MainData = ({
             name='clientTotvsCode'
             label={t('matrix code', { abbreviation: false })}
             disabled={isEdit || isDisabled}
-            onValueChange={setNameMatrix}
+            onValueChange={(e) => setNameMatrix(e)}
           />
         </Grid>
         <Grid item sm={12} md={6}>
@@ -169,7 +170,7 @@ const MainData = ({
             name='clientTotvsDescription'
             label={t('matrix', { howMany: 1 })}
             disabled={isEdit || isDisabled}
-            onValueChange={setCodeMatrix}
+            onValueChange={(e) => setCodeMatrix(e)}
           />
         </Grid>
         <Grid item sm={12} md={3}>
@@ -222,7 +223,7 @@ const MainData = ({
                     formRef={formRef}
                   />
                 </Grid>
-                <Button variant='text' onClick={(e) => handleRemoveLine(e)}>
+                <Button variant='text' onClick={() => handleRemoveLine(idx)}>
                   X
                 </Button>
               </Grid>
@@ -244,7 +245,7 @@ const MainData = ({
             as={Button}
             size='small'
             variant='text'
-            disabled={isDisabledButton}
+            disabled={disableButton}
             startIcon={<Add />}
           >
             Nova Linha
