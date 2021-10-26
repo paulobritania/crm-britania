@@ -198,15 +198,10 @@ const BuyerListScreen = () => {
           )
         } else {
           dispatch(
-            BuyerActions.saveBuyer(
-              payload,
-              () => {
-                onSuccess()
-                setLoader(false)
-                setLinesBuyers([])
-              },
-              () => setLoader(false)
-            )
+            BuyerActions.saveBuyer(payload, onSuccessCallBack, () => {
+              setLoader(false)
+              setLinesBuyers([])
+            })
           )
         }
       }
@@ -257,6 +252,7 @@ const BuyerListScreen = () => {
         props: {
           onConfirm() {
             history.push(routes.buyers.path)
+            setLinesBuyers([])
           },
           text:
             mode === 'create'
