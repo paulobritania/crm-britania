@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState, useContext } from 'react'
+import React, { useMemo, useCallback, useState } from 'react'
 
 import PropTypes from 'prop-types'
 
@@ -39,8 +39,7 @@ const MainData = ({
 }) => {
   const t = useT()
   const classes = useStyles()
-  const { linesBuyers, handleRemoveLine, handleAddLine, linesFamiliesForm } =
-    useLinesBuyers()
+  const { linesBuyers, handleRemoveLine, handleAddLine } = useLinesBuyers()
   const [matrixCode, setMatrixCode] = useState('')
   const [disabledButton, setDisabledButton] = useState(false)
 

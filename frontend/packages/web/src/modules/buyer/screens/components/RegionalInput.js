@@ -21,9 +21,9 @@ const RegionalInput = forwardRef((props, ref) => {
     regionalFromApi
   } = useLinesBuyers()
 
-  const line = linesBuyers[index].line
-  const family = linesBuyers[index].family
-  const responsible = linesBuyers[index].responsible
+  const line = linesBuyers[index].lineCode
+  const family = linesBuyers[index].familyCode
+  const responsible = linesBuyers[index].responsibleCode
 
   const { loading: regionalFromApiLoading } = useCrmApi(
     matrixCode && !!responsible && isEmpty(regionalFromApi[index])
@@ -69,7 +69,7 @@ const RegionalInput = forwardRef((props, ref) => {
       name='regionalManager'
       label={t('regional manager')}
       id='select-regional'
-      value={linesBuyers[index].regionalManager}
+      value={linesBuyers[index].regionalManagerCode}
       required
       loading={regionalFromApiLoading}
       options={regionalFromApi[index]}

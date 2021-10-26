@@ -3,42 +3,11 @@ import React, { createContext, useState, useContext } from 'react'
 const LinesBuyersContext = createContext()
 
 export function LinesBuyerProvider({ children }) {
-  const [linesFamiliesForm, setLinesFamiliesForm] = useState([])
   const [linesBuyers, setLinesBuyers] = useState([])
   const [linesFromApi, setLinesFromApi] = useState([])
   const [familiesFromApi, setFamiliesFromApi] = useState([])
   const [responsibleFromApi, setResponsibleFromApi] = useState([])
   const [regionalFromApi, setRegionalFromApi] = useState([])
-
-  function handleLinesFamiliesForm(field, value, text, idx, formRef) {
-    var newItem = {}
-    const newArray = [...linesFamiliesForm]
-
-    if (field == 'family') {
-      newItem = {
-        ...newArray[idx],
-        familyCode: value,
-        familyDescription: text
-      }
-    } else if (field == 'regionalManager') {
-      newItem = {
-        ...newArray[idx],
-        regionalManagerCode: value,
-        regionalManagerDescription: text
-      }
-    } else {
-      newItem = {
-        ...newArray[idx],
-        lineCode: value,
-        lineDescription: text
-      }
-    }
-
-    newArray[idx] = newItem
-
-    setLinesFamiliesForm(newArray)
-    formRef.current.setFieldValue('linesFamilies', newArray)
-  }
 
   function handleAddLine() {
     setLinesBuyers((prevLines) => {
@@ -59,12 +28,13 @@ export function LinesBuyerProvider({ children }) {
       if (idx !== sidx) return line
       return {
         ...line,
-        [name]: value
+        [name + 'Code']: value,
+        [name + 'Description']: text
       }
     })
 
     setLinesBuyers(newLine)
-    handleLinesFamiliesForm(name, value, text, idx, formRef)
+    formRef.current.setFieldValue('linesFamilies', newLine)
   }
 
   function handleArrayLines(idx, value) {
@@ -109,7 +79,8 @@ export function LinesBuyerProvider({ children }) {
         handleArrayLines,
         handleArrayFamilies,
         handleArrayResponsible,
-        handleArrayRegional
+        handleArrayRegional,
+        setLinesBuyers
       }}
     >
       {children}

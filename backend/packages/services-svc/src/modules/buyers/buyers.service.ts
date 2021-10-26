@@ -12,6 +12,7 @@ import {
 import { InjectModel } from '@nestjs/sequelize'
 import officegen from 'officegen'
 import { Transaction } from 'sequelize'
+import sequelize = require('sequelize')
 import { Sequelize } from 'sequelize-typescript'
 
 import { Address } from '../address/entities/address.entity'
@@ -44,6 +45,7 @@ export class BuyersService {
     private buyerLineFamily: typeof BuyerLineFamily,
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
     @InjectModel(Address) private address: typeof Address,
+    @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
   ) {}
@@ -271,7 +273,7 @@ export class BuyersService {
   async getAllBuyers(
     query: FindAllBuyersQueryDto,
     userId: number
-  ): Promise<Buyer[]> {
+  ): Promise<any[]> {
     const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
     if (!clientCodes) return []
 
@@ -326,11 +328,11 @@ export class BuyersService {
             $like: `%${ query.imageId }%`
           }
         }),
-        ...(query.responsibleCode && {
-          responsibleCode: {
-            $like: `%${ query.responsibleCode }%`
-          }
-        }),
+        // ...(query.responsibleCode && {
+        //   responsibleCode: {
+        //     $like: `%${ query.responsibleCode }%`
+        //   }
+        // }),
         ...(query.role && {
           role: {
             $like: `%${ query.role }%`
@@ -364,14 +366,22 @@ export class BuyersService {
         'birthday',
         'telephone',
         'clientTotvsCode',
-        'responsibleCode',
-        'responsibleDescription',
         'imageId'
       ],
       include: [
         {
-          model: File,
+          model: this.file,
+          as: 'imageFile',
           attributes: ['id', 'filename', 'contentType', 'path']
+        },
+        {
+          model: this.buyerAddress,
+          as: 'buyerAddress',
+          include: [{
+            model: this.address,
+            as: 'address'
+          }
+          ]
         },
         {
           model: this.buyerLineFamily,
@@ -379,11 +389,12 @@ export class BuyersService {
             lineCode: query.lineCodes.split(',').map((code) => Number(code))
           },
           required: !!query.lineCodes,
-          attributes: ['lineDescription']
+          attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
-      order: [['id', 'DESC']]
+      order: [['id', 'DESC']],
     })
+
     return buyers
   }
 
@@ -560,6 +571,47 @@ export class BuyersService {
       })
     )
   }
+
+    /**
+   * Irá retornar o comprador e suas relações
+   * @param buyerId number
+   * @param userId number
+   */
+     async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
+      const buyer = await Buyer.findByPk(buyerId, {
+        include:
+        [
+          {
+            model: this.file,
+            as: 'imageFile',
+            attributes: ['id', 'filename', 'contentType', 'path']
+          },
+          {
+            model: this.buyerAddress,
+            as: 'buyerAddress',
+            include: [{
+              model: this.address,
+              as: 'address'
+            }
+            ]
+          },
+          {
+            model: this.buyerLineFamily,
+            required: false
+          },
+        ]
+      })
+      if (!buyer) return null
+
+      if (
+        !(await this.hierarchyService.checkIfUserHasAccessToAClient(
+          userId,
+          buyer.clientTotvsCode
+        ))
+      )
+        throw new ForbiddenException()
+      return buyer
+    }
 
   /**
    * Irá gerar um relatório em formato xlsx de acordo com

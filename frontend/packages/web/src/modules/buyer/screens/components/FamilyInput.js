@@ -24,7 +24,7 @@ const FamilyInput = forwardRef((props, ref) => {
     handleArrayFamilies,
     familiesFromApi
   } = useLinesBuyers()
-  const line = linesBuyers[index].line
+  const line = linesBuyers[index].lineCode
 
   const { loading: familiesFromApiLoading } = useCrmApi(
     matrixCode && !!line && isEmpty(familiesFromApi[index])
@@ -72,7 +72,7 @@ const FamilyInput = forwardRef((props, ref) => {
       valueKey='familyDescription'
       idKey='familyCode'
       disabled={isEmpty(familiesFromApi[index])}
-      value={linesBuyers[index].family}
+      value={linesBuyers[index].familyCode}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='family'
       label={t('family', { howMany: 1 })}

@@ -7,6 +7,7 @@ import { ClientsModule } from '../clients/clients.module'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
 import { HierarchyModule } from '../hierarchy/hierarchy.module'
 import { User } from '../users/entities/user.entity'
+import { File } from '../files/entities/file.entity'
 import { UserRepresentativeCode } from '../users/entities/userRepresentativeCode.entity'
 import { BuyersController } from './buyers.controller'
 import { BuyersService } from './buyers.service'
@@ -23,6 +24,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
       BuyerAddress,
       BuyerLineFamily,
       Hierarchy,
+      File,
       User,
       UserRepresentativeCode
     ]),

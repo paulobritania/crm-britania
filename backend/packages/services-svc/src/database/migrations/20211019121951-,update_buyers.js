@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,6 +8,8 @@ module.exports = {
       queryInterface.removeColumn('buyers', 'parent_company_address_id'),
       queryInterface.removeColumn('buyers', 'regional_manager_code'),
       queryInterface.removeColumn('buyers', 'regional_manager_description'),
+      queryInterface.removeColumn('buyers', 'responsible_code'),
+      queryInterface.removeColumn('buyers', 'responsible_description'),
 
       queryInterface.addColumn('buyers', 'image_id', {
         type: Sequelize.INTEGER,
@@ -21,20 +23,26 @@ module.exports = {
     return Promise.all([
       queryInterface.removeColumn('buyers', 'image_id'),
       queryInterface.addColumn('buyers', 'parent_company_address_id', {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       }),
       queryInterface.addColumn('buyers', 'buyer_address_id', {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       }),
       queryInterface.addColumn('buyers', 'client_totvs_description', {
-        type: Sequelize.STRING(80),
+        type: Sequelize.STRING(80)
       }),
       queryInterface.addColumn('buyers', 'regional_manager_description', {
-        type: Sequelize.STRING(80),
+        type: Sequelize.STRING(80)
       }),
       queryInterface.addColumn('buyers', 'regional_manager_code', {
         type: Sequelize.INTEGER
       }),
+      queryInterface.addColumn('buyers', 'responsible_code', {
+        type: Sequelize.INTEGER
+      }),
+      queryInterface.addColumn('buyers', 'responsible_description', {
+        type: Sequelize.STRING(80)
+      })
     ])
   }
-};
+}

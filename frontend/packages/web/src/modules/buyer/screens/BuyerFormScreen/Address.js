@@ -23,12 +23,6 @@ const AddressBuyer = ({
 }) => {
   const t = useT()
   const classes = useStyles()
-  const [checked, setChecked] = useState(false)
-
-  const handleCheckChange = useCallback(async (event) => {
-    const { checked: ch } = event.target
-    setChecked(!!ch)
-  }, [])
 
   const handleChangeCep = useCallback(
     (values) => {
@@ -108,9 +102,6 @@ const AddressBuyer = ({
       </Grid>
       <Grid item sm={12}>
         <Checkbox
-          detached
-          checked={checked}
-          onChange={handleCheckChange}
           name='deliveryAddress'
           color='primary'
           label={t('use as delivery address')}

@@ -20,8 +20,8 @@ const ResponsibleInput = forwardRef((props, ref) => {
     responsibleFromApi,
     handleArrayResponsible
   } = useLinesBuyers()
-  const line = linesBuyers[index].line
-  const family = linesBuyers[index].family
+  const line = linesBuyers[index].lineCode
+  const family = linesBuyers[index].familyCode
 
   const { loading: responsibleFromApiLoading } = useCrmApi(
     matrixCode && !!family && isEmpty(responsibleFromApi[index])
@@ -68,7 +68,7 @@ const ResponsibleInput = forwardRef((props, ref) => {
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='responsible'
       label={t('responsible', { howMany: 1 })}
-      value={linesBuyers[index].responsible}
+      value={linesBuyers[index].responsibleCode}
       id='select-responsible'
       required
       loading={responsibleFromApiLoading}

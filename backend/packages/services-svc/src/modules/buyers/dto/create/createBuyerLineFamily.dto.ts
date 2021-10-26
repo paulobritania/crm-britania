@@ -39,6 +39,17 @@ export class CreateBuyerLineFamily {
   @ApiProperty(required)
   regionalManagerDescription: string
 
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  responsibleCode: number
+
+  @IsString()
+  @Length(3, 70)
+  @IsNotEmpty()
+  @ApiProperty(required)
+  responsibleDescription: string
+
   @IsOptional()
   @IsNumber()
   @ApiProperty()

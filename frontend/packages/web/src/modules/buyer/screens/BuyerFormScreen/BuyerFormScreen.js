@@ -38,6 +38,8 @@ import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 import Address from './Address'
 import MainData from './MainData'
 import { useStyles } from './styles'
+import { props } from 'lodash/fp'
+import { formatPathToCloudStorageUrl } from '@britania-crm/utils/files'
 
 const BuyerListScreen = () => {
   const t = useT()
@@ -50,29 +52,27 @@ const BuyerListScreen = () => {
   const formRef = useRef(null)
   const { createDialog } = useDialog()
 
+  const { setLinesBuyers } = useLinesBuyers()
+
   const [queryParams, setQueryParams] = useState({})
   const [loader, setLoader] = useState(false)
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
   const [image, setImage] = useState()
-  const [_buyerFromApi, set_buyerFromApi] = useState()
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
   const isEdit = useMemo(() => mode === 'edit', [mode])
 
-  const { loading } = useCrmApi(
-    isEmpty(_buyerFromApi) && state?.params?.id
-      ? [buyersCrmRoutes.getAll]
+  const { data: _buyerFromApi, loading } = useCrmApi(
+    state?.params?.id
+      ? [`${buyersCrmRoutes.getOne}/${state?.params?.id}`]
       : null,
-    {
-      params: {
-        id: state?.params?.id
-      }
-    },
+    {},
     {
       onSuccess(data) {
-        set_buyerFromApi(data[0])
+        setLinesBuyers(data.buyerLinesFamilies)
+        setImage({ ...data.imageFile, name: data?.imageFile.filename })
       },
       revalidateOnFocus: false
     }
@@ -98,33 +98,24 @@ const BuyerListScreen = () => {
         : {
             ..._buyerFromApi,
             buyerAddress: {
-              ..._buyerFromApi.buyerAddress,
-              uf: _buyerFromApi.buyerAddress.uf
-                ? upperCase(_buyerFromApi.buyerAddress.uf)
-                : ''
+              ..._buyerFromApi.buyerAddress[0].address,
+              uf: _buyerFromApi.buyerAddress[0].address.uf
+                ? upperCase(_buyerFromApi.buyerAddress[0].address.uf)
+                : '',
+              deliveryAddress: _buyerFromApi.buyerAddress[0].deliveryAddress
+                ? _buyerFromApi.buyerAddress[0].deliveryAddress
+                : false
             },
             parentCompanyAddress: {
-              ..._buyerFromApi.parentCompanyAddress,
-              uf: _buyerFromApi.parentCompanyAddress.uf
-                ? upperCase(_buyerFromApi.parentCompanyAddress.uf)
-                : ''
+              ..._buyerFromApi.buyerAddress[1].address,
+              uf: _buyerFromApi.buyerAddress[1].address.uf
+                ? upperCase(_buyerFromApi.buyerAddress[1].address.uf)
+                : '',
+              deliveryAddress: _buyerFromApi.buyerAddress[1].deliveryAddress
+                ? _buyerFromApi.buyerAddress[1].deliveryAddress
+                : false
             },
-            // linesFamilies: chain(_buyerFromApi?.buyerLinesFamilies)
-            //   .groupBy('lineCode')
-            //   .map((value, key) => ({
-            //     lineCode: Number(key),
-            //     lineDescription: value[0].lineDescription,
-            //     family: value
-            //   }))
-            // .value(),
-            // regionalManager: {
-            //   approverCode: _buyerFromApi?.regionalManagerCode,
-            //   approverDescription: _buyerFromApi?.regionalManagerDescription
-            // },
-            responsible: {
-              code: _buyerFromApi?.responsibleCode,
-              name: _buyerFromApi?.responsibleDescription
-            }
+            linesFamilies: _buyerFromApi.buyerLinesFamilies
           },
     [_buyerFromApi]
   )
@@ -194,18 +185,31 @@ const BuyerListScreen = () => {
           linesFamilies: values?.linesFamilies,
           responsibleCode: values?.responsible?.approverCode,
           responsibleDescription: values?.responsible?.approverDescription,
-          imageId: imageId === null ? buyerFromApi.imageId?.id : imageId
+          imageId: imageId === null ? buyerFromApi.imageFile.id : imageId
         }
-        dispatch(
-          BuyerActions.saveBuyer(
-            payload,
-            () => {
-              onSuccess()
-              setLoader(false)
-            },
-            () => setLoader(false)
+
+        if (isEdit) {
+          dispatch(
+            BuyerActions.editBuyer(
+              state?.params?.id,
+              payload,
+              onSuccessCallBack,
+              () => setLoader(false)
+            )
           )
-        )
+        } else {
+          dispatch(
+            BuyerActions.saveBuyer(
+              payload,
+              () => {
+                onSuccess()
+                setLinesBuyers([])
+                setLoader(false)
+              },
+              () => setLoader(false)
+            )
+          )
+        }
       }
 
       if (values.imageFile?.size) {
@@ -218,19 +222,8 @@ const BuyerListScreen = () => {
       } else {
         saveBuyer()
       }
-
-      // if (isEdit) {
-      //   dispatch(
-      //     BuyerActions.editBuyer(
-      //       state?.params?.id,
-      //       buyer,
-      //       onSuccessCallBack,
-      //       () => setLoader(false)
-      //     )
-      //   )
-      // }
     },
-    [dispatch, isEdit, onSuccessCallBack, state]
+    [dispatch, isEdit, onSuccessCallBack, state, buyerFromApi]
   )
 
   const handleReset = useCallback(() => {
@@ -295,7 +288,6 @@ const BuyerListScreen = () => {
     if (!isEmpty(buyerFromApi)) {
       formRef.current.setData({
         ...buyerFromApi,
-        imageFile: !isEmpty(buyerFromApi.file) ? buyerFromApi.file : null,
         clientTotvsDescription: {
           parentCompanyName: buyerFromApi.clientTotvsDescription,
           parentCompanyCode: buyerFromApi.clientTotvsCode
@@ -311,7 +303,11 @@ const BuyerListScreen = () => {
         responsible: {
           approverCode: buyerFromApi.responsibleCode,
           approverDescription: buyerFromApi.responsibleDescription
-        }
+        },
+        imageFile: !isEmpty(buyerFromApi.imageFile)
+          ? buyerFromApi.imageFile
+          : null,
+        imageFile: !isEmpty(buyerFromApi.imageId) ? buyerFromApi.imageId : null
       })
     }
   }, [buyerFromApi, modeView])
@@ -362,7 +358,7 @@ const BuyerListScreen = () => {
                   >
                     <Attach size={24} />
                     <p>{image.name}</p>
-                    <span>{image.size} Kb</span>
+                    {image?.size ? <span>{image?.size} Kb</span> : ''}
                   </div>
                   <Button
                     variant='text'
@@ -405,7 +401,7 @@ const BuyerListScreen = () => {
             isView={modeView}
           />
           <Grid item xs={12} className={classes.flexContainer}>
-            <Scope path='parentCompanyAddress'>
+            <Scope path='buyerAddress'>
               <Address
                 formRef={formRef}
                 title={t('address of {this}', {
@@ -414,16 +410,16 @@ const BuyerListScreen = () => {
                 })}
                 isDisabled={modeView || isDisabled}
                 stateOptions={stateOptions}
-                objFather='parentCompanyAddress'
+                objFather='buyerAddress'
               />
             </Scope>
-            <Scope path='buyerAddress'>
+            <Scope path='parentCompanyAddress'>
               <Address
                 formRef={formRef}
                 title={`${t('address')}  ${t('matrix', { howMany: 1 })}`}
                 isDisabled={modeView || isDisabled}
                 stateOptions={stateOptions}
-                objFather='buyerAddress'
+                objFather='parentCompanyAddress'
               />
             </Scope>
           </Grid>

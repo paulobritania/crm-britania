@@ -64,6 +64,18 @@ export class BuyerLineFamily extends Model<BuyerLineFamily> {
   })
   regionalManagerDescription: string
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true
+  })
+  responsibleCode: number;
+
+  @Column({
+    type: DataType.STRING(70),
+    allowNull: true
+  })
+  responsibleDescription: string;
+
   @BelongsTo(() => Buyer, { foreignKey: 'buyerId', targetKey: 'id' })
   buyer: Buyer
 }

@@ -93,18 +93,6 @@ export class Buyer extends Model<Buyer> {
   clientTotvsCode: number;
 
   @Column({
-    type: DataType.INTEGER,
-    allowNull: true
-  })
-  responsibleCode: number;
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  responsibleDescription: string;
-
-  @Column({
     allowNull: false,
     type: DataType.INTEGER
   })
@@ -116,7 +104,7 @@ export class Buyer extends Model<Buyer> {
   @HasMany(() => BuyerAddress, { foreignKey: 'idBuyers', sourceKey: 'id' })
   buyerAddress: BuyerAddress[];
 
-  @HasOne(() => File, { sourceKey: 'imageId', foreignKey: 'id' })
+  @HasOne(() => File, { sourceKey: 'imageId', foreignKey: 'id', as: 'imageFile' })
   ranking: File
 
   @BelongsTo(() => User, {
