@@ -117,6 +117,7 @@ const AddressBuyer = ({
       </Grid>
       <Grid item sm={12}>
         <Checkbox
+          disabled={isDisabled}
           name='deliveryAddress'
           color='primary'
           label={t('use as delivery address')}

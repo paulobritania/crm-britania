@@ -5,9 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import trimMask from '@meta-awesome/functions/src/trimMask'
 import { Scope } from '@unform/core'
 
-import { chain } from 'lodash'
 import debounce from 'lodash/debounce'
-import forEach from 'lodash/forEach'
 import isEmpty from 'lodash/isEmpty'
 import upperCase from 'lodash/upperCase'
 
@@ -38,8 +36,6 @@ import { useLinesBuyers } from '@britania-crm/services/hooks/useLinesBuyers'
 import Address from './Address'
 import MainData from './MainData'
 import { useStyles } from './styles'
-import { props } from 'lodash/fp'
-import { formatPathToCloudStorageUrl } from '@britania-crm/utils/files'
 
 const BuyerListScreen = () => {
   const t = useT()
@@ -59,6 +55,7 @@ const BuyerListScreen = () => {
   const [stateOptions, setStateOptions] = useState([])
   const [cpf, setCpf] = useState('')
   const [image, setImage] = useState()
+  const [hasImage, setHasImage] = useState(true)
 
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
@@ -73,6 +70,7 @@ const BuyerListScreen = () => {
       onSuccess(data) {
         setLinesBuyers(data.buyerLinesFamilies)
         setImage({ ...data.imageFile, name: data?.imageFile.filename })
+        setHasImage(false)
       },
       revalidateOnFocus: false
     }
@@ -82,6 +80,7 @@ const BuyerListScreen = () => {
     (value) => {
       formRef.current.setFieldValue('imageFile', value)
       setImage(value)
+      if (!!value) setHasImage(false)
     },
     [formRef]
   )
@@ -89,6 +88,7 @@ const BuyerListScreen = () => {
   const handleRemoveFile = useCallback(() => {
     formRef.current.setFieldValue('imageFile', '')
     setImage()
+    setHasImage(true)
   }, [formRef])
 
   const buyerFromApi = useMemo(
@@ -130,8 +130,8 @@ const BuyerListScreen = () => {
     )
 
   const isDisabled = useMemo(
-    () => loader || loading || existenceBuyerFromApiLoading,
-    [existenceBuyerFromApiLoading, loader, loading]
+    () => loader || loading || existenceBuyerFromApiLoading || hasImage,
+    [(existenceBuyerFromApiLoading, loader, loading, hasImage)]
   )
 
   const title = useMemo(() => {
@@ -212,12 +212,12 @@ const BuyerListScreen = () => {
       }
 
       if (values.imageFile?.size) {
-        // dispatch(
-        //   FileActions.uploadImage(values.imageFile, (data) => {
-        //     saveBuyer(data)
-        //     setLoader(false)
-        //   })
-        // )
+        dispatch(
+          FileActions.uploadImage(values.imageFile, (data) => {
+            saveBuyer(data)
+            setLoader(false)
+          })
+        )
       } else {
         saveBuyer()
       }
@@ -383,7 +383,7 @@ const BuyerListScreen = () => {
                       '.doc',
                       '.docx'
                     ]}
-                    onValueChange={handleNameFile}
+                    onValueChange={(e) => handleNameFile(e)}
                   />
                 </Grid>
               )}
@@ -392,9 +392,7 @@ const BuyerListScreen = () => {
           </Grid>
           <MainData
             formRef={formRef}
-            isDisabled={
-              modeView || loader || loading || existenceBuyerFromApiLoading
-            }
+            isDisabled={modeView || isDisabled}
             isEdit={isEdit}
             setCpf={setCpf}
             cpfAlreadyExists={existenceBuyerFromApi}
