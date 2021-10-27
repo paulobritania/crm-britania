@@ -37,7 +37,7 @@ const BuyerListScreen = () => {
       },
       {
         title: t('company'),
-        field: 'clientTotvsDescription'
+        field: 'clientTotvsCode'
       },
       {
         title: t('line', { howMany: 1 }),
@@ -72,11 +72,64 @@ const BuyerListScreen = () => {
       },
       {
         title: t('responsible', { howMany: 1 }),
-        field: 'responsibleDescription'
+        field: 'responsibleDescription',
+        render(row) {
+          if (!isEmpty(row?.buyerLinesFamilies)) {
+            const newLinesFamilies = chain(row?.buyerLinesFamilies)
+              .groupBy('responsibleCode')
+              .map((value, key) => ({
+                lineCode: Number(key),
+                responsibleDescription: value[0].responsibleDescription,
+                family: value
+              }))
+              .value()
+            const listFamilyAndLine = map(
+              newLinesFamilies,
+              (responsible) => responsible.responsibleDescription
+            ).join(', ')
+            const newString = listFamilyAndLine.slice(0, 15)
+            return (
+              <div>
+                <Tooltip title={listFamilyAndLine} arrow>
+                  {listFamilyAndLine.length >= 15
+                    ? newString.concat('...')
+                    : newString}
+                </Tooltip>
+              </div>
+            )
+          }
+          return '-'
+        }
       },
       {
         title: t('regional', { howMany: 1 }),
-        field: 'regionalManagerDescription'
+        field: 'regionalManagerDescription',
+        render(row) {
+          if (!isEmpty(row?.buyerLinesFamilies)) {
+            const newLinesFamilies = chain(row?.buyerLinesFamilies)
+              .groupBy('regionalManagerCode')
+              .map((value, key) => ({
+                lineCode: Number(key),
+                regionalManagerDescription: value[0].regionalManagerDescription,
+              }))
+              .value()
+            const listFamilyAndLine = map(
+              newLinesFamilies,
+              (regionalManager) => regionalManager.regionalManagerDescription
+            ).join(', ')
+            const newString = listFamilyAndLine.slice(0, 15)
+            return (
+              <div>
+                <Tooltip title={listFamilyAndLine} arrow>
+                  {listFamilyAndLine.length >= 15
+                    ? newString.concat('...')
+                    : newString}
+                </Tooltip>
+              </div>
+            )
+          }
+          return '-'
+        }
       }
     ],
     [t]
