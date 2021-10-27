@@ -12,7 +12,6 @@ import { lines as linesCrmRoutes } from '@britania-crm/services/apis/crmApi/reso
 
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 import InputSelect from '@britania-crm/web-components/InputSelect'
-import { props } from 'lodash/fp'
 
 const LineInput = forwardRef((props, ref) => {
   const { index, matrixCode, isView, formRef } = props
@@ -62,7 +61,7 @@ const LineInput = forwardRef((props, ref) => {
       detached
       valueKey='lineDescription'
       idKey='lineCode'
-      disabled={isEmpty(linesFromApi[index])}
+      disabled={isEmpty(linesFromApi[index]) || isView}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='line'
       value={linesBuyers[index].lineCode}

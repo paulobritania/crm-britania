@@ -307,7 +307,7 @@ const BuyerFormScreen = () => {
         imageFile: !isEmpty(buyerFromApi.imageId) ? buyerFromApi.imageId : null
       })
     }
-  }, [buyerFromApi, modeView])
+  }, [buyerFromApi])
 
   return (
     <Form

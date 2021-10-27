@@ -11,7 +11,7 @@ import { customer as customerCrmRoutes } from '@britania-crm/services/apis/crmAp
 import InputSelect from '@britania-crm/web-components/InputSelect'
 
 const RegionalInput = forwardRef((props, ref) => {
-  const { index, matrixCode, formRef } = props
+  const { index, matrixCode, formRef, isView } = props
   const t = useT()
   const snackbar = useSnackbar()
   const {
@@ -64,7 +64,7 @@ const RegionalInput = forwardRef((props, ref) => {
       detached
       valueKey='approverDescription'
       idKey='approverCode'
-      disabled={isEmpty(regionalFromApi[index])}
+      disabled={isEmpty(regionalFromApi[index]) || isView}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='regionalManager'
       label={t('regional manager')}

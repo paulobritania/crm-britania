@@ -214,6 +214,7 @@ const MainData = ({
                     index={idx}
                     matrixCode={matrixCode}
                     formRef={formRef}
+                    isView={isView}
                   />
                 </Grid>
                 <Grid item sm={3}>
@@ -221,6 +222,7 @@ const MainData = ({
                     index={idx}
                     matrixCode={matrixCode}
                     formRef={formRef}
+                    isView={isView}
                   />
                 </Grid>
                 <Button variant='text' onClick={() => handleRemoveLine(idx)}>
