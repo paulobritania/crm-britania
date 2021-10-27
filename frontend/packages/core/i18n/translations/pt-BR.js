@@ -268,6 +268,7 @@ export default {
   messages: 'Recados',
   'enable all hierarchy clients': 'Liberar todos os clientes da hierarquia',
   'drag n drop to add': 'Arraste e solte para adicionar',
+  'click or drag n drop to load': 'Arraste e solte ou clique para carregar',
   'the {this} or': '{gender, select, male {o} female {a}} {this}, ou',
   'remove image': 'Remover imagem',
   'new profile': 'Novo Perfil',

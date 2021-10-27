@@ -14,17 +14,17 @@ import 'react-sortable-tree/style.css'
 import 'moment/locale/pt-br'
 
 const App = () => (
-  <LinesBuyerProvider>
-    <StoreProvider store={store}>
-      <I18nProvider language='pt-BR' dictionaries={dictionaries}>
-        <SnackbarsProvider>
-          <DialogProvider>
+  <StoreProvider store={store}>
+    <I18nProvider language='pt-BR' dictionaries={dictionaries}>
+      <SnackbarsProvider>
+        <DialogProvider>
+          <LinesBuyerProvider>
             <Router />
-          </DialogProvider>
-        </SnackbarsProvider>
-      </I18nProvider>
-    </StoreProvider>
-  </LinesBuyerProvider>
+          </LinesBuyerProvider>
+        </DialogProvider>
+      </SnackbarsProvider>
+    </I18nProvider>
+  </StoreProvider>
 )
 
 export default withGlobalStyles(App)

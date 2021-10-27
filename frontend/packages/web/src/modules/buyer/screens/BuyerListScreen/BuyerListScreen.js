@@ -8,7 +8,6 @@ import isNil from 'lodash/isNil'
 import map from 'lodash/map'
 import omitBy from 'lodash/omitBy'
 
-
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 import { FileActions } from '@britania-crm/stores/file'
@@ -140,7 +139,7 @@ const BuyerListScreen = () => {
       <Container>
         <DataTable
           data={buyersCrmRoutes.getAll}
-          filters={ filters }
+          filters={filters}
           columns={columns}
           loading={downloadLoading}
           title={t('buyer', { howMany: 2 })}
@@ -162,7 +161,6 @@ const BuyerListScreen = () => {
           })}
           searchFieldAlignment='left'
         />
-        
       </Container>
     </>
   )

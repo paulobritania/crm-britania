@@ -3,6 +3,7 @@ import React, { useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import uniqueId from 'lodash/uniqueId'
+import Button from '@britania-crm/web-components/Button'
 
 import { useT } from '@britania-crm/i18n'
 import UploadSVG from '@britania-crm/web-components/Icons/Upload'
@@ -38,28 +39,29 @@ const DropzoneFile = ({ handleUpload, types, title, description }) => {
   )
 
   return (
-    <Container
-      onDragOver={dragOver}
-      onDragEnter={dragEnter}
-      onDragLeave={dragLeave}
-      onDrop={fileDrop}
-    >
-      <UploadSVG />
-      <AddNewImage>{title}</AddNewImage>
-      <AddNewImageDesc>
-        {t('drag n drop to add')}
-        <br />
-        {description}
-      </AddNewImageDesc>
-      <input
-        accept={types}
-        style={{ display: 'none' }}
-        id={uniqId}
-        type='file'
-        onChange={(e) => handleUpload(e.target.files)}
-      />
-      <label htmlFor={uniqId}></label>
-    </Container>
+    <label htmlFor={uniqId}>
+      <Container
+        onDragOver={dragOver}
+        onDragEnter={dragEnter}
+        onDragLeave={dragLeave}
+        onDrop={fileDrop}
+      >
+        <UploadSVG />
+        <AddNewImage>{title}</AddNewImage>
+        <AddNewImageDesc>
+          {t('click or drag n drop to load')}
+          <br />
+          {description}
+        </AddNewImageDesc>
+        <input
+          accept={types}
+          style={{ display: 'none' }}
+          id={uniqId}
+          type='file'
+          onChange={(e) => handleUpload(e.target.files)}
+        />
+      </Container>
+    </label>
   )
 }
 DropzoneFile.propTypes = {

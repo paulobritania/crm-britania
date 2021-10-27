@@ -37,7 +37,7 @@ import Address from './Address'
 import MainData from './MainData'
 import { useStyles } from './styles'
 
-const BuyerListScreen = () => {
+const BuyerFormScreen = () => {
   const t = useT()
   const classes = useStyles()
   const { routes } = useRoutes()
@@ -160,6 +160,7 @@ const BuyerListScreen = () => {
   }, [])
 
   const onSuccessCallBack = useCallback(() => {
+    setLinesBuyers([])
     history.push(routes.buyers.path)
   }, [history, routes])
 
@@ -198,10 +199,9 @@ const BuyerListScreen = () => {
           )
         } else {
           dispatch(
-            BuyerActions.saveBuyer(payload, onSuccessCallBack, () => {
+            BuyerActions.saveBuyer(payload, onSuccessCallBack, () =>
               setLoader(false)
-              setLinesBuyers([])
-            })
+            )
           )
         }
       }
@@ -468,4 +468,4 @@ const BuyerListScreen = () => {
   )
 }
 
-export default BuyerListScreen
+export default BuyerFormScreen
