@@ -228,6 +228,7 @@ export default {
   consultant: '{howMany, plural, one {Consultor} other {Consultores}}',
   search: 'Pesquisar',
   'search by {this}': 'Busque por {this}',
+  'search by buyer and matrix': 'Pesquise pelo comprador ou nome da matriz',
   'link of {this}': 'Víncular {this}',
   warning: 'Atenção!',
   yes: 'Sim',

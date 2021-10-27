@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import officegen from 'officegen'
-import { Transaction } from 'sequelize'
+import { Transaction, Op } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
 import { Address } from '../address/entities/address.entity'
@@ -290,6 +290,11 @@ export class BuyersService {
             $like: `%${query.name}%`
           }
         }),
+        ...(query.q && {
+          name: {
+            $like: `%${query.q}%`
+          }
+        }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
@@ -327,11 +332,6 @@ export class BuyersService {
             $like: `%${query.imageId}%`
           }
         }),
-        // ...(query.responsibleCode && {
-        //   responsibleCode: {
-        //     $like: `%${ query.responsibleCode }%`
-        //   }
-        // }),
         ...(query.role && {
           role: {
             $like: `%${query.role}%`
@@ -385,13 +385,13 @@ export class BuyersService {
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
-            lineCode: query.lineCodes.split(',').map((code) => Number(code))
+            lineCode: { $in: query.lineCodes.split(',').map((code) => Number(code)) }
           },
           required: !!query.lineCodes,
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
-      order: [['id', 'DESC']]
+      order: [['id', 'DESC']],
     })
 
     return buyers

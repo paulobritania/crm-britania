@@ -110,7 +110,7 @@ const BuyerListScreen = () => {
               .groupBy('regionalManagerCode')
               .map((value, key) => ({
                 lineCode: Number(key),
-                regionalManagerDescription: value[0].regionalManagerDescription,
+                regionalManagerDescription: value[0].regionalManagerDescription
               }))
               .value()
             const listFamilyAndLine = map(
@@ -200,7 +200,7 @@ const BuyerListScreen = () => {
             gender: 'male',
             this: t('buyer', { howMany: 1 })
           })}
-          searchText='Pesquise pelo comprador ou nome da matriz'
+          searchPlaceholder={t('search by buyer and matrix')}
           hasFilter
           filterForm={BuyerFormFilter}
           handleFilter={handleFilter}
