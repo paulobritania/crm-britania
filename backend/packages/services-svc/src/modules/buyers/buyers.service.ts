@@ -47,7 +47,7 @@ export class BuyersService {
     @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) {}
+  ) { }
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -78,8 +78,8 @@ export class BuyersService {
         })
         if (!hierarchy)
           throw new BadRequestException(
-            `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
-              'não foi encontrada na hierarquia do cliente selecionado'
+            `A relação entre a linha ${lineFamily.lineDescription} e a família ${lineFamily.familyDescription} ` +
+            'não foi encontrada na hierarquia do cliente selecionado'
           )
         return hierarchy
       })
@@ -287,44 +287,44 @@ export class BuyersService {
       where: {
         ...(query.name && {
           name: {
-            $like: `%${ query.name }%`
+            $like: `%${query.name}%`
           }
         }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
-              clientTotvsCode: {
-                $like: `%${ query.clientTotvsCode }%`
-              }
+            clientTotvsCode: {
+              $like: `%${query.clientTotvsCode}%`
             }
+          }
           : clientCodes.length && {
-              clientTotvsCode: {
-                $in: clientCodes
-              }
-            }),
+            clientTotvsCode: {
+              $in: clientCodes
+            }
+          }),
         ...(query.birthday && {
           birthday: {
-            $like: `%${ query.birthday }%`
+            $like: `%${query.birthday}%`
           }
         }),
         ...(query.category && {
           category: {
-            $like: `%${ query.category }%`
+            $like: `%${query.category}%`
           }
         }),
         ...(query.cpf && {
           cpf: {
-            $like: `%${ query.cpf }%`
+            $like: `%${query.cpf}%`
           }
         }),
         ...(query.email && {
           email: {
-            $like: `%${ query.email }%`
+            $like: `%${query.email}%`
           }
         }),
         ...(query.imageId && {
           imageId: {
-            $like: `%${ query.imageId }%`
+            $like: `%${query.imageId}%`
           }
         }),
         // ...(query.responsibleCode && {
@@ -334,24 +334,24 @@ export class BuyersService {
         // }),
         ...(query.role && {
           role: {
-            $like: `%${ query.role }%`
+            $like: `%${query.role}%`
           }
         }),
         ...(query.telephone && {
-        telephone: {
-            $like: `%${ query.telephone }%`
+          telephone: {
+            $like: `%${query.telephone}%`
           }
         }),
         ...(query.voltage && {
           voltage: {
-            $like: `%${ query.voltage }%`
+            $like: `%${query.voltage}%`
           }
         }),
         ...(query.id && {
           id: {
-              $like: `%${ query.id }%`
-            }
-          })
+            $like: `%${query.id}%`
+          }
+        })
       },
       attributes: [
         'id',
@@ -571,14 +571,14 @@ export class BuyersService {
     )
   }
 
-    /**
-   * Irá retornar o comprador e suas relações
-   * @param buyerId number
-   * @param userId number
-   */
-     async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
-      const buyer = await Buyer.findByPk(buyerId, {
-        include:
+  /**
+ * Irá retornar o comprador e suas relações
+ * @param buyerId number
+ * @param userId number
+ */
+  async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
+    const buyer = await Buyer.findByPk(buyerId, {
+      include:
         [
           {
             model: this.file,
@@ -599,18 +599,18 @@ export class BuyersService {
             required: false
           }
         ]
-      })
-      if (!buyer) return null
+    })
+    if (!buyer) return null
 
-      if (
-        !(await this.hierarchyService.checkIfUserHasAccessToAClient(
-          userId,
-          buyer.clientTotvsCode
-        ))
-      )
-        throw new ForbiddenException()
-      return buyer
-    }
+    if (
+      !(await this.hierarchyService.checkIfUserHasAccessToAClient(
+        userId,
+        buyer.clientTotvsCode
+      ))
+    )
+      throw new ForbiddenException()
+    return buyer
+  }
 
   /**
    * Irá gerar um relatório em formato xlsx de acordo com
@@ -623,10 +623,11 @@ export class BuyersService {
     userId: number,
     res: Response
   ): Promise<void> {
-    const buyers:any = await this.getAllBuyers(query, userId)
+    const buyers: any = await this.getAllBuyers(query, userId)
+    console.log(buyers)
     const formatedBuyers = []
     buyers.forEach((buyer) => {
-      buyers.buyerLinesFamilies.forEach(element => {
+      buyer.buyerLinesFamilies.forEach(element => {
         const newObject = {
           name: buyer.name,
           role: buyer.role,
@@ -635,7 +636,7 @@ export class BuyersService {
           responsible: buyer.responsibleDescription,
           active: buyer.active ? 'Ativo' : 'Inativo'
         }
-       formatedBuyers.push(newObject)
+        formatedBuyers.push(newObject)
       })
     })
     const xlsx = officegen('xlsx')
