@@ -30,11 +30,6 @@ const BuyerListScreen = () => {
 
   const [downloadLoading, setDownloadLoading] = useState(false)
 
-  const { data, loading, error } = useCrmApi(
-    [buyersCrmRoutes.getAll, filters],
-    { params: filters }
-  )
-
   const columns = useMemo(
     () => [
       {
@@ -144,8 +139,7 @@ const BuyerListScreen = () => {
   return (
     <>
       <Container>
-        {data && <DataTable
-          options={ { search: false } }
+        <DataTable
           data={buyersCrmRoutes.getAll}
           filters={ filters }
           columns={columns}
@@ -168,7 +162,7 @@ const BuyerListScreen = () => {
             this: t('buyer', { howMany: 1 })
           })}
           searchFieldAlignment='left'
-        /> }
+        />
         
       </Container>
     </>
