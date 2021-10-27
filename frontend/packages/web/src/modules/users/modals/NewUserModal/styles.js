@@ -22,16 +22,16 @@ export const InfoContainer = styled.div`
   justify-content: center;
 
   & > svg {
-    margin-right:20px
+    margin-right: 20px;
   }
 `
 export const ShadowBox = styled.div`
   display: flex;
-  background-color: ${ colors.white5 };
+  background-color: ${colors.white5};
   margin: 32;
   width: 100%;
   height: 100%;
-  justifyContent: space-between;
+  justify-content: space-between;
   padding: 32px;
   border-radius: 25px;
   align-items: center;
@@ -40,7 +40,7 @@ export const ShadowBox = styled.div`
 `
 export const LeftBox = styled.div`
   display: flex;
-  background-color: ${ colors.white };
+  background-color: ${colors.white};
   flex-direction: column;
   align-items: center;
   justify-content: center;

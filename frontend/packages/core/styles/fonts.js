@@ -7,6 +7,12 @@ import mavenProBold from './assets/fonts/MavenPro/MavenPro-Bold.ttf'
 import mavenProMedium from './assets/fonts/MavenPro/MavenPro-Medium.ttf'
 import mavenProRegular from './assets/fonts/MavenPro/MavenPro-Regular.ttf'
 import mavenProSemiBold from './assets/fonts/MavenPro/MavenPro-SemiBold.ttf'
+import openSansBold from './assets/fonts/OpenSans/OpenSans-Bold.ttf'
+import openSansExtraBold from './assets/fonts/OpenSans/OpenSans-ExtraBold.ttf'
+import openSansLight from './assets/fonts/OpenSans/OpenSans-Light.ttf'
+import openSansMedium from './assets/fonts/OpenSans/OpenSans-Medium.ttf'
+import openSansRegular from './assets/fonts/OpenSans/OpenSans-Regular.ttf'
+import openSansSemiBold from './assets/fonts/OpenSans/OpenSans-SemiBold.ttf'
 import poppinsBold from './assets/fonts/Poppins/Poppins-Bold.ttf'
 import poppinsLight from './assets/fonts/Poppins/Poppins-Light.ttf'
 import poppinsMedium from './assets/fonts/Poppins/Poppins-Medium.ttf'
@@ -43,27 +49,27 @@ const fontSize = {
 const fontFaceMavenPro = [
   {
     fontFamily: 'Maven Pro',
-    src: `url("${ mavenProMedium }") format("truetype")`,
+    src: `url("${mavenProMedium}") format("truetype")`,
     fontWeight: fontWeight.medium
   },
   {
     fontFamily: 'Maven Pro',
-    src: `url("${ mavenProRegular }") format("truetype")`,
+    src: `url("${mavenProRegular}") format("truetype")`,
     fontWeight: fontWeight.regular
   },
   {
     fontFamily: 'Maven Pro',
-    src: `url("${ mavenProSemiBold }") format("truetype")`,
+    src: `url("${mavenProSemiBold}") format("truetype")`,
     fontWeight: fontWeight.semiBold
   },
   {
     fontFamily: 'Maven Pro',
-    src: `url("${ mavenProBold }") format("truetype")`,
+    src: `url("${mavenProBold}") format("truetype")`,
     fontWeight: fontWeight.bold
   },
   {
     fontFamily: 'Maven Pro',
-    src: `url("${ mavenProBlack }") format("truetype")`,
+    src: `url("${mavenProBlack}") format("truetype")`,
     fontWeight: fontWeight.black
   }
 ]
@@ -71,62 +77,101 @@ const fontFaceMavenPro = [
 const fontFacePoppins = [
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsThin }") format("truetype")`,
+    src: `url("${poppinsThin}") format("truetype")`,
     fontWeight: fontWeight.thin
   },
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsLight }") format("truetype")`,
+    src: `url("${poppinsLight}") format("truetype")`,
     fontWeight: fontWeight.light
   },
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsMedium }") format("truetype")`,
+    src: `url("${poppinsMedium}") format("truetype")`,
     fontWeight: fontWeight.medium
   },
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsRegular }") format("truetype")`,
+    src: `url("${poppinsRegular}") format("truetype")`,
     fontWeight: fontWeight.regular
   },
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsSemiBold }") format("truetype")`,
+    src: `url("${poppinsSemiBold}") format("truetype")`,
     fontWeight: fontWeight.semiBold
   },
   {
     fontFamily: 'Poppins',
-    src: `url("${ poppinsBold }") format("truetype")`,
+    src: `url("${poppinsBold}") format("truetype")`,
     fontWeight: fontWeight.bold
+  }
+]
+
+const fontOpenSans = [
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansRegular}") format("truetype")`,
+    fontWeight: fontWeight.regular
+  },
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansBold}") format("truetype")`,
+    fontWeight: fontWeight.bold
+  },
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansExtraBold}") format("truetype")`,
+    fontWeight: fontWeight.extraBold
+  },
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansLight}") format("truetype")`,
+    fontWeight: fontWeight.light
+  },
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansMedium}") format("truetype")`,
+    fontWeight: fontWeight.medium
+  },
+  {
+    fontFamily: 'Open Sans',
+    src: `url("${openSansSemiBold}") format("truetype")`,
+    fontWeight: fontWeight.semiBold
   }
 ]
 
 const fontFaceMonospace = [
   {
     fontFamily: 'Fira Code',
-    src: `url("${ firaCodeLight }") format("truetype")`,
+    src: `url("${firaCodeLight}") format("truetype")`,
     fontWeight: fontWeight.light
   },
   {
     fontFamily: 'Fira Code',
-    src: `url("${ firaCodeRegular }") format("truetype")`,
+    src: `url("${firaCodeRegular}") format("truetype")`,
     fontWeight: fontWeight.regular
   },
   {
     fontFamily: 'Fira Code',
-    src: `url("${ firaCodeMedium }") format("truetype")`,
+    src: `url("${firaCodeMedium}") format("truetype")`,
     fontWeight: fontWeight.medium
   },
   {
     fontFamily: 'Fira Code',
-    src: `url("${ firaCodeBold }") format("truetype")`,
+    src: `url("${firaCodeBold}") format("truetype")`,
     fontWeight: fontWeight.bold
   }
 ]
 
-const fontFamily = ['\'Maven Pro\'', '\'Poppins\'', 'sans-serif', 'Arial'].join(',')
+const fontFamily = [
+  "'Maven Pro'",
+  "'Poppins'",
+  'sans-serif',
+  'Arial',
+  'Open Sans'
+].join(',')
 
-const fontFamilyMonospace = ['\'Fira Code\''].join(',')
+const fontFamilyMonospace = ["'Fira Code'"].join(',')
 
 export default {
   fontFaceMavenPro,
@@ -134,6 +179,7 @@ export default {
   fontFaceMonospace,
   fontFamily,
   fontFamilyMonospace,
+  fontOpenSans,
   fontWeight,
   fontSize
 }

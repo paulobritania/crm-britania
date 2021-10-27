@@ -2,7 +2,9 @@ import { Module, HttpModule } from '@nestjs/common'
 import { SequelizeModule } from '@nestjs/sequelize'
 
 import { DatabaseProvider } from '../../database/database.provider'
+import { Address } from '../address/entities/address.entity'
 import { ClientsModule } from '../clients/clients.module'
+import { File } from '../files/entities/file.entity'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
 import { HierarchyModule } from '../hierarchy/hierarchy.module'
 import { User } from '../users/entities/user.entity'
@@ -17,10 +19,12 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
   imports: [
     HttpModule,
     SequelizeModule.forFeature([
+      Address,
       Buyer,
       BuyerAddress,
       BuyerLineFamily,
       Hierarchy,
+      File,
       User,
       UserRepresentativeCode
     ]),

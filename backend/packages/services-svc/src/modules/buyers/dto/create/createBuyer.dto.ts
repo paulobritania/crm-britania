@@ -36,16 +36,6 @@ export class CreateBuyerDto {
   @ApiProperty(required)
   category: string
 
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsCode: number
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsDescription: string
-
   @IsEnum(VoltageEnum)
   @IsOptional()
   @ApiProperty({ enum: VoltageEnum })
@@ -72,15 +62,10 @@ export class CreateBuyerDto {
   @ApiProperty()
   telephone: string
 
-  @IsOptional()
   @IsNumber()
-  @ApiProperty()
-  regionalManagerCode: number
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  regionalManagerDescription: string
+  @IsNotEmpty()
+  @ApiProperty(required)
+  clientTotvsCode: number
 
   @IsOptional()
   @IsNumber()
@@ -91,6 +76,11 @@ export class CreateBuyerDto {
   @IsString()
   @ApiProperty()
   responsibleDescription: string
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
 
   @ValidateNested({ each: true })
   @Type(() => CreateBuyerAddressDto)

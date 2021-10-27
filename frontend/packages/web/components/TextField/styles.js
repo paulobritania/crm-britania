@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import colors from '@britania-crm/styles/colors'
 
 export const theme = (theme) => (muiTheme) => {
-  const customTheme = ({
+  const customTheme = {
     ...muiTheme,
     palette: {
       ...(muiTheme.palette || {}),
@@ -25,7 +25,8 @@ export const theme = (theme) => (muiTheme) => {
         ...(muiTheme.overrides?.MuiInputBase || {}),
         root: {
           ...(muiTheme.overrides?.MuiInputBase?.root || {}),
-          borderRadius: 16,
+          borderRadius: 3,
+          border: '1px solid #D3DCE6',
           '&:disabled': { background: 'red' }
         }
       },
@@ -34,7 +35,7 @@ export const theme = (theme) => (muiTheme) => {
         ...(muiTheme.overrides?.MuiOutlinedInput || {}),
         root: {
           ...(muiTheme.overrides?.MuiOutlinedInput?.root || {}),
-          background: colors.white,
+          background: colors.grey20,
           '& fieldset': { borderColor: colors.britPrimary1.base }
         },
         input: {
@@ -53,15 +54,10 @@ export const theme = (theme) => (muiTheme) => {
         outlined: {
           ...(muiTheme.overrides?.MuiInputLabel?.outlined || {}),
           color: colors.britPrimary1.base
-          // textOverflow: 'ellipsis',
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // width: '100%'
         }
       }
-
     }
-  })
+  }
 
   return merge(customTheme, theme)
 }
@@ -70,14 +66,14 @@ export const TextFieldStyled = styled(TextField).withConfig({
   shouldForwardProp: (propName) =>
     propName !== 'minWidth' && propName !== 'validateOnBlur'
 })`
-  width: ${ (props) => props.width ? `${ props.width }px` : '100%' };
+  width: ${(props) => (props.width ? `${props.width}px` : '100%')};
 
-  pointer-events: ${ (props) => props.readOnly ? 'none' : 'auto' };
+  pointer-events: ${(props) => (props.readOnly ? 'none' : 'auto')};
 
-  margin-bottom: 10px; 
-  // padding: 0 4px; 
+  margin-bottom: 10px;
+  // padding: 0 4px;
 
   input {
     font-size: 14px;
-  } 
+  }
 `

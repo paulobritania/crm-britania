@@ -1,11 +1,12 @@
+import styled from 'styled-components'
+
 import { makeStyles } from '@material-ui/core/styles'
 
 import colors from '@britania-crm/styles/colors'
 import fonts from '@britania-crm/styles/fonts'
 
-export default makeStyles({
+export const useStyles = makeStyles(() => ({
   container: {
-    borderRadius: 25,
     padding: 30,
     backgroundColor: colors.white
   },
@@ -13,7 +14,15 @@ export default makeStyles({
     color: colors.primary.main,
     display: 'flex',
     justifyContent: 'flex-start',
-    fontSize: fonts.fontSize.XLS
+    fontSize: fonts.fontSize.XLS,
+    fontStyle: 'normal',
+    fontFamily: fonts.fontFaceMavenPro[0].fontFamily,
+    fontWeight: fonts.fontWeight.bold,
+    color: '#1F2D3D'
+  },
+  mainData: {
+    fontSize: fonts.fontSize.M,
+    fontWeight: fonts.fontWeight.bold
   },
   buttons: {
     display: 'flex',
@@ -28,8 +37,9 @@ export default makeStyles({
     marginLeft: 10,
     width: 190
   },
-  containerMain: { marginTop: 10 },
-  containerAddButton: {
+  containerFather: { borderRadius: 0 },
+  containerMain: { margin: 10 },
+  containerRadio: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -39,20 +49,82 @@ export default makeStyles({
     backgroundColor: colors.britSecondary.base
   },
   containerTable: {
-    borderRadius: 15,
-    padding: 15,
-    backgroundColor: colors.britPrimary2.lightest,
-    marginBottom: 15
+    border: `1px solid ${colors.grey20}`,
+    borderRadius: 3
   },
   table: {
     background: colors.white,
     padding: 10,
-    borderRadius: 15
+    borderRadius: 3
+  },
+  tableHeader: {
+    display: 'flex',
+    fontFamily: fonts.fontOpenSans[0].fontFamily,
+    fontWeight: fonts.fontWeight.bold,
+    fontSize: fonts.fontSize.SSB,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.grey20
+  },
+  tableHeader: {
+    display: 'flex',
+    fontFamily: fonts.fontOpenSans[0].fontFamily,
+    fontWeight: fonts.fontWeight.bold,
+    fontSize: fonts.fontSize.SSB,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.grey20,
+    display: 'flex',
+    justifyContent: 'space-between',
+    '& > li': {
+      display: 'inline',
+      float: 'left'
+    }
   },
   labelStatus: { fontSize: '0.75em' },
   status: {
     alignItems: 'center',
     display: 'flex'
   },
-  checkbox: { width: '20%' }
-})
+  checkbox: { width: '20%' },
+  flexContainer: { display: 'flex' },
+  upload: {
+    backgroundColor: '#F9FAFC',
+    textAlign: 'center',
+    border: `${colors.britPrimary2.lightest} solid 2px`,
+    borderRadius: 4,
+    borderStyle: 'dashed',
+    paddingTop: 30
+  },
+  hasFile: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 4,
+    width: '80%',
+    height: '32px',
+    marginBottom: 10,
+    textAlign: 'center',
+    color: colors.grey60,
+    fontWeight: fonts.fontWeight.semiBold,
+    fontSize: fonts.fontSize.S,
+    border: `${colors.grey10} solid 1px`,
+    '& > div': {
+      '& > p': {
+        marginRight: 10
+      },
+      '& > span': {
+        fontSize: fonts.fontSize.SSS,
+        fontWeight: fonts.fontWeight.regular
+      }
+    }
+  },
+  lgpdTitle: {
+    fontSize: fonts.fontSize.S,
+    fontWeight: fonts.fontWeight.regular
+  },
+  lgpdText: {
+    fontSize: fonts.fontSize.SSB,
+    fontWeight: fonts.fontWeight.regular
+  }
+}))

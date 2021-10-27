@@ -1,4 +1,9 @@
-import { Table, Model, Column, DataType } from 'sequelize-typescript'
+import { Table, Model, Column, DataType, HasOne } from 'sequelize-typescript'
+
+// eslint-disable-next-line import/no-cycle
+import { Address } from '../../address/entities/address.entity'
+// eslint-disable-next-line import/no-cycle
+import { Buyer } from './buyer.entity'
 
 @Table({
   modelName: 'BuyerAddress',
@@ -11,51 +16,35 @@ export class BuyerAddress extends Model<BuyerAddress> {
   @Column({
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true,
+    autoIncrement: false,
+    type: DataType.INTEGER
+  })
+  idBuyers: number;
+
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: false,
     type: DataType.INTEGER,
     comment: 'The identifier for the BuyerAddress record'
   })
-  id: number
-
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  street: string
+  idAddress: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true
   })
-  number: number
+  addressType: number;
 
   @Column({
-    type: DataType.STRING(40),
+    type: DataType.INTEGER,
     allowNull: true
   })
-  district: string
+  deliveryAddress: number;
 
-  @Column({
-    type: DataType.STRING(70),
-    allowNull: true
-  })
-  complement: string
+  @HasOne(() => Buyer, { sourceKey: 'idBuyers', foreignKey: 'id' })
+  buyer: Buyer;
 
-  @Column({
-    type: DataType.STRING(40),
-    allowNull: true
-  })
-  city: string
-
-  @Column({
-    type: DataType.STRING(2),
-    allowNull: true
-  })
-  uf: string
-
-  @Column({
-    type: DataType.STRING(8),
-    allowNull: true
-  })
-  cep: string
+  @HasOne(() => Address, { sourceKey: 'idAddress', foreignKey: 'id' })
+  address: Address;
 }

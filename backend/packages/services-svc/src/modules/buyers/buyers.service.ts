@@ -14,7 +14,9 @@ import officegen from 'officegen'
 import { Transaction } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
+import { Address } from '../address/entities/address.entity'
 import { ClientsService } from '../clients/clients.service'
+import { File } from '../files/entities/file.entity'
 import { Hierarchy } from '../hierarchy/entities/hierarchy.entity'
 import { HierarchyMemberClassEnum } from '../hierarchy/enums/hierarchyMemberClass.enum'
 import { HierarchyService } from '../hierarchy/hierarchy.service'
@@ -31,7 +33,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
 
 @Injectable()
 export class BuyersService {
-  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA
+  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA;
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
@@ -41,6 +43,8 @@ export class BuyersService {
     @InjectModel(BuyerLineFamily)
     private buyerLineFamily: typeof BuyerLineFamily,
     @InjectModel(Hierarchy) private hierarchy: typeof Hierarchy,
+    @InjectModel(Address) private address: typeof Address,
+    @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
   ) {}
@@ -132,26 +136,42 @@ export class BuyersService {
         ...createData
       } = data
 
-      const { id: parentCompanyAddressId } = await this.buyerAddress.create(
-        parentCompanyAddress,
-        {
-          transaction
-        }
-      )
-      const { id: addressId } = await this.buyerAddress.create(buyerAddress, {
-        transaction
-      })
       const buyer = await this.buyer.create(
         {
           ...createData,
-          parentCompanyAddressId,
-          buyerAddressId: addressId,
           active: true,
           createdBy: userId,
           updatedBy: userId
         },
         { transaction }
       )
+
+      const addressBuyer = await this.address.create(buyerAddress, {
+        transaction
+      })
+      const addressParent = await this.address.create(parentCompanyAddress, {
+        transaction
+      })
+
+      await this.buyerAddress.create(
+        {
+          idAddress: addressBuyer.id,
+          idBuyers: buyer.id,
+          addressType: 1,
+          deliveryAddress: buyerAddress.deliveryAddress
+        },
+        { transaction }
+      )
+      await this.buyerAddress.create(
+        {
+          idAddress: addressParent.id,
+          idBuyers: buyer.id,
+          addressType: 2,
+          deliveryAddress: parentCompanyAddress.deliveryAddress
+        },
+        { transaction }
+      )
+
       if (linesFamilies[0]) {
         await this.validateLinesFamilies(
           linesFamilies,
@@ -252,9 +272,8 @@ export class BuyersService {
   async getAllBuyers(
     query: FindAllBuyersQueryDto,
     userId: number
-  ): Promise<Buyer[]> {
+  ): Promise<any[]> {
     const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-
     if (!clientCodes) return []
 
     if (query.clientTotvsCode && clientCodes.length) {
@@ -282,29 +301,99 @@ export class BuyersService {
               clientTotvsCode: {
                 $in: clientCodes
               }
-            })
+            }),
+        ...(query.birthday && {
+          birthday: {
+            $like: `%${ query.birthday }%`
+          }
+        }),
+        ...(query.category && {
+          category: {
+            $like: `%${ query.category }%`
+          }
+        }),
+        ...(query.cpf && {
+          cpf: {
+            $like: `%${ query.cpf }%`
+          }
+        }),
+        ...(query.email && {
+          email: {
+            $like: `%${ query.email }%`
+          }
+        }),
+        ...(query.imageId && {
+          imageId: {
+            $like: `%${ query.imageId }%`
+          }
+        }),
+        // ...(query.responsibleCode && {
+        //   responsibleCode: {
+        //     $like: `%${ query.responsibleCode }%`
+        //   }
+        // }),
+        ...(query.role && {
+          role: {
+            $like: `%${ query.role }%`
+          }
+        }),
+        ...(query.telephone && {
+        telephone: {
+            $like: `%${ query.telephone }%`
+          }
+        }),
+        ...(query.voltage && {
+          voltage: {
+            $like: `%${ query.voltage }%`
+          }
+        }),
+        ...(query.id && {
+          id: {
+              $like: `%${ query.id }%`
+            }
+          })
       },
       attributes: [
         'id',
         'name',
-        'clientTotvsDescription',
+        'cpf',
+        'role',
+        'voltage',
+        'category',
+        'email',
         'active',
+        'birthday',
+        'telephone',
         'clientTotvsCode',
-        'responsibleDescription',
-        'regionalManagerDescription'
+        'imageId'
       ],
       include: [
+        {
+          model: this.file,
+          as: 'imageFile',
+          attributes: ['id', 'filename', 'contentType', 'path']
+        },
+        {
+          model: this.buyerAddress,
+          as: 'buyerAddress',
+          include: [{
+            model: this.address,
+            as: 'address'
+          }
+          ]
+        },
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
             lineCode: query.lineCodes.split(',').map((code) => Number(code))
           },
           required: !!query.lineCodes,
-          attributes: ['lineDescription']
+          attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
       order: [['id', 'DESC']]
     })
+
     return buyers
   }
 
@@ -331,12 +420,7 @@ export class BuyersService {
           {
             model: this.buyerAddress,
             as: 'buyerAddress',
-            attributes: ['id']
-          },
-          {
-            model: this.buyerAddress,
-            as: 'parentCompanyAddress',
-            attributes: ['id']
+            attributes: ['idBuyers', 'idAddress']
           },
           {
             model: this.buyerLineFamily,
@@ -367,17 +451,44 @@ export class BuyersService {
         buyerAddress,
         parentCompanyAddress,
         linesFamilies,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        clientTotvsCode,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        clientTotvsDescription,
         ...updateData
       } = data
 
-      await buyer.buyerAddress.update(buyerAddress, { transaction })
-      await buyer.parentCompanyAddress.update(parentCompanyAddress, {
+      await buyer.buyerAddress.forEach((buyerAddress) => {
+        this.buyerAddress.destroy({
+          where: {
+            idBuyers: buyerAddress.idBuyers,
+            idAddress: buyerAddress.idAddress
+          }
+        })
+      })
+
+      const addressBuyer = await this.address.create(buyerAddress, {
         transaction
       })
+      const addressParent = await this.address.create(parentCompanyAddress, {
+        transaction
+      })
+
+      await this.buyerAddress.create(
+        {
+          idAddress: addressBuyer.id,
+          idBuyers: buyer.id,
+          addressType: 1,
+          deliveryAddress: buyerAddress.deliveryAddress
+        },
+        { transaction }
+      )
+      await this.buyerAddress.create(
+        {
+          idAddress: addressParent.id,
+          idBuyers: buyer.id,
+          addressType: 2,
+          deliveryAddress: parentCompanyAddress.deliveryAddress
+        },
+        { transaction }
+      )
+
       const linesFamiliesDeleteIds = buyer.buyerLinesFamilies
         .filter(
           (relation) =>
@@ -387,8 +498,11 @@ export class BuyersService {
       if (linesFamiliesDeleteIds[0]) {
         await this.buyerLineFamily.destroy({
           where: {
-            id: {
+            lineCode: {
               $in: linesFamiliesDeleteIds
+            },
+            buyerId: {
+              $eq: buyer.id
             }
           }
         })
@@ -457,39 +571,46 @@ export class BuyersService {
     )
   }
 
-  /**
+    /**
    * Irá retornar o comprador e suas relações
    * @param buyerId number
    * @param userId number
    */
-  async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
-    const buyer = await Buyer.findByPk(buyerId, {
-      include: [
-        {
-          model: this.buyerLineFamily,
-          required: false
-        },
-        {
-          model: this.buyerAddress,
-          as: 'parentCompanyAddress'
-        },
-        {
-          model: this.buyerAddress,
-          as: 'buyerAddress'
-        }
-      ]
-    })
-    if (!buyer) return null
+     async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
+      const buyer = await Buyer.findByPk(buyerId, {
+        include:
+        [
+          {
+            model: this.file,
+            as: 'imageFile',
+            attributes: ['id', 'filename', 'contentType', 'path']
+          },
+          {
+            model: this.buyerAddress,
+            as: 'buyerAddress',
+            include: [{
+              model: this.address,
+              as: 'address'
+            }
+            ]
+          },
+          {
+            model: this.buyerLineFamily,
+            required: false
+          }
+        ]
+      })
+      if (!buyer) return null
 
-    if (
-      !(await this.hierarchyService.checkIfUserHasAccessToAClient(
-        userId,
-        buyer.clientTotvsCode
-      ))
-    )
-      throw new ForbiddenException()
-    return buyer
-  }
+      if (
+        !(await this.hierarchyService.checkIfUserHasAccessToAClient(
+          userId,
+          buyer.clientTotvsCode
+        ))
+      )
+        throw new ForbiddenException()
+      return buyer
+    }
 
   /**
    * Irá gerar um relatório em formato xlsx de acordo com
@@ -502,90 +623,32 @@ export class BuyersService {
     userId: number,
     res: Response
   ): Promise<void> {
-    const clientCodes = await this.hierarchyService.getUserClientCodes(userId)
-
-    const buyers = !clientCodes
-      ? []
-      : await this.buyer.findAll({
-          where: {
-            ...(query.name && {
-              name: {
-                $like: `%${ query.name }%`
-              }
-            }),
-            ...(query.active && { active: query.active }),
-            ...(query.clientTotvsCode
-              ? {
-                  clientTotvsCode: {
-                    $like: `%${ query.clientTotvsCode }%`
-                  }
-                }
-              : {
-                  ...(clientCodes.length && {
-                    clientTotvsCode: {
-                      $in: clientCodes
-                    }
-                  })
-                })
-          },
-          attributes: [
-            'id',
-            'clientTotvsDescription',
-            'name',
-            'role',
-            'email',
-            'birthday'
-          ],
-          include: [
-            {
-              model: this.buyerLineFamily,
-              where: query.lineCodes && {
-                lineCode: query.lineCodes.split(',').map((code) => Number(code))
-              },
-              required: !!query.lineCodes
-            },
-            {
-              model: this.buyerAddress,
-              as: 'buyerAddress',
-              attributes: [
-                'id',
-                'street',
-                'number',
-                'district',
-                'city',
-                'uf',
-                'cep'
-              ]
-            }
-          ],
-          order: [['id', 'DESC']]
-        })
-
-    const formatedBuyers = buyers.map((buyer) => {
-      const { street, number, district, city, uf, cep } = buyer.buyerAddress
-      const address = [street, number, district, `${ city }/${ uf }`, cep].join(
-        ', '
-      )
-      return {
-        name: buyer.name,
-        address,
-        company: buyer.clientTotvsDescription,
-        role: buyer.role,
-        email: buyer.email,
-        birthday: buyer.birthday
-      }
+    const buyers:any = await this.getAllBuyers(query, userId)
+    const formatedBuyers = []
+    buyers.forEach((buyer) => {
+      buyers.buyerLinesFamilies.forEach(element => {
+        const newObject = {
+          name: buyer.name,
+          role: buyer.role,
+          line: element.lineDescription,
+          regionalManager: element.regionalManagerDescription,
+          responsible: buyer.responsibleDescription,
+          active: buyer.active ? 'Ativo' : 'Inativo'
+        }
+       formatedBuyers.push(newObject)
+      })
     })
     const xlsx = officegen('xlsx')
     const sheet = xlsx.makeNewSheet()
     sheet.name = 'Officegen Excel'
 
     sheet.data[0] = []
-    sheet.data[0][0] = 'NOME COMPLETO'
-    sheet.data[0][1] = 'ENDEREÇO COMPLETO'
-    sheet.data[0][2] = 'EMPRESA'
-    sheet.data[0][3] = 'CARGO'
-    sheet.data[0][4] = 'EMAIL'
-    sheet.data[0][5] = 'ANIVERSÁRIO'
+    sheet.data[0][0] = 'NOME'
+    sheet.data[0][1] = 'MATRIZ/EMPRESA'
+    sheet.data[0][2] = 'LINHA'
+    sheet.data[0][3] = 'REGIONAL'
+    sheet.data[0][4] = 'RESPONSÁVEL'
+    sheet.data[0][5] = 'STATUS'
 
     formatedBuyers.forEach((buyer, i) => {
       i += 1

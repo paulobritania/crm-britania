@@ -1,5 +1,39 @@
 {
     "conventionalCommits.scopes": [
-        "ola"
+        "Controle Upload",
+        "cadastro de usuario"
+    ],
+    "sqltools.connections": [
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "crm",
+            "username": "SA",
+            "password": "BRITania@2020",
+            "database": "britania_crm_com"
+        },
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "pr-s187.ad.britania.com.br",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "crm_dev",
+            "database": "DinamoCRMCOM_dev",
+            "username": "crm_homolog",
+            "password": "Br1t@n1@2020",
+            "connectionTimeout": 10000
+        }
     ]
 }

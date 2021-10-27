@@ -1,8 +1,4 @@
-import React, {
-  useCallback,
-  useMemo,
-  memo
-} from 'react'
+import React, { useCallback, useMemo, memo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import PropTypes from 'prop-types'
@@ -37,24 +33,20 @@ const UploadImage = ({
 
   const classes = useStyles()
 
-  const hasFile = useMemo(
-    () => value || defaultFile,
-    [defaultFile, value]
-  )
+  const hasFile = useMemo(() => value || defaultFile, [defaultFile, value])
 
-  const hasPreview = useMemo(
-    () => preview && !!hasFile,
-    [hasFile, preview]
-  )
+  const hasPreview = useMemo(() => preview && !!hasFile, [hasFile, preview])
 
   const handleUpload = useCallback(
     (e) => {
       const ext = e[0]?.name.split('.').pop()
       if (!types.includes(e[0].type || ext)) {
-        dispatch(AppActions.addAlert({
-          type: 'error',
-          message: MSG025
-        }))
+        dispatch(
+          AppActions.addAlert({
+            type: 'error',
+            message: MSG025
+          })
+        )
         onChange('')
         return
       }
@@ -64,44 +56,50 @@ const UploadImage = ({
     [dispatch, onChange, types]
   )
 
-  const onRemove = useCallback(
-    () => {
-      onChange('')
-    },
-    [onChange]
-  )
+  const onRemove = useCallback(() => {
+    onChange('')
+  }, [onChange])
 
   return (
-    <Grid container spacing={ 2 } alignItems="center">
+    <Grid container spacing={2} alignItems='center'>
       {(!value || (hasFile && !hideWhenHasValue)) && (
-        <Grid item xs={ 12 } sm={ hasPreview ? 6 : 12 }>
+        <Grid item xs={12} sm={hasPreview ? 6 : 12}>
           <DropzoneFile
-            handleUpload={ handleUpload }
-            types={ types.toString() }
-            title={ title }
-            description={ description }
+            handleUpload={handleUpload}
+            types={types.toString()}
+            title={title}
+            description={description}
           />
           <ErrorBox>
             {!!error && (
-              <Box style={ { color: colors.error.main } } component="span" display="flex" alignItems="center">
-                <InfoIcon fontSize="small" style={ { marginRight: '8px' } } />
-                {' '}{ error }
+              <Box
+                style={{ color: colors.error.main }}
+                component='span'
+                display='flex'
+                alignItems='center'
+              >
+                <InfoIcon fontSize='small' style={{ marginRight: '8px' }} />{' '}
+                {error}
               </Box>
             )}
           </ErrorBox>
         </Grid>
       )}
 
-      <Grid item xs={ 12 } sm={ hideWhenHasValue ? 12 : 6 } className={ classes.preview }>
+      <Grid
+        item
+        xs={12}
+        sm={hideWhenHasValue ? 12 : 6}
+        className={classes.preview}
+      >
         <PreviewFile
-          file={ value }
-          onRemove={ clearable && onRemove }
-          style={ previewStyle }
-          defaultFile={ defaultFile }
-          hasPreview={ hasPreview }
+          file={value}
+          onRemove={clearable && onRemove}
+          style={previewStyle}
+          defaultFile={defaultFile}
+          hasPreview={hasPreview}
         />
       </Grid>
-
     </Grid>
   )
 }
@@ -113,10 +111,7 @@ UploadImage.propTypes = {
   clearable: PropTypes.bool,
   preview: PropTypes.bool,
   previewStyle: PropTypes.object,
-  value: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string
-  ]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
   defaultFile: PropTypes.any,
   hideWhenHasValue: PropTypes.bool,
   title: PropTypes.string.isRequired,
@@ -124,7 +119,7 @@ UploadImage.propTypes = {
 }
 
 UploadImage.defaultProps = {
-  onChange () {},
+  onChange() {},
   error: null,
   types: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'],
   value: '',

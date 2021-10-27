@@ -4,11 +4,8 @@ import {
   DataType,
   BelongsTo,
   Table,
-  Model,
-  HasOne
-} from 'sequelize-typescript'
+  Model} from 'sequelize-typescript'
 
-import { Hierarchy } from '../../hierarchy/entities/hierarchy.entity'
 import { Buyer } from './buyer.entity'
 
 @Table({
@@ -16,7 +13,10 @@ import { Buyer } from './buyer.entity'
   tableName: 'buyers_lines_families',
   underscored: true,
   version: false,
-  timestamps: true
+  timestamps: true,
+  paranoid: false,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 })
 export class BuyerLineFamily extends Model<BuyerLineFamily> {
   @Column({
@@ -52,15 +52,30 @@ export class BuyerLineFamily extends Model<BuyerLineFamily> {
   })
   lineDescription: string
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  regionalManagerCode: number
+
+  @Column({
+    type: DataType.STRING(70),
+    allowNull: false
+  })
+  regionalManagerDescription: string
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true
+  })
+  responsibleCode: number;
+
+  @Column({
+    type: DataType.STRING(70),
+    allowNull: true
+  })
+  responsibleDescription: string;
+
   @BelongsTo(() => Buyer, { foreignKey: 'buyerId', targetKey: 'id' })
   buyer: Buyer
-
-  @HasOne(() => Hierarchy, { sourceKey: 'lineCode', foreignKey: 'lineCode' })
-  hierarchyLine: Hierarchy
-
-  @HasOne(() => Hierarchy, {
-    sourceKey: 'lineCode',
-    foreignKey: 'lineCode'
-  })
-  hierarchyFamily: Hierarchy
 }

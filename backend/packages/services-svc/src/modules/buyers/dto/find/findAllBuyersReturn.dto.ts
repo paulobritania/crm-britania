@@ -1,33 +1,64 @@
 // eslint-disable-next-line max-classes-per-file
 import { ApiProperty } from '@nestjs/swagger'
 
-class BuyerLines {
-  @ApiProperty()
-  lineDescription: string
+// class BuyerLines {
+//   @ApiProperty()
+//   lineDescription: string;
 
-  @ApiProperty()
-  lineCode: number
-}
+//   @ApiProperty()
+//   lineCode: number;
+// }
 
 export class FindAllBuyerReturnDto {
-  @ApiProperty()
-  id: number
 
   @ApiProperty()
-  matrixCompany: string
+  id: number;
 
   @ApiProperty()
-  name: string
+  clientTotvsCode: number;
 
   @ApiProperty()
-  regionalDescription: string
+  name: string;
 
   @ApiProperty()
-  responsible: string
+  active: boolean;
 
   @ApiProperty()
-  active: boolean
+  lineCodes: string;
 
   @ApiProperty()
-  buyerLinesFamilies: BuyerLines[]
+  cpf: string;
+
+  @ApiProperty()
+  category: string;
+
+  @ApiProperty()
+  voltage: string;
+
+  @ApiProperty()
+  role: string;
+
+  @ApiProperty()
+  birthday: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  telephone: string;
+
+  @ApiProperty()
+  responsibleCode: number;
+
+  @ApiProperty()
+  responsibleDescription: string;
+
+  @ApiProperty()
+  imageId: number;
+
+  @ApiProperty()
+  offset: string;
+
+  @ApiProperty()
+  limit: string;
 }

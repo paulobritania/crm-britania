@@ -1,4 +1,3 @@
-
 import hexToRgba from 'hex-to-rgba'
 import styled from 'styled-components'
 
@@ -13,60 +12,60 @@ export default makeStyles({
     color: colors.primary.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.primary.main, 0.05),
-      border: `1px solid ${ colors.primary.main }`
+      border: `1px solid ${colors.primary.main}`
     }
   },
   textSecondary: {
     color: colors.secondary.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.secondary.main, 0.05),
-      border: `1px solid ${ colors.secondary.main }`
+      border: `1px solid ${colors.secondary.main}`
     }
   },
   textSuccess: {
     color: colors.success.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.success.main, 0.05),
-      border: `1px solid ${ colors.success.main }`
+      border: `1px solid ${colors.success.main}`
     }
   },
   textWarning: {
     color: colors.warning.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.warning.main, 0.05),
-      border: `1px solid ${ colors.warning.main }`
+      border: `1px solid ${colors.warning.main}`
     }
   },
   textError: {
     color: colors.error.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.error.main, 0.05),
-      border: `1px solid ${ colors.error.main }`
+      border: `1px solid ${colors.error.main}`
     }
   },
   textInfo: {
     color: colors.info.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.info.main, 0.05),
-      border: `1px solid ${ colors.info.main }`
+      border: `1px solid ${colors.info.main}`
     }
   },
   textCare: {
     color: colors.care.main,
     '&:hover': {
       backgroundColor: hexToRgba(colors.care.main, 0.05),
-      border: `1px solid ${ colors.care.main }`
+      border: `1px solid ${colors.care.main}`
     }
   },
 
   outlinedPrimary: {
-    borderColor: colors.primary.main,
-    color: colors.primary.main,
-    '&:hover': { backgroundColor: hexToRgba(colors.primary.main, 0.05) }
+    borderColor: colors.primaryNew.main,
+    color: colors.primaryNew.main,
+    '&:hover': { backgroundColor: hexToRgba(colors.primaryNew.main, 0.05) }
   },
   outlinedSecondary: {
-    borderColor: colors.secondary.main,
-    color: colors.secondary.main,
+    borderColor: colors.secondaryNew.main,
+    color: colors.secondaryNew.main,
     '&:hover': { backgroundColor: hexToRgba(colors.secondary.main, 0.05) }
   },
   outlinedSuccess: {
@@ -96,7 +95,7 @@ export default makeStyles({
   },
 
   containedPrimary: {
-    backgroundColor: colors.primary.main,
+    backgroundColor: colors.primaryNew.main,
     '&:hover': { backgroundColor: colors.primary.dark }
   },
   containedSecondary: {
@@ -127,7 +126,7 @@ export default makeStyles({
   }
 })
 
-export const Wrapper = styled.span`    
+export const Wrapper = styled.span`
   position: relative;
   display: contents;
 `

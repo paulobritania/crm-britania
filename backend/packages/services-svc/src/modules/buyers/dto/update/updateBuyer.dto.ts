@@ -19,6 +19,12 @@ import { UpdateBuyerLineFamily } from './updateBuyerLineFamily'
 const required = { required: true }
 
 export class UpdateBuyerDto {
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  imageId: number
+
   @IsString()
   @Length(11, 11)
   @IsNotEmpty()
@@ -39,11 +45,6 @@ export class UpdateBuyerDto {
   @IsNotEmpty()
   @ApiProperty(required)
   clientTotvsCode: number
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty(required)
-  clientTotvsDescription: string
 
   @IsString()
   @IsOptional()
@@ -72,10 +73,6 @@ export class UpdateBuyerDto {
   @ApiProperty()
   telephone: string
 
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty()
-  regionalManagerCode: number
 
   @IsOptional()
   @IsString()

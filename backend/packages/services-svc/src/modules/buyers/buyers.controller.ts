@@ -140,11 +140,12 @@ export class BuyersController {
    * @param userId userId
    * @param buyerId number
    */
-  @Get(':buyerId')
-  findOneBuyer(
-    @Param('buyerId') buyerId: number,
-    @BritaniaAuth(['userId']) userId: number
-  ): Promise<Buyer> {
-    return this.buyersService.getBuyer(userId, buyerId)
-  }
+   @Get(':buyerId')
+   findOneBuyer(
+     @Param('buyerId') buyerId: number,
+     @BritaniaAuth(['userId']) userId: number
+   ): Promise<Buyer> {
+     return this.buyersService.getBuyer(userId, buyerId)
+   }
+
 }

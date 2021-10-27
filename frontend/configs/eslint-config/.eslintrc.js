@@ -17,14 +17,13 @@ module.exports = {
   extends: [
     'standard',
     'plugin:react/recommended',
-    'react-app'
+    'react-app',
+    'prettier',
+    'prettier/react'
   ],
-  plugins: [
-    'react',
-    'import-helpers',
-    'modules-newline'
-  ],
+  plugins: ['react', 'import-helpers', 'modules-newline'],
   rules: {
+    prettier: { 'space-before-function-paren': ['error', 'never'] },
     'template-curly-spacing': [2, 'always'],
     'jsx-quotes': ['error', 'prefer-double'],
     'react/display-name': 'off',
