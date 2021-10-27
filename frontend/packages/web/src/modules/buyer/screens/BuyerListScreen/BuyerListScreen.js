@@ -11,7 +11,6 @@ import omitBy from 'lodash/omitBy'
 
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
-import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 import { FileActions } from '@britania-crm/stores/file'
 import DataTable from '@britania-crm/web-components/DataTable'
 import Tooltip from '@britania-crm/web-components/Tooltip'
@@ -143,7 +142,7 @@ const BuyerListScreen = () => {
           data={buyersCrmRoutes.getAll}
           filters={ filters }
           columns={columns}
-          loading={loading || !!error || downloadLoading}
+          loading={downloadLoading}
           title={t('buyer', { howMany: 2 })}
           addTitle={t('new {this}', {
             gender: 'male',
