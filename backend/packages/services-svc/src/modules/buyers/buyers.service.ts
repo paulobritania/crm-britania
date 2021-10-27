@@ -630,7 +630,7 @@ export class BuyersService {
       buyer.buyerLinesFamilies.forEach(element => {
         const newObject = {
           name: buyer.name,
-          role: buyer.role,
+          company: buyer.clientTotvsCode,
           line: element.lineDescription,
           regionalManager: element.regionalManagerDescription,
           responsible: element.responsibleDescription,
