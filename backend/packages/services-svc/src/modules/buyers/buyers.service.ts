@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import officegen from 'officegen'
-import { Transaction, Op } from 'sequelize'
+import { Transaction, QueryTypes } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
 import { Address } from '../address/entities/address.entity'
@@ -619,45 +619,53 @@ export class BuyersService {
    * @param userId number
    */
   async generateReport(
-    query: FindAllBuyersQueryDto,
     userId: number,
-    res: Response
+    res: Response,
+    transaction?: Transaction
   ): Promise<void> {
-    const buyers: any = await this.getAllBuyers(query, userId)
-    console.log(buyers)
-    const formatedBuyers = []
-    buyers.forEach((buyer) => {
-      buyer.buyerLinesFamilies.forEach(element => {
-        const newObject = {
-          name: buyer.name,
-          company: buyer.clientTotvsCode,
-          line: element.lineDescription,
-          regionalManager: element.regionalManagerDescription,
-          responsible: element.responsibleDescription,
-          active: buyer.active ? 'Ativo' : 'Inativo'
-        }
-        formatedBuyers.push(newObject);
-      })
-    })
-    const xlsx = officegen('xlsx')
-    const sheet = xlsx.makeNewSheet()
-    sheet.name = 'Officegen Excel'
+    try{
+      const buyers = await this.db.query(
+        'SELECT * FROM vw_buyers_report',
+        { transaction, type: QueryTypes.SELECT }
+      )
 
-    sheet.data[0] = []
-    sheet.data[0][0] = 'NOME'
-    sheet.data[0][1] = 'MATRIZ/EMPRESA'
-    sheet.data[0][2] = 'LINHA'
-    sheet.data[0][3] = 'REGIONAL'
-    sheet.data[0][4] = 'RESPONSÁVEL'
-    sheet.data[0][5] = 'STATUS'
+      const xlsx = officegen('xlsx')
+      const sheet = xlsx.makeNewSheet()
+      sheet.name = 'Officegen Excel'
 
-    formatedBuyers.forEach((buyer, i) => {
-      i += 1
-      sheet.data[i] = []
-      Object.values(buyer).forEach((value, x) => {
-        sheet.data[i][x] = value
+      sheet.data[0] = []
+      sheet.data[0][0] = 'NOME COMPLETO'
+      sheet.data[0][1] = 'CPF'
+      sheet.data[0][2] = 'ENDERECO'
+      sheet.data[0][3] = 'TELEFONE'
+      sheet.data[0][4] = 'CARGO'
+      sheet.data[0][5] = 'CATEGORIA'
+      sheet.data[0][6] = 'E-MAIL'
+      sheet.data[0][7] = 'ANIVERSARIO'
+      sheet.data[0][8] = 'CODIGO DA MATRIZ'
+      sheet.data[0][9] = 'LINHA'
+      sheet.data[0][10] = 'FAMILIA'
+      sheet.data[0][11] = 'RESPONSAVEL'
+      sheet.data[0][12] = 'GERENTE REGIONAL'
+      sheet.data[0][13] = 'VOLTAGEM'
+      sheet.data[0][14] = 'STATUS'
+
+      buyers.forEach((buyer, i) => {
+        i += 1
+        sheet.data[i] = []
+        Object.values(buyer).forEach((value, x) => {
+          sheet.data[i][x] = value
+        })
       })
-    })
-    await xlsx.generate(res)
+      await xlsx.generate(res)
+
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+
+      throw new InternalServerErrorException(
+        'Ocorreu um erro ao gerar relatório'
+      )
+    }
+
   }
 }
