@@ -8,7 +8,6 @@ import isNil from 'lodash/isNil'
 import map from 'lodash/map'
 import omitBy from 'lodash/omitBy'
 
-
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
@@ -141,9 +140,9 @@ const BuyerListScreen = () => {
       <Container>
         <DataTable
           data={buyersCrmRoutes.getAll}
-          filters={ filters }
+          filters={filters}
           columns={columns}
-          loading={loading || !!error || downloadLoading}
+          loading={downloadLoading}
           title={t('buyer', { howMany: 2 })}
           addTitle={t('new {this}', {
             gender: 'male',
@@ -163,7 +162,6 @@ const BuyerListScreen = () => {
           })}
           searchFieldAlignment='left'
         />
-        
       </Container>
     </>
   )

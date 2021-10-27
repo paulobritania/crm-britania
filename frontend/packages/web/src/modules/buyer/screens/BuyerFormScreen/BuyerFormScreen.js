@@ -37,7 +37,7 @@ import Address from './Address'
 import MainData from './MainData'
 import { useStyles } from './styles'
 
-const BuyerListScreen = () => {
+const BuyerFormScreen = () => {
   const t = useT()
   const classes = useStyles()
   const { routes } = useRoutes()
@@ -468,4 +468,4 @@ const BuyerListScreen = () => {
   )
 }
 
-export default BuyerListScreen
+export default BuyerFormScreen
