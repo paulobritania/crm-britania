@@ -160,6 +160,7 @@ const BuyerFormScreen = () => {
   }, [])
 
   const onSuccessCallBack = useCallback(() => {
+    setLinesBuyers([])
     history.push(routes.buyers.path)
   }, [history, routes])
 
@@ -198,10 +199,9 @@ const BuyerFormScreen = () => {
           )
         } else {
           dispatch(
-            BuyerActions.saveBuyer(payload, onSuccessCallBack, () => {
+            BuyerActions.saveBuyer(payload, onSuccessCallBack, () =>
               setLoader(false)
-              setLinesBuyers([])
-            })
+            )
           )
         }
       }
