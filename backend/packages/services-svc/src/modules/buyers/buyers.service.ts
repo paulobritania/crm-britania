@@ -633,10 +633,10 @@ export class BuyersService {
           role: buyer.role,
           line: element.lineDescription,
           regionalManager: element.regionalManagerDescription,
-          responsible: buyer.responsibleDescription,
+          responsible: element.responsibleDescription,
           active: buyer.active ? 'Ativo' : 'Inativo'
         }
-        formatedBuyers.push(newObject)
+        formatedBuyers.push(newObject);
       })
     })
     const xlsx = officegen('xlsx')
