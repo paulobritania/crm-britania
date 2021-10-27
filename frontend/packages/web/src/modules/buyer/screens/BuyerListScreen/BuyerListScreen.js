@@ -10,7 +10,6 @@ import omitBy from 'lodash/omitBy'
 
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
-import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 import { FileActions } from '@britania-crm/stores/file'
 import DataTable from '@britania-crm/web-components/DataTable'
 import Tooltip from '@britania-crm/web-components/Tooltip'
