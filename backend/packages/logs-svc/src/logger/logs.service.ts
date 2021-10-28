@@ -25,7 +25,7 @@ export class LogsServiceImpl implements LogsService {
    */
    async generateReport(
     query: FindAllLogsQueryDto,
-    columns: Array<any>,
+    table: Array<any>,
     res: Response
   ): Promise<void> {
 
@@ -34,9 +34,7 @@ export class LogsServiceImpl implements LogsService {
         {
           where:
           {
-            ...(query.table && {
-              table:  `${query.table}`
-            }),
+            table: table,
             ...(query.log && {
               new_data: {
                 $like: `%${query.log}%`
