@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common'
 import { PinoLogger } from 'nestjs-pino'
 import { Sequelize } from 'sequelize-typescript'
 
-import { Log } from '../entities/logs.entity'
+import { Log } from '../logger/entities/logs.entity'
 
 
 

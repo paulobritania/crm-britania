@@ -1,7 +1,7 @@
 import { Controller, Inject } from '@nestjs/common'
 import { MessagePattern } from '@nestjs/microservices'
 
-import { Log } from '../entities/logs.entity'
+import { Log } from './entities/logs.entity'
 import { LogsService } from './logs.interface'
 
 @Controller()
