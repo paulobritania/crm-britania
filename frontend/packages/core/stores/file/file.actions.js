@@ -6,10 +6,8 @@ import { createActions } from 'reduxsauce'
 export const { Types, Creators } = createActions({
   deleteFile: ['id', 'onSuccess'],
   uploadImage: ['data', 'onSuccess'],
+  upload: ['data', 'onSuccess'],
   download: ['url', 'name', 'onSuccess']
 })
 
-export {
-  Types as FileTypes,
-  Creators as FileActions
-}
+export { Types as FileTypes, Creators as FileActions }
