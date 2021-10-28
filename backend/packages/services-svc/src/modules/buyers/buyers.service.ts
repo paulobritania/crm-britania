@@ -619,7 +619,6 @@ export class BuyersService {
    * @param userId number
    */
   async generateReport(
-    userId: number,
     res: Response,
     transaction?: Transaction
   ): Promise<void> {
