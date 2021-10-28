@@ -1,10 +1,4 @@
-import {
-  put,
-  call,
-  takeLatest,
-  take,
-  all
-} from 'redux-saga/effects'
+import { put, call, takeLatest, take, all } from 'redux-saga/effects'
 
 import doDownloadFile from 'js-file-download'
 
@@ -33,17 +27,14 @@ import {
 } from '@britania-crm/services/apis/crmApi/resources/customer.service'
 import {
   // deleteFile,
-  uploadSingleFile
+  upload
 } from '@britania-crm/services/apis/crmApi/resources/file.service'
 import { putRankingsChangeRanking } from '@britania-crm/services/apis/crmApi/resources/rankink.service'
 
 import { AppActions } from '../app/app.actions'
-import {
-  CustomerActions,
-  CustomerTypes
-} from './customer.actions'
+import { CustomerActions, CustomerTypes } from './customer.actions'
 
-function* doUpdateCustomer ({
+function* doUpdateCustomer({
   params,
   id,
   onSuccess = () => {},
@@ -58,19 +49,25 @@ function* doUpdateCustomer ({
     }
   } catch (error) {
     if (error?.response?.data?.message) {
-      yield put(AppActions.addAlert({ type: 'error', message: error?.response?.data?.message }))
+      yield put(
+        AppActions.addAlert({
+          type: 'error',
+          message: error?.response?.data?.message
+        })
+      )
     } else {
-      yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao solicitar alteração cadastral do cliente' }))
+      yield put(
+        AppActions.addAlert({
+          type: 'error',
+          message: 'Falha ao solicitar alteração cadastral do cliente'
+        })
+      )
     }
     yield call(onError)
   }
 }
 
-function* doChangeRankings ({
-  matrixCode,
-  params,
-  onSuccess = () => {}
-}) {
+function* doChangeRankings({ matrixCode, params, onSuccess = () => {} }) {
   try {
     yield call(putRankingsChangeRanking, matrixCode, params)
     yield put(AppActions.addAlert({ type: 'success', message: MSG017 }))
@@ -80,24 +77,29 @@ function* doChangeRankings ({
   }
 }
 
-function* doDowloadFileCustomer ({ url, filename }) {
+function* doDowloadFileCustomer({ url, filename }) {
   try {
     const response = yield call(download, encodeURIComponent(url))
 
     doDownloadFile(response, filename)
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao baixar arquivo!' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao baixar arquivo!'
+      })
+    )
   }
 }
 
 const doUploadFileCustomer = async (file, fieldName) => {
   const formData = new FormData()
   formData.append('file', file)
-  const { id } = await uploadSingleFile(formData)
+  const { id } = await upload(formData)
   return { [fieldName]: id }
 }
 
-function* doSaveCustomerPreRegistry ({
+function* doSaveCustomerPreRegistry({
   client: { documents, ...client },
   oldClient,
   onSuccess = () => {},
@@ -110,13 +112,17 @@ function* doSaveCustomerPreRegistry ({
         if (!isEmpty(doc)) {
           if (isArray(doc)) {
             const docsToRemove = reduce(
-              filter(doc, (d) => !find(
-                documents[fieldName],
-                (newDoc) => newDoc?.fileId === d?.fileId
-              )),
+              filter(
+                doc,
+                (d) =>
+                  !find(
+                    documents[fieldName],
+                    (newDoc) => newDoc?.fileId === d?.fileId
+                  )
+              ),
               (acc2, d, index) => ({
                 ...acc2,
-                [`${ fieldName }[${ index }]`]: d.file
+                [`${fieldName}[${index}]`]: d.file
               }),
               {}
             )
@@ -149,7 +155,7 @@ function* doSaveCustomerPreRegistry ({
         if (doc instanceof File) {
           return {
             ...acc,
-            [`${ fieldName }Id`]: doc
+            [`${fieldName}Id`]: doc
           }
         } else if (isArray(doc) && !isEmpty(doc)) {
           return {
@@ -158,7 +164,7 @@ function* doSaveCustomerPreRegistry ({
               filter(doc, (d) => d instanceof File),
               (acc2, d, index) => ({
                 ...acc2,
-                [`${ `${ fieldName }FileIds` }[${ index }]`]: d
+                [`${`${fieldName}FileIds`}[${index}]`]: d
               }),
               {}
             )
@@ -169,10 +175,11 @@ function* doSaveCustomerPreRegistry ({
       {}
     )
 
-    const uploadedIds = yield all(map(
-      filesToUpload,
-      (file, fieldName) => call(doUploadFileCustomer, file, fieldName)
-    ))
+    const uploadedIds = yield all(
+      map(filesToUpload, (file, fieldName) =>
+        call(doUploadFileCustomer, file, fieldName)
+      )
+    )
 
     const uploadedObj = {}
     forEach(uploadedIds, (fileObj) => {
@@ -191,16 +198,23 @@ function* doSaveCustomerPreRegistry ({
         if (!isArray(doc) && !removedObj[fieldName]) {
           return {
             ...acc,
-            [`${ fieldName }Id`]: documents[fieldName]?.id || null
+            [`${fieldName}Id`]: documents[fieldName]?.id || null
           }
         }
 
         if (isArray(doc)) {
           return {
             ...acc,
-            [`${ fieldName }FileIds`]: filter(
+            [`${fieldName}FileIds`]: filter(
               map(
-                filter(documents[fieldName], (file) => !find(removedObj[fieldName], (fileRemoved) => file?.fileId === fileRemoved.id)),
+                filter(
+                  documents[fieldName],
+                  (file) =>
+                    !find(
+                      removedObj[fieldName],
+                      (fileRemoved) => file?.fileId === fileRemoved.id
+                    )
+                ),
                 (file) => file?.fileId
               ),
               (file) => !!file
@@ -210,7 +224,7 @@ function* doSaveCustomerPreRegistry ({
 
         return {
           ...acc,
-          [`${ fieldName }Id`]: null
+          [`${fieldName}Id`]: null
         }
       },
       {}
@@ -231,12 +245,29 @@ function* doSaveCustomerPreRegistry ({
 
     let id = client.id
     if (!id) {
-      const { data } = yield call(postCustomerPreRegistry, { ...client, documents: newDocumentsAfterUpload })
+      const { data } = yield call(postCustomerPreRegistry, {
+        ...client,
+        documents: newDocumentsAfterUpload
+      })
       id = data.id
-      yield put(AppActions.addAlert({ type: 'success', message: 'Cliente pré-cadastrado com sucesso!' }))
+      yield put(
+        AppActions.addAlert({
+          type: 'success',
+          message: 'Cliente pré-cadastrado com sucesso!'
+        })
+      )
     } else {
-      yield call(putCustomerPreRegistry, { ...client, documents: newDocumentsAfterUpload }, id)
-      yield put(AppActions.addAlert({ type: 'success', message: 'Pré-cadastrado atualizado com sucesso!' }))
+      yield call(
+        putCustomerPreRegistry,
+        { ...client, documents: newDocumentsAfterUpload },
+        id
+      )
+      yield put(
+        AppActions.addAlert({
+          type: 'success',
+          message: 'Pré-cadastrado atualizado com sucesso!'
+        })
+      )
     }
 
     yield call(onSuccess, id)
@@ -247,31 +278,53 @@ function* doSaveCustomerPreRegistry ({
   } catch (error) {
     console.error('error', error)
 
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao salvar o cliente!' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao salvar o cliente!'
+      })
+    )
     yield call(onError, error)
   }
 }
 
-function* doFinishCustomerPreRegistry ({
-  client, oldClient, onSuccess = () => {}, onError = () => {}
+function* doFinishCustomerPreRegistry({
+  client,
+  oldClient,
+  onSuccess = () => {},
+  onError = () => {}
 }) {
   try {
     let id = client.id
-    yield put(CustomerActions.saveCustomerPreRegistry(
-      client,
-      oldClient,
-      (newId) => { id = newId },
-      onError
-    ))
+    yield put(
+      CustomerActions.saveCustomerPreRegistry(
+        client,
+        oldClient,
+        (newId) => {
+          id = newId
+        },
+        onError
+      )
+    )
     yield take(CustomerTypes.SAVE_CUSTOMER_PRE_REGISTRY_SUCCESS)
     if (id) {
       yield call(putFinishCustomerPreRegistry, {}, id)
 
-      yield put(AppActions.addAlert({ type: 'success', message: 'Pré-cadastrado concluído com sucesso!' }))
+      yield put(
+        AppActions.addAlert({
+          type: 'success',
+          message: 'Pré-cadastrado concluído com sucesso!'
+        })
+      )
       yield call(onSuccess, id)
     }
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao concluir o cadastro do cliente!' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao concluir o cadastro do cliente!'
+      })
+    )
     yield call(onError, error)
   }
 }
@@ -281,6 +334,12 @@ export default [
   takeLatest(CustomerTypes.CHANGE_RANKINGS, doChangeRankings),
   takeLatest(CustomerTypes.DOWNLOAD_FILE_CUSTOMER, doDowloadFileCustomer),
 
-  takeLatest(CustomerTypes.SAVE_CUSTOMER_PRE_REGISTRY, doSaveCustomerPreRegistry),
-  takeLatest(CustomerTypes.FINISH_CUSTOMER_PRE_REGISTRY, doFinishCustomerPreRegistry)
+  takeLatest(
+    CustomerTypes.SAVE_CUSTOMER_PRE_REGISTRY,
+    doSaveCustomerPreRegistry
+  ),
+  takeLatest(
+    CustomerTypes.FINISH_CUSTOMER_PRE_REGISTRY,
+    doFinishCustomerPreRegistry
+  )
 ]

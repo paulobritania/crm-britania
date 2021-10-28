@@ -208,9 +208,9 @@ const BuyerFormScreen = () => {
 
       if (values.imageFile?.size) {
         dispatch(
-          FileActions.uploadImage(values.imageFile, (data) => {
-            saveBuyer(data)
+          FileActions.upload(values.imageFile, (data) => {
             setLoader(false)
+            saveBuyer(data)
           })
         )
       } else {

@@ -32,8 +32,8 @@ import { FilesService } from './files.service'
 @ApiTags('Files')
 @Controller('files')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @RequiredAccess(AccessesEnum.IMAGEM_DO_LOGIN)
+@UseGuards(JwtAuthGuard)
 export class FilesController {
   constructor(
     @Inject('FilesService') private readonly filesService: FilesService
@@ -48,7 +48,7 @@ export class FilesController {
     isArray: true
   })
   @ApiConsumes('multipart/form-data')
-  @Post('upload')
+  @Post('uploadImageLogin')
   @RequiredPermission(PermissionsEnum.EDITAR)
   @UseInterceptors(
     FileInterceptor('file', {
@@ -59,6 +59,32 @@ export class FilesController {
     })
   )
   async uploadLoginImage(
+    @UploadedFile() file: any,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<any> {
+    return this.filesService.upload(file, userId)
+  }
+
+  @ApiBody({
+    description: 'Upload an file',
+    type: UploadFileDto
+  })
+  @ApiOkResponse({
+    description: 'File uploaded successfully',
+    isArray: true
+  })
+  @ApiConsumes('multipart/form-data')
+  @AccessNotRequired()
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: destinationFolder,
+        filename: editFilename
+      })
+    })
+  )
+  async upload(
     @UploadedFile() file: any,
     @BritaniaAuth(['userId']) userId: number
   ): Promise<any> {
