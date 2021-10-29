@@ -23,6 +23,7 @@ import { FindMatrixDto } from './dto/find/findMatrixQuery.dto'
 import { FindMatrixReturnDto } from './dto/find/findMatrixReturn.dto'
 import { UpdateBuyerDto } from './dto/update/updateBuyer.dto'
 import { Buyer } from './entities/buyer.entity'
+import { Transaction } from 'sequelize'
 
 @ApiTags('Buyers')
 @UseGuards(JwtAuthGuard)
@@ -114,10 +115,9 @@ export class BuyersController {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   getReport(
     @Res() res: Response,
-    @Query() query: FindAllBuyersQueryDto,
     @BritaniaAuth(['userId']) userId: number
   ) {
-    this.buyersService.generateReport(query, userId, res)
+    this.buyersService.generateReport(userId, res)
   }
 
   /**

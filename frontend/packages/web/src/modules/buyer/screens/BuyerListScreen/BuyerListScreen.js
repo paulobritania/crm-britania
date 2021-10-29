@@ -8,10 +8,8 @@ import isNil from 'lodash/isNil'
 import map from 'lodash/map'
 import omitBy from 'lodash/omitBy'
 
-
 import { useT } from '@britania-crm/i18n'
 import { buyers as buyersCrmRoutes } from '@britania-crm/services/apis/crmApi/resources/routes'
-import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 import { FileActions } from '@britania-crm/stores/file'
 import DataTable from '@britania-crm/web-components/DataTable'
 import Tooltip from '@britania-crm/web-components/Tooltip'
@@ -30,11 +28,6 @@ const BuyerListScreen = () => {
 
   const [downloadLoading, setDownloadLoading] = useState(false)
 
-  const { data, loading, error } = useCrmApi(
-    [buyersCrmRoutes.getAll, filters],
-    { params: filters }
-  )
-
   const columns = useMemo(
     () => [
       {
@@ -44,7 +37,7 @@ const BuyerListScreen = () => {
       },
       {
         title: t('company'),
-        field: 'clientTotvsDescription'
+        field: 'clientTotvsCode'
       },
       {
         title: t('line', { howMany: 1 }),
@@ -79,11 +72,64 @@ const BuyerListScreen = () => {
       },
       {
         title: t('responsible', { howMany: 1 }),
-        field: 'responsibleDescription'
+        field: 'responsibleDescription',
+        render(row) {
+          if (!isEmpty(row?.buyerLinesFamilies)) {
+            const newLinesFamilies = chain(row?.buyerLinesFamilies)
+              .groupBy('responsibleCode')
+              .map((value, key) => ({
+                lineCode: Number(key),
+                responsibleDescription: value[0].responsibleDescription,
+                family: value
+              }))
+              .value()
+            const listFamilyAndLine = map(
+              newLinesFamilies,
+              (responsible) => responsible.responsibleDescription
+            ).join(', ')
+            const newString = listFamilyAndLine.slice(0, 15)
+            return (
+              <div>
+                <Tooltip title={listFamilyAndLine} arrow>
+                  {listFamilyAndLine.length >= 15
+                    ? newString.concat('...')
+                    : newString}
+                </Tooltip>
+              </div>
+            )
+          }
+          return '-'
+        }
       },
       {
         title: t('regional', { howMany: 1 }),
-        field: 'regionalManagerDescription'
+        field: 'regionalManagerDescription',
+        render(row) {
+          if (!isEmpty(row?.buyerLinesFamilies)) {
+            const newLinesFamilies = chain(row?.buyerLinesFamilies)
+              .groupBy('regionalManagerCode')
+              .map((value, key) => ({
+                lineCode: Number(key),
+                regionalManagerDescription: value[0].regionalManagerDescription
+              }))
+              .value()
+            const listFamilyAndLine = map(
+              newLinesFamilies,
+              (regionalManager) => regionalManager.regionalManagerDescription
+            ).join(', ')
+            const newString = listFamilyAndLine.slice(0, 15)
+            return (
+              <div>
+                <Tooltip title={listFamilyAndLine} arrow>
+                  {listFamilyAndLine.length >= 15
+                    ? newString.concat('...')
+                    : newString}
+                </Tooltip>
+              </div>
+            )
+          }
+          return '-'
+        }
       }
     ],
     [t]
@@ -144,18 +190,17 @@ const BuyerListScreen = () => {
   return (
     <>
       <Container>
-        {data && <DataTable
-          options={ { search: false } }
+        <DataTable
           data={buyersCrmRoutes.getAll}
-          filters={ filters }
+          filters={filters}
           columns={columns}
-          loading={loading || !!error || downloadLoading}
+          loading={downloadLoading}
           title={t('buyer', { howMany: 2 })}
           addTitle={t('new {this}', {
             gender: 'male',
             this: t('buyer', { howMany: 1 })
           })}
-          searchText='Pesquise pelo comprador ou nome da matriz'
+          searchPlaceholder={t('search by buyer and matrix')}
           hasFilter
           filterForm={BuyerFormFilter}
           handleFilter={handleFilter}
@@ -168,8 +213,7 @@ const BuyerListScreen = () => {
             this: t('buyer', { howMany: 1 })
           })}
           searchFieldAlignment='left'
-        /> }
-        
+        />
       </Container>
     </>
   )

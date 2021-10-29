@@ -46,8 +46,8 @@ export const workflows = {
   create: '/services/workflows',
   update: '/services/workflows',
   deactivate: '/services/workflows',
-  getVersionUrl: (typeId) => `/services/workflows/types/${ typeId }/version`,
-  getTasksUrl: (id) => `/services/workflows/${ id }/tasks`,
+  getVersionUrl: (typeId) => `/services/workflows/types/${typeId}/version`,
+  getTasksUrl: (id) => `/services/workflows/${id}/tasks`,
   getVersionVpc: '/services/vpcs/workflow/versions'
 }
 
@@ -55,7 +55,8 @@ export const file = {
   delete: '/services/files',
   getById: '/services/files',
   download: '/services/files',
-  uploadSingleFile: '/services/files/upload'
+  uploadSingleFile: '/services/files/uploadImageLogin',
+  upload: '/services/files/upload'
 }
 
 export const auth = { login: '/auth' }
@@ -72,8 +73,10 @@ export const ranking = {
 export const clients = {
   get: '/services/clients/parent-companies',
   getGroups: '/services/clients/groups',
-  getParentCompaniesBranchesUrl: (clientCode) => `/services/clients/parent-companies/${ clientCode }/branches`,
-  getRankingSuggestionUrl: '/services/clients/:clientTotvsCode/ranking/suggestion',
+  getParentCompaniesBranchesUrl: (clientCode) =>
+    `/services/clients/parent-companies/${clientCode}/branches`,
+  getRankingSuggestionUrl:
+    '/services/clients/:clientTotvsCode/ranking/suggestion',
   getPutUrlRankingChangeRanking: '/services/clients/:clientTotvsCode/ranking',
   getOperationNature: '/services/clients/operation-nature'
 }
@@ -173,6 +176,8 @@ export const products = {
   getOne: '/services/products/:productCode'
 }
 
-export const reports = { getContractualPercentage: '/services/reports/vpc/contractual-percentage' }
+export const reports = {
+  getContractualPercentage: '/services/reports/vpc/contractual-percentage'
+}
 
 export const bank = { getAll: '/services/banks' }

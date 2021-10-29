@@ -355,7 +355,7 @@ export class MTableToolbar extends React.Component {
         : this.props.showTitle
         ? this.props.title
         : null
-    const filter = this.props
+
     return (
       <Toolbar
         className={classNames(
@@ -390,6 +390,7 @@ export class MTableToolbar extends React.Component {
               <PageFilter
                 handleFilter={this.props.handleFilter}
                 Form={this.props.filterForm}
+                clearSearch={() => this.onSearchChange('')}
               />
             ) : null}
           </Grid>

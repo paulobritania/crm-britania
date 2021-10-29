@@ -100,4 +100,9 @@ export class FindAllBuyersQueryDto {
 
   @ApiProperty(notRequired)
   limit: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty(notRequired)
+  q: string;
 }
