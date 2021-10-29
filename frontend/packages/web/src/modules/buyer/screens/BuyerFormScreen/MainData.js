@@ -159,6 +159,7 @@ const MainData = ({
             label={t('matrix code', { abbreviation: false })}
             disabled={isEdit || isDisabled}
             onValueChange={(e) => setNameMatrix(e)}
+            maxLength="9"
           />
         </Grid>
         <Grid item sm={12} md={6}>
@@ -171,6 +172,7 @@ const MainData = ({
             label={t('matrix', { howMany: 1 })}
             disabled={isEdit || isDisabled}
             onValueChange={(e) => setCodeMatrix(e)}
+            maxLength="84"
           />
         </Grid>
         <Grid item sm={12} md={3}>
@@ -183,7 +185,7 @@ const MainData = ({
         </Grid>
         <Grid item sm={12} md={9} className={classes.containerTable}>
           <Grid item sm={11}>
-            <ul className={classes.tableHeader}>
+            <ul className={classes.tableHeaderLine}>
               <li>{t('line', { howMany: 1 })}</li>
               <li>{t('family', { howMany: 1 })}</li>
               <li>{t('responsible', { howMany: 1 })}</li>
@@ -194,36 +196,44 @@ const MainData = ({
             {linesBuyers.map((lines, idx) => (
               <Grid item key={idx} className={classes.flexContainer}>
                 <Grid item sm={3}>
-                  <LineInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    isView={isView}
-                    formRef={formRef}
-                  />
+                  <div style={{ maxWidth: '180px' }}>
+                    <LineInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      isView={isView}
+                      formRef={formRef}
+                    />
+                  </div>
                 </Grid>
                 <Grid item sm={3}>
-                  <FamilyInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    isView={isView}
-                    formRef={formRef}
-                  />
+                  <div style={{ maxWidth: '180px' }}>
+                    <FamilyInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      isView={isView}
+                      formRef={formRef}
+                    />
+                  </div>
                 </Grid>
                 <Grid item sm={3}>
-                  <ResponsibleInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    formRef={formRef}
-                    isView={isView}
-                  />
+                  <div style={{ maxWidth: '180px' }}>
+                    <ResponsibleInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      formRef={formRef}
+                      isView={isView}
+                    />
+                  </div>
                 </Grid>
                 <Grid item sm={3}>
-                  <RegionalInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    formRef={formRef}
-                    isView={isView}
-                  />
+                  <div style={{ maxWidth: '180px' }}>
+                    <RegionalInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      formRef={formRef}
+                      isView={isView}
+                    />
+                  </div>
                 </Grid>
                 <Button variant='text' onClick={() => handleRemoveLine(idx)}>
                   X

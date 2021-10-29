@@ -14,7 +14,8 @@ export default makeStyles({
     fontSize: 12,
     whiteSpace: 'nowrap',
     marginLeft: 20,
-    border: 0
+    border: 0,
+    textDecoration: 'underline'
   }
 })
 

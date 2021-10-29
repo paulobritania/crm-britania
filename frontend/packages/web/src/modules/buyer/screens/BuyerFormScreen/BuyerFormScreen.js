@@ -231,9 +231,11 @@ const BuyerFormScreen = () => {
         clientTotvsCode: clientTotvs
       })
       setLinesBuyers([])
+      setImage()
     } else {
       formRef.current.reset()
       setLinesBuyers([])
+      setImage()
     }
   }, [isEdit])
 
