@@ -65,7 +65,6 @@ const LineInput = forwardRef((props, ref) => {
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='line'
       value={linesBuyers[index].lineCode}
-      label={t('line', { howMany: 1 })}
       id='select-line'
       required
       loading={linesFromApiLoading}

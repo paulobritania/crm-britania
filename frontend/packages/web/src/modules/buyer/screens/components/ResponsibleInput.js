@@ -67,7 +67,6 @@ const ResponsibleInput = forwardRef((props, ref) => {
       disabled={isEmpty(responsibleFromApi[index]) || isView}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='responsible'
-      label={t('responsible', { howMany: 1 })}
       value={linesBuyers[index].responsibleCode}
       id='select-responsible'
       required
