@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 
-import { Log } from '../entities/logs.entity'
+import { Log } from './entities/logs.entity'
 import { LogsController } from './logs.controller'
 import { LogsServiceImpl } from './logs.service'
 

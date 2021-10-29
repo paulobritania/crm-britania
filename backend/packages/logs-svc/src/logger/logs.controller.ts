@@ -1,8 +1,10 @@
 import { Controller, Inject } from '@nestjs/common'
 import { MessagePattern } from '@nestjs/microservices'
 
-import { Log } from '../entities/logs.entity'
+import { Log } from './entities/logs.entity'
 import { LogsService } from './logs.interface'
+
+import { FindAllLogsQueryDto } from './dto/findAllLogsQuery.dto'
 
 @Controller()
 export class LogsController {
@@ -20,5 +22,10 @@ export class LogsController {
   @MessagePattern({ log: 'create' })
   async create(data: Log): Promise<void> {
     this.logsService.create(data)
+  }
+
+  @MessagePattern({ log: 'getAll' })
+  async getAll(query: FindAllLogsQueryDto, columns: Array<any>): Promise<void> {
+    this.logsService.generateReport(query, columns)
   }
 }

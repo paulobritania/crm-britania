@@ -19,7 +19,7 @@ export class BanksService {
     return this.bankModel.findAll({
       attributes: ['code', 'description'],
       where: {
-        ...(query.description && {
+        ...((query.description || query.code) && {
           $or: [
             { description: { $like: `%${ query.description }%` } },
             { code: { $like: `%${ query.description }%` } }
