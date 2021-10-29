@@ -14,6 +14,7 @@ import { Document } from '../modules/configurations/entities/document.entity'
 import { Field } from '../modules/fields/entities/field.entity'
 import { File } from '../modules/files/entities/file.entity'
 import { Hierarchy } from '../modules/hierarchy/entities/hierarchy.entity'
+import { Log } from '../modules/logs/entities/log.entity'
 import { MessageProfilesAssoc } from '../modules/messageBoards/entities/messageAssocProfiles.entity'
 import { MessageBoard } from '../modules/messageBoards/entities/messageBoard.entity'
 import { MessageBoardsFile } from '../modules/messageBoards/entities/messageBoardFile.entity'
@@ -98,6 +99,7 @@ export const DatabaseModelList = [
   Document,
   Field,
   File,
+  Log,
   MessageBoard,
   Permission,
   ProfileAccess,
