@@ -11,10 +11,8 @@ module.exports = {
       },
       bank_code: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'banks',
-          key: 'code'
-        }
+        allowNull: false,
+        default: 0
       },
       company_id: {
         type: Sequelize.INTEGER,
