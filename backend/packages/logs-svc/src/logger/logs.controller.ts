@@ -23,9 +23,4 @@ export class LogsController {
   async create(data: Log): Promise<void> {
     this.logsService.create(data)
   }
-
-  @MessagePattern({ log: 'getAll' })
-  async getAll(query: FindAllLogsQueryDto, columns: Array<any>): Promise<void> {
-    this.logsService.generateReport(query, columns)
-  }
 }

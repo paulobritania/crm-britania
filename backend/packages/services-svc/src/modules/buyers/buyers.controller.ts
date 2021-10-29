@@ -114,10 +114,9 @@ export class BuyersController {
   )
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   getReport(
-    @Res() res: Response,
-    @BritaniaAuth(['userId']) userId: number
+    @Res() res: Response
   ) {
-    this.buyersService.generateReport(userId, res)
+    this.buyersService.generateReport(res)
   }
 
   /**
