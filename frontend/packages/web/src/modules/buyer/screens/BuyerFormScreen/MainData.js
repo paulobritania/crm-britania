@@ -196,7 +196,7 @@ const MainData = ({
             <tbody>
               {linesBuyers.map((lines, idx) => (
                 <tr style={{}} key={idx}>
-                  <td style={{paddingTop: '10px', maxWidth: '180px'}}>
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
                     <LineInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -205,7 +205,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '180px'}}>
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
                     <FamilyInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -214,7 +214,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '180px'}}>
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
                     <ResponsibleInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -223,7 +223,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '180px'}}>
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
                     <RegionalInput
                       index={idx}
                       matrixCode={matrixCode}
