@@ -75,7 +75,6 @@ const FamilyInput = forwardRef((props, ref) => {
       value={linesBuyers[index].familyCode}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='family'
-      label={t('family', { howMany: 1 })}
       id='select-family'
       required
       loading={familiesFromApiLoading}

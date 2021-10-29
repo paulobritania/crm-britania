@@ -129,6 +129,13 @@ export const useStyles = makeStyles(() => ({
     fontWeight: fonts.fontWeight.regular
   },
   titleTable: {
-    fontFamily: fonts.fontOpenSans[0].fontFamily,
+    fontFamily: fonts.fontFaceMavenPro[0].fontFamily,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    color: '#8492A6'
   }
 }))

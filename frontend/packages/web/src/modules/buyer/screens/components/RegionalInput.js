@@ -67,7 +67,6 @@ const RegionalInput = forwardRef((props, ref) => {
       disabled={isEmpty(regionalFromApi[index]) || isView}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='regionalManager'
-      label={t('regional manager')}
       id='select-regional'
       value={linesBuyers[index].regionalManagerCode}
       required
