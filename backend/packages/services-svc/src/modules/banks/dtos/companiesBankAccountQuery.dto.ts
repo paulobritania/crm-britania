@@ -17,7 +17,7 @@ export class CompaniesBankAccountDto extends PagedQuery {
   @IsString()
   @IsOptional()
   @ApiProperty({ required: false })
-  bankCode: number
+  bankCode: string
 
   @IsString()
   @IsOptional()
