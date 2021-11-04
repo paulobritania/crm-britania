@@ -166,7 +166,6 @@ const BuyerFormScreen = () => {
 
   const handleSubmit = useCallback(
     (values) => {
-    console.log("🚀 ~ file: BuyerFormScreen.js ~ line 169 ~ BuyerFormScreen ~ values", values)
       
       setLoader(true)
 
