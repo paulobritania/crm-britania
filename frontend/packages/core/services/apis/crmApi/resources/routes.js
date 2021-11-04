@@ -96,6 +96,12 @@ export const customer = {
   getInfoCustomer: 'services/clients/parent-companies/description'
 }
 
+export const banks = {
+  getAll: '/services/banks',
+  getOne: '/services/banks',
+  post: '/services/banks'
+}
+
 export const buyers = {
   getAll: '/services/buyers',
   getLines: '/services/buyers/lines',
@@ -179,5 +185,3 @@ export const products = {
 export const reports = {
   getContractualPercentage: '/services/reports/vpc/contractual-percentage'
 }
-
-export const bank = { getAll: '/services/banks' }

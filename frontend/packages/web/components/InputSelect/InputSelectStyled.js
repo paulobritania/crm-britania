@@ -1,9 +1,4 @@
-import React, {
-  useMemo,
-  useCallback,
-  forwardRef,
-  memo
-} from 'react'
+import React, { useMemo, useCallback, forwardRef, memo } from 'react'
 
 import PropTypes from 'prop-types'
 
@@ -24,42 +19,54 @@ import CloseIconButton from '@britania-crm/web-components/IconButton/CloseIconBu
 import TextField from '../TextField'
 import useStyles from './styles'
 
-const InputSelectStyled = forwardRef(({
-  iconAdornment,
-  native,
-  options,
-  idKey,
-  valueKey,
-  loading,
-  clearable,
-  InputProps,
-  value,
-  onChange,
-  multiple,
-  ...props
-}, fieldRef) => {
-  const classes = useStyles()
+const InputSelectStyled = forwardRef(
+  (
+    {
+      iconAdornment,
+      native,
+      options,
+      idKey,
+      valueKey,
+      loading,
+      clearable,
+      InputProps,
+      value,
+      onChange,
+      multiple,
+      ...props
+    },
+    fieldRef
+  ) => {
+    const classes = useStyles()
 
-  const EndAdornment = useMemo(
-    () => (loading || clearable) && (
-      <>
-        {InputProps?.endAdornment || null}
+    const EndAdornment = useMemo(
+      () =>
+        (loading || clearable) && (
+          <>
+            {InputProps?.endAdornment || null}
 
-        <InputAdornment style={ { marginRight: 12 } } position="end">
-          {clearable && value && <CloseIconButton size="small" onClick={ () => onChange({ target: { value: multiple ? [] : null } }) } />}
-          {loading && <CircularProgress disableShrink color="inherit" size={ 20 } />}
-        </InputAdornment>
-      </>
+            <InputAdornment style={{ marginRight: 12 }} position='end'>
+              {clearable && value && (
+                <CloseIconButton
+                  size='small'
+                  onClick={() =>
+                    onChange({ target: { value: multiple ? [] : null } })
+                  }
+                />
+              )}
+              {loading && (
+                <CircularProgress disableShrink color='inherit' size={20} />
+              )}
+            </InputAdornment>
+          </>
+        ),
+      [InputProps.endAdornment, clearable, loading, multiple, onChange, value]
+    )
 
-    ),
-    [InputProps.endAdornment, clearable, loading, multiple, onChange, value]
-  )
-
-  const renderedOptions = useMemo(
-    () => {
+    const renderedOptions = useMemo(() => {
       if (isEmpty(options)) {
         return (
-          <MenuItem selected disabled value="">
+          <MenuItem selected disabled value=''>
             <em>Nenhum valor</em>
           </MenuItem>
         )
@@ -69,91 +76,98 @@ const InputSelectStyled = forwardRef(({
         const name = option[valueKey]
 
         return (
-          <MenuItem classes={ { root: classes.menuItem } } value={ id } key={ id } style={ { fontSize: 14 } }>
-            {multiple &&
-            <Checkbox
-              classes={ { root: classes.checkbox } }
-              checked={ indexOf(value, id) > -1 }
-              size="small"
-            />
-            }
+          <MenuItem
+            classes={{ root: classes.menuItem }}
+            value={id}
+            key={id}
+            style={{ fontSize: 14 }}
+          >
+            {multiple && (
+              <Checkbox
+                classes={{ root: classes.checkbox }}
+                checked={indexOf(value, id) > -1}
+                size='small'
+              />
+            )}
             {name}
           </MenuItem>
         )
       })
-    },
-    [options, idKey, valueKey, classes, multiple, value]
-  )
+    }, [options, idKey, valueKey, classes, multiple, value])
 
-  const transformRender = useCallback(
-    (value) => isObject(value) ? value[valueKey] : value || ''
-    ,
-    [valueKey]
-  )
+    const transformRender = useCallback(
+      (value) => (isObject(value) ? value[valueKey] : value || ''),
+      [valueKey]
+    )
 
-  const rederSelectedValues = useCallback(
-    (value) => {
-      if (multiple) {
-        return map(value, (item) => find(options, (option) => (option[idKey] === item))?.[valueKey]).join(', ')
-      } else {
-        return find(options, (option) => (option[idKey] === value))?.[valueKey]
-      }
-    },
-    [idKey, multiple, options, valueKey]
-  )
-
-  return (
-    <TextField
-      ref={ fieldRef }
-      detached
-      select
-      InputProps={ {
-        ...InputProps,
-        endAdornment: EndAdornment
-      } }
-      transformRender={ transformRender }
-      SelectProps={ {
-        native,
-        onChange,
-        multiple,
-        value,
-        renderValue: rederSelectedValues,
-        MenuProps: {
-          style: { height: 300 },
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'left'
-          },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'left'
-          },
-          getContentAnchorEl: null
+    const rederSelectedValues = useCallback(
+      (value) => {
+        if (multiple) {
+          return map(
+            value,
+            (item) =>
+              find(options, (option) => option[idKey] === item)?.[valueKey]
+          ).join(', ')
+        } else {
+          return find(options, (option) => option[idKey] === value)?.[valueKey]
         }
-      } }
-      value={ value }
-      theme={ {
-        overrides: {
-          MuiMenu: {
-            paper: {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-              paddingLeft: 16,
-              paddingRight: 16
+      },
+      [idKey, multiple, options, valueKey]
+    )
+
+    return (
+      <TextField
+        ref={fieldRef}
+        detached
+        select
+        InputProps={{
+          ...InputProps,
+          endAdornment: EndAdornment
+        }}
+        transformRender={transformRender}
+        SelectProps={{
+          native,
+          onChange,
+          multiple,
+          value,
+          renderValue: rederSelectedValues,
+          MenuProps: {
+            style: { height: 300 },
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'left'
             },
-            list: { padding: 0 }
+            transformOrigin: {
+              vertical: 'top',
+              horizontal: 'left'
+            },
+            getContentAnchorEl: null
           }
-        }
-      } }
-      { ...props }
-      style={ { fontSize: 15 } }
-    >
-      {renderedOptions}
-    </TextField>
-  )
-})
+        }}
+        value={value}
+        theme={{
+          overrides: {
+            MuiMenu: {
+              paper: {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                paddingLeft: 16,
+                paddingRight: 16
+              },
+              list: { padding: 0 }
+            }
+          }
+        }}
+        {...props}
+        style={{ fontSize: 15 }}
+      >
+        {renderedOptions}
+      </TextField>
+    )
+  }
+)
 
 InputSelectStyled.propTypes = {
   label: PropTypes.any,
@@ -191,7 +205,7 @@ InputSelectStyled.defaultProps = {
   InputProps: {},
   clearable: false,
   value: '',
-  onChange () {},
+  onChange() {},
   multiple: false
 }
 

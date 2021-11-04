@@ -1,23 +1,15 @@
 module.exports = {
-  primaryNew: {
-    main: '#1F2D3D',
-    text: '#EFF2F7'
-  },
-  secondaryNew: {
-    main: '#3C4858',
-    text: '#3C4858'
-  },
   primary: {
-    main: '#152942',
+    main: '#1F2D3D',
     light: '#5B697B',
     dark: 'rgba(0, 0, 0, 0.87)',
-    text: '#9D9D9D'
+    text: '#EFF2F7'
   },
   secondary: {
-    main: '#0E436E',
+    main: '#3C4858',
     light: '#567B9A',
     dark: '#0A345B',
-    text: '#9D9D9D'
+    text: '#3C4858'
   },
   info: {
     main: '#3FB3E5',

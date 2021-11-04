@@ -168,7 +168,7 @@ const fontFamily = [
   "'Poppins'",
   'sans-serif',
   'Arial',
-  'Open Sans'
+  "'Open Sans'"
 ].join(',')
 
 const fontFamilyMonospace = ["'Fira Code'"].join(',')

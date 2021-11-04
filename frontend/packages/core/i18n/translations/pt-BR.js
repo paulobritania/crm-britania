@@ -292,6 +292,14 @@ export default {
   'active - {this}': 'Ativo - {this}',
   client: '{howMany, plural, one {Cliente} other {Clientes}}',
   '{this} register': 'cadastro {this}',
+  bank: '{howMany, plural, one {Banco} other {Bancos}}',
+  '{this} datagrid body empty data source message':
+    'Não existem {this} cadastrados no sistema',
+  'buyer datagrid body empty data source message':
+    'Não existem compradores cadastrados no sistema',
+  'equalization datagrid body empty data source message':
+    'Não existem solicitações de equalização no sistema',
+  'register of {this}': 'Cadastro de {this}',
   buyer: '{howMany, plural, one {Comprador} other {Compradores}}',
   '{this} datagrid body empty data source message':
     'Não existem {this} cadastrados no sistema',
