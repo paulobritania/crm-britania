@@ -190,6 +190,8 @@ const BuyerFormScreen = () => {
           imageId: imageId === null ? buyerFromApi.imageId : imageId
         }
 
+        setLinesBuyers([]);
+
         if (isEdit) {
           dispatch(
             BuyerActions.editBuyer(

@@ -244,16 +244,18 @@ const MainData = ({
               ))}
             </tbody>
           </table>
-          <IconButton
-            onClick={() => handleAddLine()}
-            as={Button}
-            size='small'
-            variant='text'
-            disabled={disableButton}
-            startIcon={<Add />}
-          >
-            Nova Linha
-          </IconButton>
+          {!isDisabled &&
+            <IconButton
+              onClick={() => handleAddLine()}
+              as={Button}
+              size='small'
+              variant='text'
+              disabled={disableButton}
+              startIcon={<Add />}
+            >
+              Nova Linha
+            </IconButton>
+          }
         </Grid>
         <InputHidden name='linesFamilies' />
         <Grid item sm={12} md={3} className={classes.containerRadio}>
