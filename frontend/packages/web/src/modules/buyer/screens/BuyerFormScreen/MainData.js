@@ -264,9 +264,6 @@ const MainData = ({
             options={mockVoltage}
           />
         </Grid>
-        <Grid item sm={12} md={2}>
-          
-        </Grid>
       </Grid >
     </>
   )

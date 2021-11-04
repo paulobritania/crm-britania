@@ -166,6 +166,8 @@ const BuyerFormScreen = () => {
 
   const handleSubmit = useCallback(
     (values) => {
+    console.log("🚀 ~ file: BuyerFormScreen.js ~ line 169 ~ BuyerFormScreen ~ values", values)
+      
       setLoader(true)
 
       const saveBuyer = (imageId = null) => {
@@ -173,6 +175,7 @@ const BuyerFormScreen = () => {
           ...values,
           cpf: trimMask(values.cpf),
           clientTotvsCode: Number(values.clientTotvsCode.parentCompanyCode),
+          clientTotvsDescription: values.clientTotvsDescription.parentCompanyName,
           buyerAddress: {
             ...values?.buyerAddress,
             number: Number(values?.buyerAddress?.number)
