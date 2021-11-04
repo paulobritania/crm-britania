@@ -184,19 +184,19 @@ const MainData = ({
           />
         </Grid>
         <Grid item sm={12} md={9} className={classes.containerTable}>
-          <table style={{ width: '100%'}}>
+          <table style={{ width: '100%' }}>
             <thead>
               <tr className={classes.titleTable}>
-                <th style={{textAlign: 'center', paddingTop: '10px'}}>Linha</th>
-                <th style={{textAlign: 'center', paddingTop: '10px'}}>Família</th>
-                <th style={{textAlign: 'center', paddingTop: '10px'}}>Responsável</th>
-                <th style={{textAlign: 'center', paddingTop: '10px'}}>Regional</th>
+                <th style={{ textAlign: 'center', paddingTop: '10px' }}>Linha</th>
+                <th style={{ textAlign: 'center', paddingTop: '10px' }}>Família</th>
+                <th style={{ textAlign: 'center', paddingTop: '10px' }}>Responsável</th>
+                <th style={{ textAlign: 'center', paddingTop: '10px' }}>Regional</th>
               </tr>
             </thead>
             <tbody>
               {linesBuyers.map((lines, idx) => (
                 <tr style={{}} key={idx}>
-                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                  <td style={{ paddingTop: '10px', maxWidth: '100px' }}>
                     <LineInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -205,7 +205,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                  <td style={{ paddingTop: '10px', maxWidth: '100px' }}>
                     <FamilyInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -214,7 +214,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                  <td style={{ paddingTop: '10px', maxWidth: '100px' }}>
                     <ResponsibleInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -223,7 +223,7 @@ const MainData = ({
                     />
                   </td>
 
-                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                  <td style={{ paddingTop: '10px', maxWidth: '100px' }}>
                     <RegionalInput
                       index={idx}
                       matrixCode={matrixCode}
@@ -233,9 +233,12 @@ const MainData = ({
                   </td>
 
                   <td>
-                    <Button variant='text' onClick={() => handleRemoveLine(idx)}>
-                      X
-                    </Button>
+                    {!isDisabled &&
+                      <Button variant='text' onClick={() => handleRemoveLine(idx)}>
+                        X
+                      </Button>
+                    }
+
                   </td>
                 </tr>
               ))}
@@ -247,7 +250,7 @@ const MainData = ({
           <RadioGroup
             name='voltage'
             label={t('voltage', { howMany: 1 })}
-            readOnly={isDisabled}
+            disabled={isDisabled}
             options={mockVoltage}
           />
         </Grid>

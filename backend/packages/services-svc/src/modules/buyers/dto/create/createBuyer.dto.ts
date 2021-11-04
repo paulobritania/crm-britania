@@ -67,6 +67,11 @@ export class CreateBuyerDto {
   @ApiProperty(required)
   clientTotvsCode: number
 
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty(required)
+  clientTotvsDescription: string
+
   @IsOptional()
   @IsNumber()
   @ApiProperty()

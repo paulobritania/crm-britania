@@ -92,6 +92,13 @@ export class Buyer extends Model<Buyer> {
   })
   clientTotvsCode: number;
 
+
+  @Column({
+    type: DataType.STRING(80),
+    allowNull: false
+  })
+  clientTotvsDescription: string;
+
   @Column({
     allowNull: false,
     type: DataType.INTEGER

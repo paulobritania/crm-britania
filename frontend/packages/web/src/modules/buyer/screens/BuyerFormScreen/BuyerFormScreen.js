@@ -96,27 +96,27 @@ const BuyerFormScreen = () => {
       !_buyerFromApi
         ? undefined
         : {
-            ..._buyerFromApi,
-            buyerAddress: {
-              ..._buyerFromApi.buyerAddress[0].address,
-              state: _buyerFromApi.buyerAddress[0].address.state
-                ? upperCase(_buyerFromApi.buyerAddress[0].address.state)
-                : '',
-              deliveryAddress: _buyerFromApi.buyerAddress[0].deliveryAddress
-                ? _buyerFromApi.buyerAddress[0].deliveryAddress
-                : false
-            },
-            parentCompanyAddress: {
-              ..._buyerFromApi.buyerAddress[1].address,
-              state: _buyerFromApi.buyerAddress[1].address.state
-                ? upperCase(_buyerFromApi.buyerAddress[1].address.state)
-                : '',
-              deliveryAddress: _buyerFromApi.buyerAddress[1].deliveryAddress
-                ? _buyerFromApi.buyerAddress[1].deliveryAddress
-                : false
-            },
-            linesFamilies: _buyerFromApi.buyerLinesFamilies
+          ..._buyerFromApi,
+          buyerAddress: {
+            ..._buyerFromApi.buyerAddress[0].address,
+            state: _buyerFromApi.buyerAddress[0].address.state
+              ? upperCase(_buyerFromApi.buyerAddress[0].address.state)
+              : '',
+            deliveryAddress: _buyerFromApi.buyerAddress[0].deliveryAddress
+              ? _buyerFromApi.buyerAddress[0].deliveryAddress
+              : false
           },
+          parentCompanyAddress: {
+            ..._buyerFromApi.buyerAddress[1].address,
+            state: _buyerFromApi.buyerAddress[1].address.state
+              ? upperCase(_buyerFromApi.buyerAddress[1].address.state)
+              : '',
+            deliveryAddress: _buyerFromApi.buyerAddress[1].deliveryAddress
+              ? _buyerFromApi.buyerAddress[1].deliveryAddress
+              : false
+          },
+          linesFamilies: _buyerFromApi.buyerLinesFamilies
+        },
     [_buyerFromApi]
   )
 
@@ -359,13 +359,16 @@ const BuyerFormScreen = () => {
                     <p>{image.name}</p>
                     {image?.size ? <span>{image?.size} Kb</span> : ''}
                   </div>
-                  <Button
-                    variant='text'
-                    onClick={handleRemoveFile}
-                    style={{ fontSize: 16, color: '#8492a6' }}
-                  >
-                    x
-                  </Button>
+                  {!modeView &&
+                    <Button
+                      variant='text'
+                      onClick={handleRemoveFile}
+                      style={{ fontSize: 16, color: '#8492a6' }}
+                    >
+                      x
+                    </Button>
+                  }
+
                 </Grid>
               ) : (
                 <Grid item sm={6} md={6} className={classes.upload}>

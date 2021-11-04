@@ -37,7 +37,7 @@ const BuyerListScreen = () => {
       },
       {
         title: t('company'),
-        field: 'clientTotvsCode'
+        field: 'clientTotvsDescription'
       },
       {
         title: t('line', { howMany: 1 }),
