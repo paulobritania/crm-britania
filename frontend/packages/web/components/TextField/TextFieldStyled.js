@@ -44,6 +44,15 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
     ...rest
   } = props
 
+  const ArrayErros = [];
+  if (externalHelperText) {
+    if (externalHelperText == 'CPF já cadastrado em outra Matriz') {
+      ArrayErros.push(externalHelperText);
+    }
+  }
+
+  const hasError = ArrayErros.length >= 1;
+
   const inputId = useMemo(() => id || uuid().new(), [id])
 
   const handleChange = useCallback(
@@ -62,7 +71,7 @@ const TextFieldStyled = forwardRef((props, inputRef) => {
   const helperText = useMemo(
     () =>
       (error || externalHelperText) && (
-        <Box component='span' display='flex' alignItems='center'>
+        <Box component='span' display='flex' alignItems='center' style={{color: hasError && 'red'}}>
           <InfoIcon fontSize='small' style={{ marginRight: '8px' }} />{' '}
           {error || externalHelperText}
         </Box>
