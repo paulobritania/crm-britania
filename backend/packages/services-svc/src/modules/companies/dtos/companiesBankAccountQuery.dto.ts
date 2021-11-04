@@ -3,7 +3,7 @@ import { IsOptional, IsString, Length } from 'class-validator'
 
 import { PagedQuery } from '../../../utils/pagination/pagedQuery.dto'
 
-export class CompaniesBankAccountDto extends PagedQuery {
+export class CompaniesBankAccountQueryDto extends PagedQuery {
   @IsString()
   @IsOptional()
   @ApiProperty({ required: false })

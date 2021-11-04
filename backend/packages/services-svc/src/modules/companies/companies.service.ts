@@ -10,15 +10,19 @@ import { Sequelize } from 'sequelize-typescript'
 
 import { convertToFindOptions } from '../../utils/pagination/pagedQuery.dto'
 import { PagedResult } from '../../utils/pagination/pagedResult.dto'
+import { CompaniesBankAccountDto } from './dtos/companiesBankAccount.dto'
+import { CompaniesBankAccountQueryDto } from './dtos/companiesBankAccountQuery.dto'
 import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
+import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
 import { Company } from './entities/company.entity'
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @Inject('SEQUELIZE') private db: Sequelize,
-    @InjectModel(Company) private companyModel: typeof Company
+    @InjectModel(Company) private companyModel: typeof Company,
+    @InjectModel(CompaniesBankAccount) private companyBankAccountModel: typeof CompaniesBankAccount
   ) {}
 
   /**
@@ -40,6 +44,58 @@ export class CompaniesService {
 
     return result
   }
+
+
+    /**
+   * Lista dados bancarios das empresas e retorna paginado
+   * @param query CompaniesBankAccountDto
+   */
+     async findCompaniesBankAccount(query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
+      const result: PagedResult<CompaniesBankAccountDto> = {
+        totalRegisters: 0,
+        data: []
+      }
+
+      result.totalRegisters = await this.companyBankAccountModel.count()
+      result.data = await this.companyBankAccountModel.findAll({
+        where: {
+          ...(query.id && {
+            id: {
+              $like: `%${ query.id }%`
+            }
+          }),
+          ...(query.companyCode && {
+            companyCode: {
+              $like: `%${ query.companyCode }%`
+            }
+          }),
+          ...(query.bankCode && {
+            bankCode: {
+              $like: `%${ query.bankCode }%`
+            }
+          }),
+          ...(query.agency && {
+            agency: {
+              $like: `%${ query.agency }%`
+            }
+          }),
+          ...(query.account && {
+            account: {
+              $like: `%${ query.account }%`
+            }
+          }),
+          ...(query.note && {
+            note: {
+              $like: `%${ query.note }%`
+            }
+          })
+        },
+        attributes: ['id', 'companyCode', 'bankCode', 'agency', 'account', 'note'],
+        ...convertToFindOptions(query.page, query.pageSize)
+      })
+
+      return result
+    }
 
   /**
    * Busca uma empresa específica

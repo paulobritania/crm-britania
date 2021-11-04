@@ -43,6 +43,7 @@ export class ServicesServiceImpl implements ServicesService {
   async getUserByUsername(
     username: string
   ): Promise<GetUserByUsernameResponseDto> {
+    // eslint-disable-next-line no-console
     console.log('URL ->>', this.servicesUrl)
     const getUserUrl = `${ this.servicesUrl }/users/username`
 

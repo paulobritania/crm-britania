@@ -29,6 +29,8 @@ import { PermissionsEnum } from '../../utils/enums/permissions.enum'
 import { PagedApiResponse } from '../../utils/pagination/pagedApiResponse.dto'
 import { PagedResult } from '../../utils/pagination/pagedResult.dto'
 import { CompaniesService } from './companies.service'
+import { CompaniesBankAccountDto } from './dtos/companiesBankAccount.dto'
+import { CompaniesBankAccountQueryDto } from './dtos/companiesBankAccountQuery.dto'
 import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
 import { Company } from './entities/company.entity'
@@ -49,6 +51,12 @@ export class CompaniesController {
   @Get()
   findAll(@Query() query: CompanyQueryDto): Promise<PagedResult<CompanyDto>> {
     return this.companiesService.findAll(query)
+  }
+
+  @PagedApiResponse(Company, 'bank account list of companies')
+  @Get()
+  findCompaniesBankAccount(@Query() query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
+    return this.companiesService.findCompaniesBankAccount(query)
   }
 
   @ApiOkResponse({

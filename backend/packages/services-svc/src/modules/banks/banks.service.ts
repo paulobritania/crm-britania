@@ -28,7 +28,7 @@ export class BanksService {
           code: {
             $like: `%${ query.code }%`
           }
-        }),
+        })
       },
       ...convertToFindOptions(query.page, query.pageSize)
     })
