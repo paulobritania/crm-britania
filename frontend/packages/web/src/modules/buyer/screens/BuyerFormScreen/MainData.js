@@ -183,8 +183,8 @@ const MainData = ({
             inputProps={{ maxLength: 200 }}
           />
         </Grid>
-        <Grid item sm={12} md={9} className={classes.containerTable}>
-          <table style={{ width: '100%' }}>
+        <Grid item sm={12} md={9}>
+          <table className={classes.containerTable}>
             <thead>
               <tr className={classes.titleTable}>
                 <th style={{ textAlign: 'center', paddingTop: '10px' }}>Linha</th>
@@ -244,6 +244,16 @@ const MainData = ({
               ))}
             </tbody>
           </table>
+          <IconButton
+            onClick={() => handleAddLine()}
+            as={Button}
+            size='small'
+            variant='text'
+            disabled={disableButton}
+            startIcon={<Add />}
+          >
+            Nova Linha
+          </IconButton>
         </Grid>
         <InputHidden name='linesFamilies' />
         <Grid item sm={12} md={3} className={classes.containerRadio}>
@@ -255,16 +265,7 @@ const MainData = ({
           />
         </Grid>
         <Grid item sm={12} md={2}>
-          <IconButton
-            onClick={() => handleAddLine()}
-            as={Button}
-            size='small'
-            variant='text'
-            disabled={disableButton}
-            startIcon={<Add />}
-          >
-            Nova Linha
-          </IconButton>
+          
         </Grid>
       </Grid >
     </>

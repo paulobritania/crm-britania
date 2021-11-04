@@ -50,7 +50,8 @@ export const useStyles = makeStyles(() => ({
   },
   containerTable: {
     border: `1px solid ${colors.grey20}`,
-    borderRadius: 3
+    borderRadius: 3,
+    width: '100%'
   },
   table: {
     background: colors.white,
