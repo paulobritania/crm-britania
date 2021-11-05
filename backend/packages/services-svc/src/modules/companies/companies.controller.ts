@@ -33,8 +33,8 @@ import { CompaniesBankAccountDto } from './dtos/companiesBankAccount.dto'
 import { CompaniesBankAccountQueryDto } from './dtos/companiesBankAccountQuery.dto'
 import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
-import { Company } from './entities/company.entity'
 import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
+import { Company } from './entities/company.entity'
 
 @ApiTags('Companies')
 @Controller('companies')

@@ -48,7 +48,7 @@ export class CompaniesService {
 
   /**
    * Lista dados bancarios das empresas e retorna paginado
-   * @param query CompaniesBankAccountDto
+   * @param query CompaniesBankAccountQueryDto
    */
   async findCompaniesBankAccount(
     query: CompaniesBankAccountQueryDto
@@ -64,32 +64,32 @@ export class CompaniesService {
         where: {
           ...(query.id && {
             id: {
-              $like: `%${query.id}%`
+              $like: `%${ query.id }%`
             }
           }),
           ...(query.companyId && {
             companyId: {
-              $like: `%${query.companyId}%`
+              $like: `%${ query.companyId }%`
             }
           }),
           ...(query.bankCode && {
             bankCode: {
-              $like: `%${query.bankCode}%`
+              $like: `%${ query.bankCode }%`
             }
           }),
           ...(query.agency && {
             agency: {
-              $like: `%${query.agency}%`
+              $like: `%${ query.agency }%`
             }
           }),
           ...(query.account && {
             account: {
-              $like: `%${query.account}%`
+              $like: `%${ query.account }%`
             }
           }),
           ...(query.note && {
             note: {
-              $like: `%${query.note}%`
+              $like: `%${ query.note }%`
             }
           })
         },
@@ -105,7 +105,7 @@ export class CompaniesService {
       })
     } catch (error) {
       throw new InternalServerErrorException(
-        'Ocorreu um arro ao cadastrar empresa: \n' + error
+        `Ocorreu um arro ao cadastrar empresa: \n${  error }`
       )
     }
 
