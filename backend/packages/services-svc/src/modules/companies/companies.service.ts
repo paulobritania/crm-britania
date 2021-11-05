@@ -162,6 +162,36 @@ export class CompaniesService {
     }
   }
 
+
+    /**
+   * Cria uma conta bancaria da empresa e a retorna
+   * @param data CompaniesBankAccountDto
+   * @param userId number
+   * @returns CompaniesBankAccount
+   */
+     async createCompanyBankAccount(data: CompaniesBankAccountDto, userId: number): Promise<CompaniesBankAccount> {
+      const transaction = await this.db.transaction()
+  
+      try {
+        const companyBankAccountData = {
+          ...data,
+          createdBy: userId,
+          updatedBy: null
+        }
+  
+        const company = await this.companyBankAccountModel.create(companyBankAccountData, {
+          transaction
+        })
+  
+        await transaction.commit()
+        return company
+      } catch (error) {
+        await transaction.rollback()
+        throw new InternalServerErrorException(
+          'Ocorreu um arro ao cadastrar empresa: '+error
+        )
+      }
+    }
   /**
    * Atualiza uma empresa existente
    * @param data CompanyDto

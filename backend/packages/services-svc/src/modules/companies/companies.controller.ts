@@ -82,6 +82,19 @@ export class CompaniesController {
     return this.companiesService.create(data, userId)
   }
 
+
+  @ApiResponse({
+    type: Number
+  })
+  @RequiredPermission(PermissionsEnum.INCLUIR)
+  @Post('/CompaniesBankAccount')
+  async createCompanyBankAccount(
+    @Body() data: CompaniesBankAccountDto,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<CompaniesBankAccount> {
+    return this.companiesService.createCompanyBankAccount(data, userId)
+  }
+
   @ApiResponse({
     type: Number
   })
