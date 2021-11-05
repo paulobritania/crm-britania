@@ -22,7 +22,8 @@ export class CompaniesService {
   constructor(
     @Inject('SEQUELIZE') private db: Sequelize,
     @InjectModel(Company) private companyModel: typeof Company,
-    @InjectModel(CompaniesBankAccount) private companyBankAccountModel: typeof CompaniesBankAccount
+    @InjectModel(CompaniesBankAccount)
+    private companyBankAccountModel: typeof CompaniesBankAccount
   ) {}
 
   /**
@@ -45,57 +46,71 @@ export class CompaniesService {
     return result
   }
 
-
-    /**
+  /**
    * Lista dados bancarios das empresas e retorna paginado
    * @param query CompaniesBankAccountDto
    */
-     async findCompaniesBankAccount(query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
-      const result: PagedResult<CompaniesBankAccountDto> = {
-        totalRegisters: 0,
-        data: []
-      }
+  async findCompaniesBankAccount(
+    query: CompaniesBankAccountQueryDto
+  ): Promise<PagedResult<CompaniesBankAccountDto>> {
+    const result: PagedResult<CompaniesBankAccountDto> = {
+      totalRegisters: 0,
+      data: []
+    }
 
+    try {
       result.totalRegisters = await this.companyBankAccountModel.count()
       result.data = await this.companyBankAccountModel.findAll({
         where: {
           ...(query.id && {
             id: {
-              $like: `%${ query.id }%`
+              $like: `%${query.id}%`
             }
           }),
           ...(query.companyId && {
             companyId: {
-              $like: `%${ query.companyId }%`
+              $like: `%${query.companyId}%`
             }
           }),
           ...(query.bankCode && {
             bankCode: {
-              $like: `%${ query.bankCode }%`
+              $like: `%${query.bankCode}%`
             }
           }),
           ...(query.agency && {
             agency: {
-              $like: `%${ query.agency }%`
+              $like: `%${query.agency}%`
             }
           }),
           ...(query.account && {
             account: {
-              $like: `%${ query.account }%`
+              $like: `%${query.account}%`
             }
           }),
           ...(query.note && {
             note: {
-              $like: `%${ query.note }%`
+              $like: `%${query.note}%`
             }
           })
         },
-        attributes: ['id', 'companyCode', 'bankCode', 'agency', 'account', 'note'],
+        attributes: [
+          'id',
+          'companyId',
+          'bankCode',
+          'agency',
+          'account',
+          'note'
+        ],
         ...convertToFindOptions(query.page, query.pageSize)
       })
-
-      return result
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Ocorreu um arro ao cadastrar empresa: \n' + error
+      )
     }
+
+    return result
+  }
 
   /**
    * Busca uma empresa específica

@@ -34,13 +34,14 @@ import { CompaniesBankAccountQueryDto } from './dtos/companiesBankAccountQuery.d
 import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
 import { Company } from './entities/company.entity'
+import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
 
 @ApiTags('Companies')
 @Controller('companies')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 @RequiredAccess(AccessesEnum.CADASTRO_EMPRESAS)
-@ApiExtraModels(PagedResult, CompanyDto)
+@ApiExtraModels(PagedResult, CompanyDto, CompaniesBankAccountDto)
 export class CompaniesController {
   constructor(
     @Inject('CompaniesService')
@@ -53,7 +54,7 @@ export class CompaniesController {
     return this.companiesService.findAll(query)
   }
 
-  @PagedApiResponse(Company, 'bank account list of companies')
+  @PagedApiResponse(CompaniesBankAccount, 'bank account list of companies')
   @Get('/CompaniesBankAccount')
   findCompaniesBankAccount(@Query() query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
     return this.companiesService.findCompaniesBankAccount(query)
