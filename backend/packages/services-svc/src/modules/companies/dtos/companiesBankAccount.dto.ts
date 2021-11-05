@@ -1,21 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from 'class-validator'
 
 export class CompaniesBankAccountDto {
-  @ApiProperty()
-  id
+  
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  companyCode: number;
 
-  @ApiProperty()
-  companyCode
+  @IsString()
+  @IsNotEmpty()
+  @Length(3, 3)
+  @ApiProperty({ required: true })
+  bankCode: string;
 
-  @ApiProperty()
-  bankCode
+  @IsString()
+  @IsNotEmpty()
+  @Length(0, 10)
+  @ApiProperty({ required: true })
+  agency: string;
 
-  @ApiProperty()
-  agency
+  @IsString()
+  @IsNotEmpty()
+  @Length(0, 10)
+  @ApiProperty({ required: true })
+  account: string;
 
+  @IsString()
+  @Length(0, 500)
+  @IsOptional()
   @ApiProperty()
-  account
-
-  @ApiProperty()
-  note
+  note: string;
 }
