@@ -64,9 +64,9 @@ export class CompaniesService {
               $like: `%${ query.id }%`
             }
           }),
-          ...(query.companyCode && {
-            companyCode: {
-              $like: `%${ query.companyCode }%`
+          ...(query.companyId && {
+            companyId: {
+              $like: `%${ query.companyId }%`
             }
           }),
           ...(query.bankCode && {

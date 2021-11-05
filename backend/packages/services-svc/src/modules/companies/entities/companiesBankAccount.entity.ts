@@ -65,7 +65,7 @@ export class CompaniesBankAccount extends Model<CompaniesBankAccount> {
     type: DataType.INTEGER
   })
   updatedBy: number;
-  
+
 
   @HasOne(() => Bank, { sourceKey: 'bankCode', foreignKey: 'code' })
   bank: Bank
