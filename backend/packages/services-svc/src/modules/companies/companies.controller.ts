@@ -54,7 +54,7 @@ export class CompaniesController {
   }
 
   @PagedApiResponse(Company, 'bank account list of companies')
-  @Get()
+  @Get('/CompaniesBankAccount')
   findCompaniesBankAccount(@Query() query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
     return this.companiesService.findCompaniesBankAccount(query)
   }

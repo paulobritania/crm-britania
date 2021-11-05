@@ -28,7 +28,7 @@ export class CompaniesBankAccount extends Model<CompaniesBankAccount> {
     allowNull: false,
     type: DataType.INTEGER
   })
-  companyCode: number
+  companyId: number
 
   @Column({
     type: DataType.STRING(3),
@@ -43,14 +43,14 @@ export class CompaniesBankAccount extends Model<CompaniesBankAccount> {
   agency: string
 
   @Column({
-    type: DataType.STRING(20),
+    type: DataType.STRING(10),
     allowNull: false
   })
   account: string
 
   @Column({
     type: DataType.STRING(500),
-    allowNull: false
+    allowNull: true
   })
   note: string
 
@@ -65,11 +65,12 @@ export class CompaniesBankAccount extends Model<CompaniesBankAccount> {
     type: DataType.INTEGER
   })
   updatedBy: number;
+  
 
   @HasOne(() => Bank, { sourceKey: 'bankCode', foreignKey: 'code' })
   bank: Bank
 
-  @HasOne(() => Company, { sourceKey: 'companyCode', foreignKey: 'id' })
+  @HasOne(() => Company, { sourceKey: 'companyId', foreignKey: 'id' })
   company: Company
 
   @HasOne(() => User, { sourceKey: 'createdBy', foreignKey: 'id' })
