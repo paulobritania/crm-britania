@@ -158,7 +158,7 @@ export class CompaniesService {
     } catch (error) {
       await transaction.rollback()
       throw new InternalServerErrorException(
-        'Ocorreu um arro ao cadastrar empresa' + error
+        `Ocorreu um arro ao cadastrar empresa${  error }`
       )
     }
   }
@@ -227,7 +227,7 @@ export class CompaniesService {
       )
     }
   }
-  
+
     /**
    * Atualiza uma conta existente
    * @param data CompaniesBankAccountDto
@@ -236,28 +236,28 @@ export class CompaniesService {
    */
      async updateCompanyBankAccount(data: CompaniesBankAccountDto, id: number, userId: number): Promise<number> {
       const transaction = await this.db.transaction()
-  
+
       try {
         const companyBankAccount = await this.companyBankAccountModel.findByPk(id)
-  
+
         if (!companyBankAccount) throw new BadRequestException('conta não encontrada')
-  
+
         const companyBankAccountData = {
           ...data,
           updatedBy: userId
         }
-  
+
         await companyBankAccount.update({ ...companyBankAccountData }, { transaction })
-  
+
         await transaction.commit()
-  
+
         return companyBankAccount.id
       } catch (error) {
         await transaction.rollback()
         if (error instanceof HttpException) throw error
-  
+
         throw new InternalServerErrorException(
-          'Ocorreu um erro ao atualizar a conta: ' + error
+          `Ocorreu um erro ao atualizar a conta: ${  error }`
         )
       }
     }
