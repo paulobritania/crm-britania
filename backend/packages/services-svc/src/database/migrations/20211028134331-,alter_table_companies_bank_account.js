@@ -1,17 +1,6 @@
 'use strict';
-const bank = {
-  fields: ['bank_code'],
-  type: 'foreign key',
-  name: 'fk_bank_using_bankCode',
-  references: {
-    table: 'banks',
-    field: 'code'
-  },
-  onDelete: 'no action',
-  onUpdate: 'no action'
-}
 
-const companie = {
+const company = {
   fields: ['company_id'],
   type: 'foreign key',
   name: 'fk_companie_using_companieId',
@@ -22,12 +11,13 @@ const companie = {
   onDelete: 'no action',
   onUpdate: 'no action'
 }
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('companies_bank_account', companie)
+    return queryInterface.addConstraint('companies_bank_account', company)
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint('companies_bank_account', companie.name)
+    return queryInterface.removeConstraint('companies_bank_account', company.name)
   }
 };

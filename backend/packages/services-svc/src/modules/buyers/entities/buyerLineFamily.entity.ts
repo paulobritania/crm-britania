@@ -14,7 +14,7 @@ import { Buyer } from './buyer.entity'
   underscored: true,
   version: false,
   timestamps: false,
-  paranoid: false,
+  paranoid: false
 })
 export class BuyerLineFamily extends Model<BuyerLineFamily> {
   @Column({

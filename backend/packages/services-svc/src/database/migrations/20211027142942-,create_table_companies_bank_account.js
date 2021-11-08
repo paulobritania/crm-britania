@@ -10,11 +10,9 @@ module.exports = {
         allowNull: false
       },
       bank_code: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'banks',
-          key: 'code'
-        }
+        type: Sequelize.STRING(10),
+        allowNull: false,
+        default: 0
       },
       company_id: {
         type: Sequelize.INTEGER,
