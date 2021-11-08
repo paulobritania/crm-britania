@@ -72,6 +72,15 @@ export class CompaniesController {
   }
 
   @ApiResponse({
+    description: 'succsess',
+    type: CompaniesBankAccountDto,
+    isArray: false
+  })
+  @Get('/company-bank-account/:id')
+  findOneBankAccount(@Param('id') id: number): Promise<CompaniesBankAccountDto>{
+    return this.companiesService.findOneBankAccount(id);
+  }
+  @ApiResponse({
     type: Number
   })
   @RequiredPermission(PermissionsEnum.INCLUIR)
@@ -113,7 +122,7 @@ export class CompaniesController {
     type: Number
   })
   @RequiredPermission(PermissionsEnum.EDITAR)
-  @Put('/company-bank-account:id')
+  @Put('/company-bank-account/:id')
   async updateCompanyBankAccount(
     @Param('id') id: number,
     @Body() data: CompaniesBankAccountDto,
