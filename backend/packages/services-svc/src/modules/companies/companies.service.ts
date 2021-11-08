@@ -40,7 +40,7 @@ export class CompaniesService {
 
     result.totalRegisters = await this.companyModel.count()
     result.data = await this.companyModel.findAll({
-      attributes: ['id', 'name', 'cnpj', 'bankCode'],
+      attributes: ['id', 'name', 'cnpj'],
       ...convertToFindOptions(query.page, query.pageSize),
       order: [[query.orderBy || 'id', query.sort || 'ASC']]
     })
@@ -124,12 +124,7 @@ export class CompaniesService {
       attributes: [
         'id',
         'name',
-        'cnpj',
-        'bankCode',
-        'agency',
-        'account',
-        'identifier',
-        'message'
+        'cnpj'
       ]
     })
   }

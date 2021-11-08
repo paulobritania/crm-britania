@@ -32,37 +32,7 @@ export class Company extends Model<Company> {
     allowNull: false,
     type: DataType.STRING(14)
   })
-  cnpj: string
-
-  @Column({
-    type: DataType.STRING(10),
-    allowNull: false
-  })
-  bankCode: string
-
-  @Column({
-    type: DataType.STRING(10),
-    allowNull: false
-  })
-  agency: string
-
-  @Column({
-    type: DataType.STRING(20),
-    allowNull: false
-  })
-  account: string
-
-  @Column({
-    type: DataType.STRING(8),
-    allowNull: true
-  })
-  identifier: string
-
-  @Column({
-    allowNull: true,
-    type: DataType.STRING(500)
-  })
-  message: string
+  cnpj: string;
 
   @Column({
     allowNull: false,
@@ -74,12 +44,11 @@ export class Company extends Model<Company> {
     allowNull: true,
     type: DataType.INTEGER
   })
-  updatedBy: number;
+  updatedBy: number
 
   @HasOne(() => User, { sourceKey: 'createdBy', foreignKey: 'id' })
   createdByUser: User
 
   @HasOne(() => User, { sourceKey: 'updatedBy', foreignKey: 'id' })
-  updatedByUser: User;
-
+  updatedByUser: User
 }

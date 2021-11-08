@@ -56,7 +56,7 @@ export class CompaniesController {
   }
 
   @PagedApiResponse(CompaniesBankAccount, 'bank account list of companies')
-  @Get('/CompaniesBankAccount')
+  @Get('/company-bank-account')
   findCompaniesBankAccount(@Query() query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
     return this.companiesService.findCompaniesBankAccount(query)
   }
@@ -88,7 +88,7 @@ export class CompaniesController {
     type: Number
   })
   @RequiredPermission(PermissionsEnum.INCLUIR)
-  @Post('/CompaniesBankAccount')
+  @Post('/company-bank-account')
   async createCompanyBankAccount(
     @Body() data: CompaniesBankAccountDto,
     @BritaniaAuth(['userId']) userId: number
@@ -113,7 +113,7 @@ export class CompaniesController {
     type: Number
   })
   @RequiredPermission(PermissionsEnum.EDITAR)
-  @Put('/CompanyBankAccount:id')
+  @Put('/company-bank-account:id')
   async updateCompanyBankAccount(
     @Param('id') id: number,
     @Body() data: CompaniesBankAccountDto,
@@ -127,7 +127,7 @@ export class CompaniesController {
     isArray: false
   })
   @RequiredPermission(PermissionsEnum.EXCLUIR)
-  @Delete('/CompanyBankAccount:id')
+  @Delete('/company-bank-account:id')
   async delete(
     @Param('id') id: number,
     @BritaniaAuth(['userId']) userId: number
