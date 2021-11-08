@@ -166,7 +166,7 @@ const BuyerFormScreen = () => {
 
   const handleSubmit = useCallback(
     (values) => {
-      
+
       setLoader(true)
 
       const saveBuyer = (imageId = null) => {
@@ -242,6 +242,16 @@ const BuyerFormScreen = () => {
       setImage()
     }
   }, [isEdit])
+
+  const finish = useCallback(() => {
+    if (!modeView) {
+      formRef.current.submit();
+    } else {
+      setLinesBuyers([])
+      setImage()
+      history.push(routes.buyers.path)
+    }
+  }, [])
 
   const debounceQuery = useCallback(
     debounce((filter) => {
@@ -462,11 +472,7 @@ const BuyerFormScreen = () => {
               variant='contained'
               className={classes.btnSave}
               isLoading={loader || loading || existenceBuyerFromApiLoading}
-              onClick={() =>
-                !modeView
-                  ? formRef.current.submit()
-                  : history.push(routes.buyers.path)
-              }
+              onClick={finish}
             >
               {!modeView ? t('finish registration') : t('turn back')}
             </Button>
