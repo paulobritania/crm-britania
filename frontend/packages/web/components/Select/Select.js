@@ -9,7 +9,8 @@ import {
   CircularProgress,
   InputAdornment,
   MenuItem,
-  InputLabel
+  InputLabel,
+  Input
 } from '@material-ui/core'
 
 import { areEqual } from '@britania-crm/utils/memo'
@@ -27,24 +28,34 @@ const InputSelectStyled = ({
   loading,
   clearable,
   value,
-  customChange
+  customChange,
+  placeholder
 }) => {
   const classes = useStyles()
 
   const renderedOptions = useMemo(() => {
+    const optsArray = []
+
+    optsArray.push(
+      <MenuItem value={0} key={0} style={{ display: 'none' }}>
+        {placeholder}
+      </MenuItem>
+    )
+
     if (isEmpty(options)) {
-      return (
+      optsArray.push(
         <MenuItem selected disabled value=''>
           <em>Nenhum valor</em>
         </MenuItem>
       )
+      return optsArray
     }
 
-    return map(options, (option) => {
+    map(options, (option) => {
       const id = option[idKey]
       const name = option[valueKey]
 
-      return (
+      optsArray.push(
         <MenuItem
           classes={{ root: classes.menuItem }}
           value={id}
@@ -55,6 +66,8 @@ const InputSelectStyled = ({
         </MenuItem>
       )
     })
+
+    return optsArray
   }, [options, idKey, valueKey, classes])
 
   const EndAdornment = useMemo(
@@ -80,8 +93,9 @@ const InputSelectStyled = ({
       <Controller
         render={({ field: { onChange, value } }) => (
           <TextFieldStyled
+            className={value === 0 ? classes.placeholder : ''}
             onChange={customChange || onChange}
-            value={value}
+            value={value ?? 0}
             variant={variant}
             select
             disabled={loading}

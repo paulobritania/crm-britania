@@ -14,7 +14,7 @@ export const InputTextStyled = styled(TextField)`
       margin: 0;
       align-items: center;
       justify-content: center;
-      padding: 10px 50px 10px 16px !important;
+      padding: 10px 50px 10px 0 !important;
     }
     & svg {
       color: #858c94;

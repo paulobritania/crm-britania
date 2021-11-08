@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { TextField, InputLabel } from '@material-ui/core'
@@ -16,13 +16,14 @@ const Input = ({
   control,
   label,
   variant,
-  mask,
   mode,
   readonly,
   rows,
   multiline,
   placeholder,
-  maxLenght
+  mask,
+  maxLenght,
+  ...rest
 }) => {
   return (
     <>
@@ -55,7 +56,7 @@ const Input = ({
             </ThemeProvider>
           ) : (
             <MaskedInput
-              mask={cpfCnpjMask('', { mode })}
+              mask={mask}
               variant={variant}
               value={value}
               onChange={onChange}

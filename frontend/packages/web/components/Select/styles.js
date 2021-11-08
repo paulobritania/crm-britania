@@ -12,7 +12,13 @@ const useStyles = makeStyles({
     alignItems: 'center',
     marginTop: -1
   },
-  checkbox: { padding: 0, marginRight: 8 }
+  checkbox: { padding: 0, marginRight: 8 },
+  placeholder: {
+    '& div > div': {
+      color: '#b8b8b8',
+      fontSize: 14
+    }
+  }
 })
 
 export const TextFieldStyled = styled(TextField).withConfig({

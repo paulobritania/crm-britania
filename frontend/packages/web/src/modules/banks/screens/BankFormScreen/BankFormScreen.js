@@ -22,6 +22,7 @@ import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
 import { CompanyActions } from '@britania-crm/stores/companies'
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import account from '@britania-crm/forms/masks/account.mask'
 import cpfCnpjMask from '@britania-crm/forms/masks/cpfCnpj.mask'
 import Button from '@britania-crm/web-components/Button'
 import { CircularLoader } from '@britania-crm/web-components/Loader'
@@ -217,7 +218,7 @@ const BankFormScreen = () => {
               valueKey='establishmentDescription'
               idKey='establishmentCode'
               id='select-company'
-              placeholder='Empresa'
+              placeholder='Selecione a Empresa'
               loading={listCompaniesLoading}
               required
               options={listCompaniesFromApi}
@@ -232,7 +233,7 @@ const BankFormScreen = () => {
               defaultValue=''
               mode='cnpj'
               placeholder='00.000.000/0000-00'
-              mask={true}
+              mask={cpfCnpjMask('', { mode })}
               readonly
             />
           </Grid>
@@ -285,6 +286,7 @@ const BankFormScreen = () => {
               paramName='description'
               name='bankCode'
               label={t('bank')}
+              placeholder={t('bank')}
             />
           </Grid>
           <Grid container spacing={1}>
@@ -306,6 +308,7 @@ const BankFormScreen = () => {
                 label={t('account', { howMany: 1 })}
                 control={control}
                 maxLenght={10}
+                mask={account('')}
               />
             </Grid>
           </Grid>

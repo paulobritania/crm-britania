@@ -25,7 +25,7 @@ import SearchIconButton from '@britania-crm/web-components/IconButton/SearchIcon
 import InfoIcon from '@britania-crm/web-components/Icons/infoIcon'
 import Tooltip from '@britania-crm/web-components/Tooltip'
 
-import { InputLabelStyled, InputTextStyled } from './styles'
+import { InputTextStyled } from './styles'
 
 const AutocompleteStyled = ({
   name,
@@ -47,6 +47,7 @@ const AutocompleteStyled = ({
   loading: externalLoading,
   infoDescription,
   variant,
+  placeholder,
   ...rest
 }) => {
   const [open, setOpen] = useState(false)
@@ -157,6 +158,7 @@ const AutocompleteStyled = ({
                 style={{ display: 'flex' }}
                 InputProps={{
                   ...params.InputProps,
+                  placeholder: placeholder,
                   endAdornment: (
                     <InputAdornment position='end'>
                       {loading && (
@@ -203,7 +205,8 @@ AutocompleteStyled.propTypes = {
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
   infoDescription: PropTypes.string,
-  variant: PropTypes.string
+  variant: PropTypes.string,
+  placeholder: PropTypes.string
 }
 
 AutocompleteStyled.defaultProps = {
@@ -222,7 +225,8 @@ AutocompleteStyled.defaultProps = {
   loading: false,
   disabled: false,
   infoDescription: '',
-  variant: 'outlined'
+  variant: 'outlined',
+  placeholder: ''
 }
 
 export default memo(AutocompleteStyled, areEqual)
