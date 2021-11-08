@@ -9,13 +9,14 @@ import {
   Length,
   Validate
 } from 'class-validator'
+import { PagedQuery } from '../../../../utils/pagination/pagedQuery.dto'
 
 import { IsStringifiedNumberArray } from '../../../../utils/validations/isStringifiedNumberArrayValidator'
 import { VoltageEnum } from '../../enum/Voltage.enum'
 
 const notRequired = { required: false }
 
-export class FindAllBuyersQueryDto {
+export class FindAllBuyersQueryDto extends PagedQuery {
 
   @IsNumberString()
   @IsOptional()
@@ -94,12 +95,6 @@ export class FindAllBuyersQueryDto {
   @IsOptional()
   @ApiProperty(notRequired)
   imageId: number;
-
-  @ApiProperty(notRequired)
-  offset: string;
-
-  @ApiProperty(notRequired)
-  limit: string;
 
   @IsString()
   @IsOptional()

@@ -393,6 +393,8 @@ export class BuyersService {
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
+      offset: query.page,
+      limit: query.pageSize,
       order: [['id', 'DESC']]
     })
 
