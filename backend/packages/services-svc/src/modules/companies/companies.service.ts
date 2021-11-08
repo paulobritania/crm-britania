@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   HttpException
 } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
@@ -20,6 +21,7 @@ import { Company } from './entities/company.entity'
 @Injectable()
 export class CompaniesService {
   constructor(
+    @Inject('LOGS_SERVICE') private logsClient: ClientProxy,
     @Inject('SEQUELIZE') private db: Sequelize,
     @InjectModel(Company) private companyModel: typeof Company,
     @InjectModel(CompaniesBankAccount)
@@ -141,13 +143,12 @@ export class CompaniesService {
   async create(data: CompanyDto, userId: number): Promise<Company> {
     const transaction = await this.db.transaction()
 
+    const companyData = {
+      ...data,
+      createdBy: userId,
+      updatedBy: null
+    }
     try {
-      const companyData = {
-        ...data,
-        createdBy: userId,
-        updatedBy: null
-      }
-
       const company = await this.companyModel.create(companyData, {
         transaction
       })
@@ -157,7 +158,7 @@ export class CompaniesService {
     } catch (error) {
       await transaction.rollback()
       throw new InternalServerErrorException(
-        'Ocorreu um arro ao cadastrar empresa'
+        'Ocorreu um arro ao cadastrar empresa' + error
       )
     }
   }
@@ -172,12 +173,12 @@ export class CompaniesService {
      async createCompanyBankAccount(data: CompaniesBankAccountDto, userId: number): Promise<CompaniesBankAccount> {
       const transaction = await this.db.transaction()
 
+      const companyBankAccountData = {
+        ...data,
+        createdBy: userId,
+        updatedBy: null
+      }
       try {
-        const companyBankAccountData = {
-          ...data,
-          createdBy: userId,
-          updatedBy: null
-        }
 
         const company = await this.companyBankAccountModel.create(companyBankAccountData, {
           transaction
@@ -224,6 +225,72 @@ export class CompaniesService {
       throw new InternalServerErrorException(
         'Ocorreu um erro ao atualizar empresa'
       )
+    }
+  }
+  
+    /**
+   * Atualiza uma conta existente
+   * @param data CompaniesBankAccountDto
+   * @param id number
+   * @param userId number
+   */
+     async updateCompanyBankAccount(data: CompaniesBankAccountDto, id: number, userId: number): Promise<number> {
+      const transaction = await this.db.transaction()
+  
+      try {
+        const companyBankAccount = await this.companyBankAccountModel.findByPk(id)
+  
+        if (!companyBankAccount) throw new BadRequestException('conta não encontrada')
+  
+        const companyBankAccountData = {
+          ...data,
+          updatedBy: userId
+        }
+  
+        await companyBankAccount.update({ ...companyBankAccountData }, { transaction })
+  
+        await transaction.commit()
+  
+        return companyBankAccount.id
+      } catch (error) {
+        await transaction.rollback()
+        if (error instanceof HttpException) throw error
+  
+        throw new InternalServerErrorException(
+          'Ocorreu um erro ao atualizar a conta: ' + error
+        )
+      }
+    }
+
+      /**
+   * Exclui uma conta bancaria
+   * @param id number
+   * @param userId number
+   */
+  async deleteCompanyBankAccount(id: number, userId: number): Promise<void> {
+    const transaction = await this.db.transaction()
+
+    try {
+      const bankAccount = await this.companyBankAccountModel.findByPk(id)
+
+      if (!bankAccount) throw new BadRequestException('Conta não encontrada')
+
+      const log = {
+        oldData: bankAccount.get({ plain: true }),
+        userId,
+        httpVerb: 'delete',
+        table: 'companies_bank_account'
+      }
+
+      await bankAccount.destroy({ transaction })
+      this.logsClient.send({ log: 'create' }, log).toPromise()
+
+      await transaction.commit()
+    } catch (error) {
+      await transaction.rollback()
+      if (error instanceof HttpException) throw error
+
+      throw new InternalServerErrorException('Erro ao remover a conta')
     }
   }
 }

@@ -7,7 +7,8 @@ import {
   Body,
   Put,
   Param,
-  Query
+  Query,
+  Delete
 } from '@nestjs/common'
 import {
   ApiTags,
@@ -106,5 +107,31 @@ export class CompaniesController {
     @BritaniaAuth(['userId']) userId: number
   ): Promise<number> {
     return this.companiesService.update(data, id, userId)
+  }
+
+  @ApiResponse({
+    type: Number
+  })
+  @RequiredPermission(PermissionsEnum.EDITAR)
+  @Put('/CompanyBankAccount:id')
+  async updateCompanyBankAccount(
+    @Param('id') id: number,
+    @Body() data: CompaniesBankAccountDto,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<number> {
+    return this.companiesService.updateCompanyBankAccount(data, id, userId)
+  }
+
+  @ApiOkResponse({
+    description: 'bank account deleted successfully',
+    isArray: false
+  })
+  @RequiredPermission(PermissionsEnum.EXCLUIR)
+  @Delete('/CompanyBankAccount:id')
+  async delete(
+    @Param('id') id: number,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<void> {
+    return this.companiesService.deleteCompanyBankAccount(id, userId)
   }
 }
