@@ -14,4 +14,9 @@ export class CompanyDto {
   @MaxLength(14)
   @ApiProperty(isRequired)
   cnpj: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty(isRequired)
+  identifier: string;
 }

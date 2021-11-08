@@ -44,7 +44,6 @@ export class ServicesServiceImpl implements ServicesService {
     username: string
   ): Promise<GetUserByUsernameResponseDto> {
     // eslint-disable-next-line no-console
-    console.log('URL ->>', this.servicesUrl)
     const getUserUrl = `${ this.servicesUrl }/users/username`
 
     try {

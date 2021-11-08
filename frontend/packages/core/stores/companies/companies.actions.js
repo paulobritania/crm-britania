@@ -5,7 +5,7 @@ import { createActions } from 'reduxsauce'
  */
 export const { Types, Creators } = createActions({
   saveCompany: ['params', 'onSuccess', 'onError'],
-  updateCompany: ['params', 'id', 'onSuccess', 'onError'],
+  updateCompany: ['id', 'params', 'onSuccess', 'onError'],
   saveCompanyBank: ['params', 'onSuccess', 'onError'],
   editCompanyBank: ['id', 'params', 'onSuccess', 'onError']
 })

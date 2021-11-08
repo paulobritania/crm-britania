@@ -13,7 +13,7 @@ export const INITIAL_VALUES = {
 
 export default ({ t }) => {
   return Yup.object().shape({
-    companyCode: Yup.number(),
+    identifier: Yup.number(),
     companyId: required({ t })(Yup.number()),
     bankCode: required({ t })(Yup.string()),
     agency: maxLength({

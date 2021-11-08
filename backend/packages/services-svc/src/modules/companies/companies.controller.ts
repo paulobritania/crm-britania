@@ -72,7 +72,7 @@ export class CompaniesController {
   }
 
   @ApiResponse({
-    description: 'succsess',
+    description: 'Bank Account returned successfully',
     type: CompaniesBankAccountDto,
     isArray: false
   })

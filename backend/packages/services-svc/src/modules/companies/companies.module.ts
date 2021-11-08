@@ -9,12 +9,13 @@ import { CompaniesController } from './companies.controller'
 import { CompaniesService } from './companies.service'
 import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
 import { Company } from './entities/company.entity'
+import { Bank } from '../banks/entities/bank.entity'
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     LoggerModule.forRoot(),
-    SequelizeModule.forFeature([Company, CompaniesBankAccount])
+    SequelizeModule.forFeature([Company, CompaniesBankAccount, Bank])
   ],
   controllers: [CompaniesController],
   providers: [DatabaseProvider, CompaniesService,

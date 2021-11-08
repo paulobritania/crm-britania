@@ -66,7 +66,6 @@ export class CompaniesBankAccount extends Model<CompaniesBankAccount> {
   })
   updatedBy: number;
 
-
   @HasOne(() => Bank, { sourceKey: 'bankCode', foreignKey: 'code' })
   bank: Bank
 

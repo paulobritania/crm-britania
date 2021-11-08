@@ -1,4 +1,5 @@
 import { Column, Model, Table, DataType, HasOne } from 'sequelize-typescript'
+import { Bank } from '../../banks/entities/bank.entity';
 
 import { User } from '../../users/entities/user.entity'
 
@@ -33,6 +34,12 @@ export class Company extends Model<Company> {
     type: DataType.STRING(14)
   })
   cnpj: string;
+
+  @Column({
+    allowNull: false,
+    type: DataType.STRING
+  })
+  identifier: string;
 
   @Column({
     allowNull: false,

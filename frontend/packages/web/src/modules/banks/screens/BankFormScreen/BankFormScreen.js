@@ -2,6 +2,8 @@ import React, { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
+import { isEmpty } from 'lodash'
+
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
@@ -35,9 +37,7 @@ import Divider from '@material-ui/core/Divider'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 
 import { useForm } from 'react-hook-form'
-
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
-
 import { useStyles, InputLabelStyled } from './styles'
 
 const BankFormScreen = () => {
@@ -52,14 +52,11 @@ const BankFormScreen = () => {
   const { createDialog } = useDialog()
   const mode = useMemo(() => state?.params?.mode, [state])
   const modeView = useMemo(() => mode === 'view', [mode])
-  // state.params.id = 1
-  // const isEdit = useMemo(() => mode === 'edit', [mode])
-  const isEdit = true
-  const [id, setId] = useState(1)
+  const isEdit = useMemo(() => mode === 'edit', [mode])
 
   const defaultValues = {
     companyId: null,
-    companyCode: 0,
+    identifier: 0,
     bankCode: '',
     agency: '',
     account: '',
@@ -74,11 +71,10 @@ const BankFormScreen = () => {
   const { handleSubmit, reset, control, setValue } = methods
 
   const { data: bankFromApi, loading } = useCrmApi(
-    // id ? [`${banksCrmRoutes.getOne}/${state?.params?.id}`] : null,
-    id ? [`${companies.getAllBanks}`] : null,
-    {
-      id: id
-    },
+    state?.params?.id
+      ? [`${banksCrmRoutes.getOne}/${state?.params?.id}`]
+      : null,
+    {},
     {
       revalidateOnFocus: false
     }
@@ -131,8 +127,8 @@ const BankFormScreen = () => {
       const saveBank = (companyId) => {
         const payload = {
           ...values,
-          companyCode: Number(values.companyCode),
-          companyId: Number(companyId) ?? null,
+          identifier: values.identifier,
+          companyId: values.companyId ?? companyId,
           bankCode: values.bankCode.code,
           agency: values.agency,
           account: values.account,
@@ -162,30 +158,47 @@ const BankFormScreen = () => {
           CompanyActions.saveCompany(
             {
               name: company.nomeEmpresa,
-              cnpj: company.cnpj
+              cnpj: company.cnpj,
+              identifier: company.codigoEmpresa.toString()
             },
             (data) => {
               setLoader(false)
               saveBank(data)
             },
-            (data) => {
-              console.log(data)
-            }
+            () => setLoader(false)
           )
         )
       } else {
         saveBank()
       }
     },
-    [dispatch, isEdit, bankFromApi, company]
+    [dispatch, isEdit, bankFromApi, company, id]
   )
 
   useEffect(() => {
-    console.log(bankFromApi)
-    // bankFromApi.forEach((bank) => {
-    //   console.log(bank)
-    // })
-  }, [bankFromApi])
+    if (!state?.params?.id && mode !== 'create')
+      history.replace(routes.banks.path)
+
+    async function getBank() {
+      if (!isEmpty(bankFromApi)) {
+        setValue('identifier', bankFromApi.company?.identifier)
+        setValue('companyId', bankFromApi.companyId)
+        setValue('bankCode', bankFromApi.bank)
+        setValue('agency', bankFromApi.agency)
+        setValue('account', bankFromApi.account)
+        setValue('note', bankFromApi.note)
+
+        const res = await api.get(
+          `${establishments.getOne}/${bankFromApi.company?.identifier}`
+        )
+
+        setCompany(res.data)
+        setValue('cnpj', res.data.cnpj)
+      }
+    }
+
+    getBank()
+  }, [bankFromApi, api, history, mode, state, routes])
 
   const handleCancel = useCallback(
     () =>
@@ -205,11 +218,6 @@ const BankFormScreen = () => {
     [createDialog, history, mode, routes.banks.path, t]
   )
 
-  //   useEffect(() => {
-  //     if (!state?.params?.id && mode !== 'create')
-  //       history.replace(routes.banks.path)
-  //   }, [history, mode, routes, state])
-
   const handleChange = async (e) => {
     const res = await api.get(
       `${establishments.getOne}/${e.target.value}`,
@@ -217,7 +225,7 @@ const BankFormScreen = () => {
     )
 
     setCompany(res.data)
-    setValue('companyCode', e.target.value)
+    setValue('identifier', e.target.value)
     setValue('cnpj', res.data.cnpj)
   }
 
@@ -240,7 +248,7 @@ const BankFormScreen = () => {
           </Grid>
           <Grid item sm={12}>
             <Select
-              name='companyCode'
+              name='identifier'
               control={control}
               label={t('company name')}
               valueKey='establishmentDescription'

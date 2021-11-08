@@ -10,4 +10,4 @@ export const postCompanyBank = async (params) =>
   await api.post(companies.postBank, params)
 
 export const putCompanyBank = async (id, params) =>
-  await api.put(`${companies.putBank}/${id}`, params)
+  api.put(companies.putBank.replace(':id', id), params)

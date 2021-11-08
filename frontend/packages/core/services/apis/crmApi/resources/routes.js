@@ -176,7 +176,7 @@ export const companies = {
   getOne: '/services/companies/:id',
   post: '/services/companies',
   put: '/services/companies/:id',
-  getAllBanks: '/services/companies/company-bank-account',
+  getOneBank: '/services/companies/company-bank-account',
   postBank: '/services/companies/company-bank-account',
   putBank: '/services/companies/company-bank-account/:id'
 }

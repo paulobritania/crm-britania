@@ -17,6 +17,7 @@ import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
 import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
 import { Company } from './entities/company.entity'
+import { Bank } from '../banks/entities/bank.entity'
 
 @Injectable()
 export class CompaniesService {
@@ -24,6 +25,7 @@ export class CompaniesService {
     @Inject('LOGS_SERVICE') private logsClient: ClientProxy,
     @Inject('SEQUELIZE') private db: Sequelize,
     @InjectModel(Company) private companyModel: typeof Company,
+    @InjectModel(Bank) private bankModel: typeof Bank,
     @InjectModel(CompaniesBankAccount)
     private companyBankAccountModel: typeof CompaniesBankAccount
   ) {}
@@ -121,7 +123,17 @@ export class CompaniesService {
    */
   async findOneBankAccount(id: number): Promise<CompaniesBankAccountDto> {
     return this.companyBankAccountModel.findByPk(id, {
-      attributes: ['id', 'companyId', 'bankCode', 'agency', 'account', 'note']
+      attributes: ['id', 'companyId', 'bankCode', 'agency', 'account', 'note'],
+      include: [
+        {
+          model: this.companyModel,
+          attributes: ['identifier']
+        },
+        {
+          model: this.bankModel,
+          attributes: ['code', 'description']
+        }
+      ]
     })
   }
 
