@@ -1,13 +1,10 @@
-
 import { eventChannel } from 'redux-saga'
-import {
-  all,
-  spawn
-} from 'redux-saga/effects'
+import { all, spawn } from 'redux-saga/effects'
 
 import access from '@britania-crm/stores/access/access.sagas'
 import app from '@britania-crm/stores/app/app.sagas'
 import auth from '@britania-crm/stores/auth/auth.sagas'
+import bank from '@britania-crm/stores/bank/bank.sagas'
 import buyer from '@britania-crm/stores/buyer/buyer.sagas'
 import companies from '@britania-crm/stores/companies/companies.sagas'
 import customer from '@britania-crm/stores/customer/customer.sagas'
@@ -44,7 +41,7 @@ const networkChannel = eventChannel((emitter) => {
   }
 })
 
-export default function* root () {
+export default function* root() {
   yield all([
     spawn(startWatchingNetworkConnectivity(networkChannel)),
     ...app,
@@ -56,6 +53,7 @@ export default function* root () {
     ...access,
     ...field,
     ...users,
+    ...bank,
     ...buyer,
     ...customer,
     ...representative,

@@ -183,14 +183,13 @@ const BankFormScreen = () => {
   //   }, [history, mode, routes, state])
 
   const handleChange = async (e) => {
-    setValue('companyId', e.target.value)
-
     const res = await api.get(
       `${establishments.getOne}/${e.target.value}`,
       null
     )
 
     setCompany(res.data)
+    setValue('companyId', e.target.value)
     setValue('cnpj', res.data.cnpj)
   }
 
