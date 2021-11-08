@@ -98,8 +98,7 @@ export const customer = {
 
 export const banks = {
   getAll: '/services/banks',
-  getOne: '/services/banks',
-  post: '/services/banks'
+  getOne: '/services/banks'
 }
 
 export const buyers = {
@@ -176,7 +175,9 @@ export const companies = {
   getAll: '/services/companies',
   getOne: '/services/companies/:id',
   post: '/services/companies',
-  put: '/services/companies/:id'
+  put: '/services/companies/:id',
+  postBank: '/services/companies/companies-bank-account',
+  putBank: '/services/companies/companies-bank-account/:id'
 }
 
 export const products = {

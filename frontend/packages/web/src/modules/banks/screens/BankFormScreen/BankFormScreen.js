@@ -5,7 +5,6 @@ import { useHistory, useLocation } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
-import { isEmpty } from 'lodash'
 import api from '../../../../../../core/services/apis/crmApi/api'
 
 import { useDialog } from '@britania-crm/dialog'
@@ -20,7 +19,7 @@ import {
 } from '@britania-crm/services/apis/crmApi/resources/routes'
 
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
-import { BankActions } from '@britania-crm/stores/bank'
+import { CompanyActions } from '@britania-crm/stores/companies'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import cpfCnpjMask from '@britania-crm/forms/masks/cpfCnpj.mask'
@@ -33,7 +32,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Divider from '@material-ui/core/Divider'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
 
@@ -130,7 +129,7 @@ const BankFormScreen = () => {
 
         if (isEdit) {
           dispatch(
-            BankActions.editBank(
+            CompanyActions.editCompanyBank(
               state?.params?.id,
               payload,
               () => {
@@ -142,7 +141,7 @@ const BankFormScreen = () => {
           )
         } else {
           dispatch(
-            BankActions.saveBank(
+            CompanyActions.saveCompanyBank(
               payload,
               () => {
                 setLoader(false)
@@ -303,10 +302,10 @@ const BankFormScreen = () => {
               <Input
                 name='account'
                 defaultValue=''
-                placeholder='00000000000-0'
+                placeholder='00000000-0'
                 label={t('account', { howMany: 1 })}
                 control={control}
-                maxLenght={13}
+                maxLenght={10}
               />
             </Grid>
           </Grid>

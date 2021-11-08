@@ -6,7 +6,6 @@ import { blacklistTransform } from '@britania-crm/stores'
 import access from '@britania-crm/stores/access/access.reducer'
 import app from '@britania-crm/stores/app/app.reducer'
 import auth from '@britania-crm/stores/auth/auth.reducer'
-import bank from '@britania-crm/stores/bank/bank.reducer'
 import buyer from '@britania-crm/stores/buyer/buyer.reducer'
 import customer from '@britania-crm/stores/customer/customer.reducer'
 import documents from '@britania-crm/stores/documents/documents.reducer'
@@ -104,7 +103,6 @@ const rootReducer = combineReducers({
   workflow: persistReducer(workflowPersistConfig, workflow),
   access: persistReducer(accessPersistConfig, access),
   buyer: persistReducer(buyerPersistConfig, buyer),
-  bank: persistReducer(bankPersistConfig, bank),
   customer: persistReducer(customerPersistConfig, customer),
   representative: persistReducer(representativePersistConfig, representative),
   documents: persistReducer(documentsPersistConfig, documents),
