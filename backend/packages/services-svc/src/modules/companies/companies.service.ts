@@ -107,7 +107,7 @@ export class CompaniesService {
       })
     } catch (error) {
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao cadastrar empresa: \n${  error }`
+        `Ocorreu um erro ao cadastrar empresa: \n${  error }`
       )
     }
 
@@ -135,7 +135,7 @@ export class CompaniesService {
    * @param userId number
    * @returns Company
    */
-  async create(data: CompanyDto, userId: number): Promise<Company> {
+  async create(data: CompanyDto, userId: number): Promise<number> {
     const transaction = await this.db.transaction()
 
     const companyData = {
@@ -148,10 +148,12 @@ export class CompaniesService {
         transaction
       })
 
-      await transaction.commit()
-      return company
+      transaction.commit()
+      return company.id
     } catch (error) {
-      await transaction.rollback()
+      transaction.rollback()
+      if (error instanceof HttpException) throw error
+
       throw new InternalServerErrorException(
         `Ocorreu um arro ao cadastrar empresa${  error }`
       )

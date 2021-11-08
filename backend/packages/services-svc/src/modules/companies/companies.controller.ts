@@ -79,7 +79,7 @@ export class CompaniesController {
   async createCompany(
     @Body() data: CompanyDto,
     @BritaniaAuth(['userId']) userId: number
-  ): Promise<Company> {
+  ): Promise<number> {
     return this.companiesService.create(data, userId)
   }
 

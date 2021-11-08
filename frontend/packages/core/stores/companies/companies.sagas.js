@@ -11,12 +11,7 @@ import {
 import { AppActions } from '../app/app.actions'
 import { CompanyTypes } from './companies.actions'
 
-function* doUpdateCompany({
-  params,
-  id,
-  onSuccess = () => {},
-  onError = () => {}
-}) {
+function* doUpdateCompany({ params, id, onSuccess, onError }) {
   try {
     yield call(putCompany, params, id)
     yield put(AppActions.addAlert({ type: 'success', message: MSG027 }))
@@ -32,17 +27,16 @@ function* doUpdateCompany({
   }
 }
 
-function* doSaveCompany({ params, onSuccess = () => {}, onError = () => {} }) {
+function* doSaveCompany({ params, onSuccess, onError }) {
   try {
-    yield call(postCompany, params)
+    const { data } = yield call(postCompany, params)
+    yield call(onSuccess(data))
     yield put(
       AppActions.addAlert({
         type: 'success',
         message: 'Empresa cadastrada com sucesso!'
       })
     )
-
-    yield call(onSuccess)
   } catch (error) {
     yield put(
       AppActions.addAlert({
@@ -54,15 +48,16 @@ function* doSaveCompany({ params, onSuccess = () => {}, onError = () => {} }) {
   }
 }
 
-function* saveCompanyBank({
-  params,
-  onSuccess = () => {},
-  onError = () => {}
-}) {
+function* doSaveCompanyBank({ params, onSuccess, onError }) {
   try {
     yield call(postCompanyBank, params)
+    yield put(
+      AppActions.addAlert({
+        type: 'success',
+        message: 'Conta bancária cadastrada com sucesso!'
+      })
+    )
     yield call(onSuccess)
-    yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
     if (error.response.status === 403) {
       yield put(
@@ -77,16 +72,16 @@ function* saveCompanyBank({
   }
 }
 
-function* editCompanyBank({
-  id,
-  params,
-  onSuccess = () => {},
-  onError = () => {}
-}) {
+function* doEditCompanyBank({ id, params, onSuccess, onError }) {
   try {
     yield call(putCompanyBank, id, params)
+    yield put(
+      AppActions.addAlert({
+        type: 'success',
+        message: 'Conta bancária atualizada com sucesso!'
+      })
+    )
     yield call(onSuccess)
-    yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
     if (error.response.status === 403) {
       yield put(
@@ -102,8 +97,8 @@ function* editCompanyBank({
 }
 
 export default [
-  takeLatest(CompanyTypes.UPDATE_COMPANY, doUpdateCompany),
   takeLatest(CompanyTypes.SAVE_COMPANY, doSaveCompany),
-  takeLatest(CompanyTypes.SAVE_COMPANY_BANK, saveCompanyBank),
-  takeLatest(CompanyTypes.EDIT_COMPANY_BANK, editCompanyBank)
+  takeLatest(CompanyTypes.UPDATE_COMPANY, doUpdateCompany),
+  takeLatest(CompanyTypes.SAVE_COMPANY_BANK, doSaveCompanyBank),
+  takeLatest(CompanyTypes.EDIT_COMPANY_BANK, doEditCompanyBank)
 ]

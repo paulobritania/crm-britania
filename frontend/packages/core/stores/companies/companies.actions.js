@@ -4,8 +4,8 @@ import { createActions } from 'reduxsauce'
  * Creating actions and types with reduxsauce.
  */
 export const { Types, Creators } = createActions({
-  updateCompany: ['params', 'id', 'onSuccess', 'onError'],
   saveCompany: ['params', 'onSuccess', 'onError'],
+  updateCompany: ['params', 'id', 'onSuccess', 'onError'],
   saveCompanyBank: ['params', 'onSuccess', 'onError'],
   editCompanyBank: ['id', 'params', 'onSuccess', 'onError']
 })

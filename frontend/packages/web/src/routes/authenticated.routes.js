@@ -519,12 +519,21 @@ export const useRoutes = () => {
           title: t('bank', { howMany: 1 })
         }
       },
+
       newBank: {
         path: '/financial/banks/create',
         exact: true,
         Component: BankFormScreen,
         access: USER_ACCESSES.BANCOS,
         action: USER_ACTIONS.INCLUIR
+      },
+
+      editBank: {
+        path: '/financial/banks/edit',
+        exact: true,
+        Component: BankFormScreen,
+        access: USER_ACCESSES.BANCOS,
+        action: USER_ACTIONS.EDITAR
       },
 
       vpcModule: {

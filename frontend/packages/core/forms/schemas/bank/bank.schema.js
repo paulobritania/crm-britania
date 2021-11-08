@@ -3,8 +3,9 @@ import * as Yup from 'yup'
 import required from '@britania-crm/forms/validators/required.validator'
 
 export const INITIAL_VALUES = {
+  companyId: null,
   companyCode: 0,
-  bankCode: 0,
+  bankCode: '',
   agency: '',
   account: '',
   note: ''
@@ -12,8 +13,9 @@ export const INITIAL_VALUES = {
 
 export default ({ t }) => {
   return Yup.object().shape({
-    companyCode: required({ t })(Yup.number()),
-    bankCode: required({ t })(Yup.number()),
+    companyCode: Yup.number(),
+    companyId: required({ t })(Yup.number()),
+    bankCode: required({ t })(Yup.string()),
     agency: maxLength({
       t,
       length: 10,

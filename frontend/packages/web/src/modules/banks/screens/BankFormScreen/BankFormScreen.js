@@ -15,7 +15,8 @@ import I18n, { useT } from '@britania-crm/i18n'
 import {
   establishments,
   banks as banksCrmRoutes,
-  banks
+  banks,
+  companies
 } from '@britania-crm/services/apis/crmApi/resources/routes'
 
 import useCrmApi from '@britania-crm/services/hooks/useCrmApi'
@@ -45,10 +46,20 @@ const BankFormScreen = () => {
   const { routes } = useRoutes()
   const dispatch = useCallback(useDispatch(), [])
   const history = useHistory()
+  const [loader, setLoader] = useState(false)
   const [company, setCompany] = useState({})
+  const { state } = useLocation()
+  const { createDialog } = useDialog()
+  const mode = useMemo(() => state?.params?.mode, [state])
+  const modeView = useMemo(() => mode === 'view', [mode])
+  // state.params.id = 1
+  // const isEdit = useMemo(() => mode === 'edit', [mode])
+  const isEdit = true
+  const [id, setId] = useState(1)
 
   const defaultValues = {
-    companyId: 0,
+    companyId: null,
+    companyCode: 0,
     bankCode: '',
     agency: '',
     account: '',
@@ -59,22 +70,15 @@ const BankFormScreen = () => {
     defaultValues: defaultValues
     // resolver: yupResolver(bankSchema)
   })
-  const { handleSubmit, reset, control, setValue, getValues } = methods
 
-  const { state } = useLocation()
-  const { createDialog } = useDialog()
-
-  const [loader, setLoader] = useState(false)
-
-  const mode = useMemo(() => state?.params?.mode, [state])
-  const modeView = useMemo(() => mode === 'view', [mode])
-  const isEdit = useMemo(() => mode === 'edit', [mode])
+  const { handleSubmit, reset, control, setValue } = methods
 
   const { data: bankFromApi, loading } = useCrmApi(
-    state?.params?.id
-      ? [`${banksCrmRoutes.getOne}/${state?.params?.id}`]
-      : null,
-    {},
+    // id ? [`${banksCrmRoutes.getOne}/${state?.params?.id}`] : null,
+    id ? [`${companies.getAllBanks}`] : null,
+    {
+      id: id
+    },
     {
       revalidateOnFocus: false
     }
@@ -114,14 +118,21 @@ const BankFormScreen = () => {
     }
   }, [bankFromApi, mode, t])
 
+  const onSuccessCallBack = useCallback(() => {
+    setLoader(false)
+    reset()
+    history.push(routes.banks.path)
+  }, [history, routes])
+
   const onSubmit = useCallback(
     (values) => {
       setLoader(true)
 
-      const saveBank = () => {
+      const saveBank = (companyId) => {
         const payload = {
           ...values,
-          companyId: Number(values.companyId),
+          companyCode: Number(values.companyCode),
+          companyId: Number(companyId) ?? null,
           bankCode: values.bankCode.code,
           agency: values.agency,
           account: values.account,
@@ -133,31 +144,48 @@ const BankFormScreen = () => {
             CompanyActions.editCompanyBank(
               state?.params?.id,
               payload,
-              () => {
-                setLoader(false)
-                history.push(routes.banks.path)
-              },
+              onSuccessCallBack,
               () => setLoader(false)
             )
           )
         } else {
           dispatch(
-            CompanyActions.saveCompanyBank(
-              payload,
-              () => {
-                setLoader(false)
-                history.push(routes.banks.path)
-              },
-              () => setLoader(false)
+            CompanyActions.saveCompanyBank(payload, onSuccessCallBack, () =>
+              setLoader(false)
             )
           )
         }
       }
 
-      saveBank()
+      if (!values.companyId) {
+        dispatch(
+          CompanyActions.saveCompany(
+            {
+              name: company.nomeEmpresa,
+              cnpj: company.cnpj
+            },
+            (data) => {
+              setLoader(false)
+              saveBank(data)
+            },
+            (data) => {
+              console.log(data)
+            }
+          )
+        )
+      } else {
+        saveBank()
+      }
     },
-    [dispatch, isEdit, bankFromApi]
+    [dispatch, isEdit, bankFromApi, company]
   )
+
+  useEffect(() => {
+    console.log(bankFromApi)
+    // bankFromApi.forEach((bank) => {
+    //   console.log(bank)
+    // })
+  }, [bankFromApi])
 
   const handleCancel = useCallback(
     () =>
@@ -189,7 +217,7 @@ const BankFormScreen = () => {
     )
 
     setCompany(res.data)
-    setValue('companyId', e.target.value)
+    setValue('companyCode', e.target.value)
     setValue('cnpj', res.data.cnpj)
   }
 
@@ -212,7 +240,7 @@ const BankFormScreen = () => {
           </Grid>
           <Grid item sm={12}>
             <Select
-              name='companyId'
+              name='companyCode'
               control={control}
               label={t('company name')}
               valueKey='establishmentDescription'
