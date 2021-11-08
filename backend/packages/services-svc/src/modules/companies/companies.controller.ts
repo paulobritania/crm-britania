@@ -7,7 +7,8 @@ import {
   Body,
   Put,
   Param,
-  Query
+  Query,
+  Delete
 } from '@nestjs/common'
 import {
   ApiTags,
@@ -29,8 +30,11 @@ import { PermissionsEnum } from '../../utils/enums/permissions.enum'
 import { PagedApiResponse } from '../../utils/pagination/pagedApiResponse.dto'
 import { PagedResult } from '../../utils/pagination/pagedResult.dto'
 import { CompaniesService } from './companies.service'
+import { CompaniesBankAccountDto } from './dtos/companiesBankAccount.dto'
+import { CompaniesBankAccountQueryDto } from './dtos/companiesBankAccountQuery.dto'
 import { CompanyDto } from './dtos/company.dto'
 import { CompanyQueryDto } from './dtos/companyQuery.dto'
+import { CompaniesBankAccount } from './entities/companiesBankAccount.entity'
 import { Company } from './entities/company.entity'
 
 @ApiTags('Companies')
@@ -38,7 +42,7 @@ import { Company } from './entities/company.entity'
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 @RequiredAccess(AccessesEnum.CADASTRO_EMPRESAS)
-@ApiExtraModels(PagedResult, CompanyDto)
+@ApiExtraModels(PagedResult, CompanyDto, CompaniesBankAccountDto)
 export class CompaniesController {
   constructor(
     @Inject('CompaniesService')
@@ -49,6 +53,12 @@ export class CompaniesController {
   @Get()
   findAll(@Query() query: CompanyQueryDto): Promise<PagedResult<CompanyDto>> {
     return this.companiesService.findAll(query)
+  }
+
+  @PagedApiResponse(CompaniesBankAccount, 'bank account list of companies')
+  @Get('/CompaniesBankAccount')
+  findCompaniesBankAccount(@Query() query: CompaniesBankAccountQueryDto): Promise<PagedResult<CompaniesBankAccountDto>> {
+    return this.companiesService.findCompaniesBankAccount(query)
   }
 
   @ApiOkResponse({
@@ -73,6 +83,19 @@ export class CompaniesController {
     return this.companiesService.create(data, userId)
   }
 
+
+  @ApiResponse({
+    type: Number
+  })
+  @RequiredPermission(PermissionsEnum.INCLUIR)
+  @Post('/CompaniesBankAccount')
+  async createCompanyBankAccount(
+    @Body() data: CompaniesBankAccountDto,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<CompaniesBankAccount> {
+    return this.companiesService.createCompanyBankAccount(data, userId)
+  }
+
   @ApiResponse({
     type: Number
   })
@@ -84,5 +107,31 @@ export class CompaniesController {
     @BritaniaAuth(['userId']) userId: number
   ): Promise<number> {
     return this.companiesService.update(data, id, userId)
+  }
+
+  @ApiResponse({
+    type: Number
+  })
+  @RequiredPermission(PermissionsEnum.EDITAR)
+  @Put('/CompanyBankAccount:id')
+  async updateCompanyBankAccount(
+    @Param('id') id: number,
+    @Body() data: CompaniesBankAccountDto,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<number> {
+    return this.companiesService.updateCompanyBankAccount(data, id, userId)
+  }
+
+  @ApiOkResponse({
+    description: 'bank account deleted successfully',
+    isArray: false
+  })
+  @RequiredPermission(PermissionsEnum.EXCLUIR)
+  @Delete('/CompanyBankAccount:id')
+  async delete(
+    @Param('id') id: number,
+    @BritaniaAuth(['userId']) userId: number
+  ): Promise<void> {
+    return this.companiesService.deleteCompanyBankAccount(id, userId)
   }
 }

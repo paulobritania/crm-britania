@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import officegen from 'officegen'
-import { Transaction } from 'sequelize'
+import { Transaction, QueryTypes } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
 import { Address } from '../address/entities/address.entity'
@@ -33,7 +33,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
 
 @Injectable()
 export class BuyersService {
-  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA;
+  private readonly clientHierarchy: string;
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
@@ -47,7 +47,9 @@ export class BuyersService {
     @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) {}
+  ) {
+    this.clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA
+  }
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -79,7 +81,7 @@ export class BuyersService {
         if (!hierarchy)
           throw new BadRequestException(
             `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
-              'não foi encontrada na hierarquia do cliente selecionado'
+            'não foi encontrada na hierarquia do cliente selecionado'
           )
         return hierarchy
       })
@@ -290,18 +292,23 @@ export class BuyersService {
             $like: `%${ query.name }%`
           }
         }),
+        ...(query.q && {
+          name: {
+            $like: `%${ query.q }%`
+          }
+        }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
-              clientTotvsCode: {
-                $like: `%${ query.clientTotvsCode }%`
-              }
+            clientTotvsCode: {
+              $like: `%${ query.clientTotvsCode }%`
             }
+          }
           : clientCodes.length && {
-              clientTotvsCode: {
-                $in: clientCodes
-              }
-            }),
+            clientTotvsCode: {
+              $in: clientCodes
+            }
+          }),
         ...(query.birthday && {
           birthday: {
             $like: `%${ query.birthday }%`
@@ -327,18 +334,13 @@ export class BuyersService {
             $like: `%${ query.imageId }%`
           }
         }),
-        // ...(query.responsibleCode && {
-        //   responsibleCode: {
-        //     $like: `%${ query.responsibleCode }%`
-        //   }
-        // }),
         ...(query.role && {
           role: {
             $like: `%${ query.role }%`
           }
         }),
         ...(query.telephone && {
-        telephone: {
+          telephone: {
             $like: `%${ query.telephone }%`
           }
         }),
@@ -349,9 +351,9 @@ export class BuyersService {
         }),
         ...(query.id && {
           id: {
-              $like: `%${ query.id }%`
-            }
-          })
+            $like: `%${ query.id }%`
+          }
+        })
       },
       attributes: [
         'id',
@@ -385,7 +387,7 @@ export class BuyersService {
         {
           model: this.buyerLineFamily,
           where: query.lineCodes && {
-            lineCode: query.lineCodes.split(',').map((code) => Number(code))
+            lineCode: { $in: query.lineCodes.split(',').map((code) => Number(code)) }
           },
           required: !!query.lineCodes,
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
@@ -571,14 +573,14 @@ export class BuyersService {
     )
   }
 
-    /**
-   * Irá retornar o comprador e suas relações
-   * @param buyerId number
-   * @param userId number
-   */
-     async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
-      const buyer = await Buyer.findByPk(buyerId, {
-        include:
+  /**
+ * Irá retornar o comprador e suas relações
+ * @param buyerId number
+ * @param userId number
+ */
+  async getBuyer(userId: number, buyerId: number): Promise<Buyer> {
+    const buyer = await Buyer.findByPk(buyerId, {
+      include:
         [
           {
             model: this.file,
@@ -599,18 +601,18 @@ export class BuyersService {
             required: false
           }
         ]
-      })
-      if (!buyer) return null
+    })
+    if (!buyer) return null
 
-      if (
-        !(await this.hierarchyService.checkIfUserHasAccessToAClient(
-          userId,
-          buyer.clientTotvsCode
-        ))
-      )
-        throw new ForbiddenException()
-      return buyer
-    }
+    if (
+      !(await this.hierarchyService.checkIfUserHasAccessToAClient(
+        userId,
+        buyer.clientTotvsCode
+      ))
+    )
+      throw new ForbiddenException()
+    return buyer
+  }
 
   /**
    * Irá gerar um relatório em formato xlsx de acordo com
@@ -619,44 +621,53 @@ export class BuyersService {
    * @param userId number
    */
   async generateReport(
-    query: FindAllBuyersQueryDto,
     userId: number,
-    res: Response
+    res: Response,
+    transaction?: Transaction
   ): Promise<void> {
-    const buyers:any = await this.getAllBuyers(query, userId)
-    const formatedBuyers = []
-    buyers.forEach((buyer) => {
-      buyers.buyerLinesFamilies.forEach(element => {
-        const newObject = {
-          name: buyer.name,
-          role: buyer.role,
-          line: element.lineDescription,
-          regionalManager: element.regionalManagerDescription,
-          responsible: buyer.responsibleDescription,
-          active: buyer.active ? 'Ativo' : 'Inativo'
-        }
-       formatedBuyers.push(newObject)
-      })
-    })
-    const xlsx = officegen('xlsx')
-    const sheet = xlsx.makeNewSheet()
-    sheet.name = 'Officegen Excel'
+    try{
+      const buyers = await this.db.query(
+        'SELECT * FROM vw_buyers_report',
+        { transaction, type: QueryTypes.SELECT }
+      )
 
-    sheet.data[0] = []
-    sheet.data[0][0] = 'NOME'
-    sheet.data[0][1] = 'MATRIZ/EMPRESA'
-    sheet.data[0][2] = 'LINHA'
-    sheet.data[0][3] = 'REGIONAL'
-    sheet.data[0][4] = 'RESPONSÁVEL'
-    sheet.data[0][5] = 'STATUS'
+      const xlsx = officegen('xlsx')
+      const sheet = xlsx.makeNewSheet()
+      sheet.name = 'Officegen Excel'
 
-    formatedBuyers.forEach((buyer, i) => {
-      i += 1
-      sheet.data[i] = []
-      Object.values(buyer).forEach((value, x) => {
-        sheet.data[i][x] = value
+      sheet.data[0] = []
+      sheet.data[0][0] = 'NOME COMPLETO'
+      sheet.data[0][1] = 'CPF'
+      sheet.data[0][2] = 'ENDERECO'
+      sheet.data[0][3] = 'TELEFONE'
+      sheet.data[0][4] = 'CARGO'
+      sheet.data[0][5] = 'CATEGORIA'
+      sheet.data[0][6] = 'E-MAIL'
+      sheet.data[0][7] = 'ANIVERSARIO'
+      sheet.data[0][8] = 'CODIGO DA MATRIZ'
+      sheet.data[0][9] = 'LINHA'
+      sheet.data[0][10] = 'FAMILIA'
+      sheet.data[0][11] = 'RESPONSAVEL'
+      sheet.data[0][12] = 'GERENTE REGIONAL'
+      sheet.data[0][13] = 'VOLTAGEM'
+      sheet.data[0][14] = 'STATUS'
+
+      buyers.forEach((buyer, i) => {
+        i += 1
+        sheet.data[i] = []
+        Object.values(buyer).forEach((value, x) => {
+          sheet.data[i][x] = value
+        })
       })
-    })
-    await xlsx.generate(res)
+      await xlsx.generate(res)
+
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+
+      throw new InternalServerErrorException(
+        'Ocorreu um erro ao gerar relatório'
+      )
+    }
+
   }
 }

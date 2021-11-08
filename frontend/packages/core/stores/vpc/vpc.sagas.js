@@ -1,9 +1,4 @@
-import {
-  put,
-  call,
-  all,
-  takeLatest
-} from 'redux-saga/effects'
+import { put, call, all, takeLatest } from 'redux-saga/effects'
 
 import doDownloadFile from 'js-file-download'
 
@@ -16,7 +11,7 @@ import {
 import { download } from '@britania-crm/services/apis/crmApi/resources/app.service'
 import {
   deleteFile,
-  uploadSingleFile
+  upload
 } from '@britania-crm/services/apis/crmApi/resources/file.service'
 import {
   postVpc,
@@ -25,27 +20,28 @@ import {
 } from '@britania-crm/services/apis/crmApi/resources/vpc.service'
 
 import { AppActions } from '../app/app.actions'
-import {
-  VpcTypes,
-  VpcActions
-} from './vpc.actions'
+import { VpcTypes, VpcActions } from './vpc.actions'
 
 const doUploadFileVpc = async (file, description) => {
   const formData = new FormData()
   formData.append('file', file)
-  const { id } = await uploadSingleFile(formData)
+  const { id } = await upload(formData)
 
   return { fileId: id, description }
 }
 
-function* saveVpc ({
-  vpc, startWorkflow, onSuccess = () => {}, onError = () => {}
+function* saveVpc({
+  vpc,
+  startWorkflow,
+  onSuccess = () => {},
+  onError = () => {}
 }) {
   try {
-    const infoFileUpload = yield all(map(
-      vpc.attachments,
-      (item) => call(doUploadFileVpc, item.file, item.description)
-    ))
+    const infoFileUpload = yield all(
+      map(vpc.attachments, (item) =>
+        call(doUploadFileVpc, item.file, item.description)
+      )
+    )
 
     const newVpc = {
       ...vpc,
@@ -61,24 +57,29 @@ function* saveVpc ({
     yield call(onSuccess)
     yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao cadastrar VPC.' }))
+    yield put(
+      AppActions.addAlert({ type: 'error', message: 'Falha ao cadastrar VPC.' })
+    )
     yield call(onError, error)
   }
 }
 
-function* editVpc ({
-  id, vpc, startWorkflow, onSuccess = () => {}, onError = () => {}
+function* editVpc({
+  id,
+  vpc,
+  startWorkflow,
+  onSuccess = () => {},
+  onError = () => {}
 }) {
   try {
-    const infoFileUpload = yield all(map(
-      vpc.attachments,
-      (item) => {
+    const infoFileUpload = yield all(
+      map(vpc.attachments, (item) => {
         if (item?.file instanceof File) {
           return call(doUploadFileVpc, item.file, item.description)
         }
         return item
-      }
-    ))
+      })
+    )
 
     const newVpc = {
       ...vpc,
@@ -94,20 +95,27 @@ function* editVpc ({
     yield call(onSuccess)
     yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao editar VPC.' }))
+    yield put(
+      AppActions.addAlert({ type: 'error', message: 'Falha ao editar VPC.' })
+    )
     yield call(onError, error)
   }
 }
 
-function* doStartWorkflowVpc ({ id }) {
+function* doStartWorkflowVpc({ id }) {
   try {
     yield call(startWorkflowVpc, id)
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao iniciar fluxo de tarefas do VPC atual.' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao iniciar fluxo de tarefas do VPC atual.'
+      })
+    )
   }
 }
 
-function* doDeleteFileVpc ({ data, onSuccess }) {
+function* doDeleteFileVpc({ data, onSuccess }) {
   try {
     yield call(deleteFile, data)
     yield call(onSuccess)
@@ -116,16 +124,19 @@ function* doDeleteFileVpc ({ data, onSuccess }) {
   }
 }
 
-function* doDowloadFileVpc ({
-  url, filename, onSuccess
-}) {
+function* doDowloadFileVpc({ url, filename, onSuccess }) {
   try {
     const response = yield call(download, encodeURIComponent(url))
 
     yield call(doDownloadFile, response, filename)
     yield call(onSuccess, false)
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao baixar arquivo!' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao baixar arquivo!'
+      })
+    )
   }
 }
 

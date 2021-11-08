@@ -1593,7 +1593,7 @@ export class WorkflowsService {
       if (error instanceof HttpException) throw error
 
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao inativar os fluxos de trabalho: ${ id.join(', ') }`
+        `Ocorreu um erro ao inativar os fluxos de trabalho: ${ id.join(', ') }`
       )
     }
   }

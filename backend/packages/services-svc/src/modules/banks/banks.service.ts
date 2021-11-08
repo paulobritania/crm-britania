@@ -20,10 +20,14 @@ export class BanksService {
       attributes: ['code', 'description'],
       where: {
         ...(query.description && {
-          $or: [
-            { description: { $like: `%${ query.description }%` } },
-            { code: { $like: `%${ query.description }%` } }
-          ]
+          description: {
+            $like: `%${ query.description }%`
+          }
+        }),
+        ...(query.code && {
+          code: {
+            $like: `%${ query.code }%`
+          }
         })
       },
       ...convertToFindOptions(query.page, query.pageSize)

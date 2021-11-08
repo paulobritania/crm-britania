@@ -1,8 +1,4 @@
-import {
-  put,
-  call,
-  takeLatest
-} from 'redux-saga/effects'
+import { put, call, takeLatest } from 'redux-saga/effects'
 
 import doDownloadFile from 'js-file-download'
 
@@ -18,39 +14,45 @@ import {
   saveDocuments,
   deleteDocument
 } from '@britania-crm/services/apis/crmApi/resources/fan.service'
-import { uploadSingleFile } from '@britania-crm/services/apis/crmApi/resources/file.service'
+import { upload } from '@britania-crm/services/apis/crmApi/resources/file.service'
 
 import { AppActions } from '../app/app.actions'
 import { FanTypes } from './fan.actions'
 
-function* doSaveFan ({
-  fan, onSuccess = () => {}, onError = () => {}
-}) {
+function* doSaveFan({ fan, onSuccess = () => {}, onError = () => {} }) {
   try {
     const response = yield call(saveFan, fan)
     yield call(onSuccess, response.data)
     yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
     yield call(onError, false)
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao cadastrar FAN.' }))
+    yield put(
+      AppActions.addAlert({ type: 'error', message: 'Falha ao cadastrar FAN.' })
+    )
   }
 }
 
-function* doConcludeFan ({
-  id, onSuccess = () => {}, onError = () => {}
-}) {
+function* doConcludeFan({ id, onSuccess = () => {}, onError = () => {} }) {
   try {
     yield call(concludeFan, id)
     yield call(onSuccess)
     yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
     yield call(onError, false)
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao iniciar fluxo de tarefa do FAN.' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao iniciar fluxo de tarefa do FAN.'
+      })
+    )
   }
 }
 
-function* doUpdateFan ({
-  id, params, onSuccess = () => {}, onError = () => {}
+function* doUpdateFan({
+  id,
+  params,
+  onSuccess = () => {},
+  onError = () => {}
 }) {
   try {
     yield call(putFan, id, params)
@@ -58,31 +60,40 @@ function* doUpdateFan ({
     yield put(AppActions.addAlert({ type: 'success', message: MSG003 }))
   } catch (error) {
     yield call(onError, false)
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao editar FAN.' }))
+    yield put(
+      AppActions.addAlert({ type: 'error', message: 'Falha ao editar FAN.' })
+    )
   }
 }
 
-function* doUploadFileFan ({
-  data, idFan, onSuccess
-}) {
+function* doUploadFileFan({ data, idFan, onSuccess }) {
   try {
     if (!data?.path) {
       const formData = new FormData()
       formData.append('file', data.file)
-      const response = yield call(uploadSingleFile, formData)
+      const response = yield call(upload, formData)
       yield call(onSuccess, {
-        ...data, ...response, fileId: response.id
+        ...data,
+        ...response,
+        fileId: response.id
       })
 
       yield call(saveDocuments, idFan, {
-        documents: [{
-          description: data.description,
-          fileId: response.id,
-          filename: data.filename
-        }]
+        documents: [
+          {
+            description: data.description,
+            fileId: response.id,
+            filename: data.filename
+          }
+        ]
       })
 
-      yield put(AppActions.addAlert({ type: 'success', message: 'Arquivo salvo com sucesso!' }))
+      yield put(
+        AppActions.addAlert({
+          type: 'success',
+          message: 'Arquivo salvo com sucesso!'
+        })
+      )
     } else {
       yield call(onSuccess, data)
     }
@@ -91,7 +102,7 @@ function* doUploadFileFan ({
   }
 }
 
-function* doDeleteFileFan ({ id, onSuccess }) {
+function* doDeleteFileFan({ id, onSuccess }) {
   try {
     yield call(deleteDocument, id)
     yield call(onSuccess)
@@ -100,13 +111,18 @@ function* doDeleteFileFan ({ id, onSuccess }) {
   }
 }
 
-function* doDowloadFileFan ({ url, filename }) {
+function* doDowloadFileFan({ url, filename }) {
   try {
     const response = yield call(download, encodeURIComponent(url))
 
     doDownloadFile(response, filename)
   } catch (error) {
-    yield put(AppActions.addAlert({ type: 'error', message: 'Falha ao baixar arquivo!' }))
+    yield put(
+      AppActions.addAlert({
+        type: 'error',
+        message: 'Falha ao baixar arquivo!'
+      })
+    )
   }
 }
 

@@ -2,36 +2,20 @@ import React, { useState, useCallback, useRef } from 'react'
 
 import PropTypes from 'prop-types'
 
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 
 import I18n, { useT } from '@britania-crm/i18n'
 import Button from '@britania-crm/web-components/Button'
 
-import useStyles, {
-  FilterWrapper,
-  FilterFooter,
-  AccordionHeader,
-  AccordionContainer,
-  AccordionSummary
-} from './styles'
+import useStyles from './styles'
 
-const PageFilter = ({ Form, handleFilter, filters }) => {
-  const t = useT()
-  const [expanded, setExpanded] = useState(false)
+const PageFilter = ({ Form, handleFilter, filters, clearSearch }) => {
   const formRef = useRef(null)
   const classes = useStyles()
 
-  const handleChange = useCallback(
-    () => setExpanded((expanded) => !expanded),
-    []
-  )
-
   const handleClearForm = useCallback(() => {
     formRef.current.reset()
+    clearSearch()
 
     setTimeout(() => {
       formRef.current.submit()
@@ -45,12 +29,7 @@ const PageFilter = ({ Form, handleFilter, filters }) => {
 
   return (
     <Grid item style={{ display: 'flex' }}>
-      <Form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        filterEmptyValues
-        filters={filters}
-      />
+      <Form ref={formRef} onSubmit={handleSubmit} filterEmptyValues />
       <I18n
         className={classes.buttonClear}
         as={Button}

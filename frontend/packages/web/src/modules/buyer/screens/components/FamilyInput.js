@@ -71,11 +71,10 @@ const FamilyInput = forwardRef((props, ref) => {
       detached
       valueKey='familyDescription'
       idKey='familyCode'
-      disabled={isEmpty(familiesFromApi[index])}
+      disabled={isEmpty(familiesFromApi[index]) || isView}
       value={linesBuyers[index].familyCode}
       onChange={(e) => handleLineChange(index, e, formRef)}
       name='family'
-      label={t('family', { howMany: 1 })}
       id='select-family'
       required
       loading={familiesFromApiLoading}

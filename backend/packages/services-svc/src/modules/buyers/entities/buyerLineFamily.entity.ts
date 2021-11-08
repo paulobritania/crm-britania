@@ -13,10 +13,8 @@ import { Buyer } from './buyer.entity'
   tableName: 'buyers_lines_families',
   underscored: true,
   version: false,
-  timestamps: true,
-  paranoid: false,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  timestamps: false,
+  paranoid: false
 })
 export class BuyerLineFamily extends Model<BuyerLineFamily> {
   @Column({
