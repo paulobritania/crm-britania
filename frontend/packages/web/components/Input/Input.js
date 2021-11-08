@@ -1,22 +1,34 @@
 import React from 'react'
-
 import PropTypes from 'prop-types'
 
+import { TextField, InputLabel } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
-
-import { TextField } from '@material-ui/core'
 
 import { Controller } from 'react-hook-form'
 
 import MaskedInput from 'react-input-mask'
 import cpfCnpjMask from '@britania-crm/forms/masks/cpfCnpj.mask'
 
-import { theme as MuiTheme, InputLabelStyled } from './styles'
+import { theme } from './styles'
 
-const Input = ({ name, control, label, variant, theme, mask, mode }) => {
+const Input = ({
+  name,
+  control,
+  label,
+  variant,
+  mask,
+  mode,
+  readonly,
+  rows,
+  multiline,
+  placeholder,
+  maxLenght
+}) => {
   return (
-    <ThemeProvider theme={MuiTheme(theme)}>
-      <InputLabelStyled>{label}</InputLabelStyled>
+    <>
+      <InputLabel style={{ margin: '5px auto', color: '#1F2D3D' }}>
+        {label}
+      </InputLabel>
       <Controller
         name={name}
         control={control}
@@ -26,16 +38,21 @@ const Input = ({ name, control, label, variant, theme, mask, mode }) => {
           formState
         }) =>
           !mask ? (
-            <TextField
-              helperText={error ? error.message : null}
-              size='small'
-              error={!!error}
-              onChange={onChange}
-              value={value}
-              fullWidth
-              label={label}
-              variant='outlined'
-            />
+            <ThemeProvider theme={theme}>
+              <TextField
+                helperText={error ? error.message : null}
+                size='small'
+                error={!!error}
+                onChange={onChange}
+                value={value}
+                fullWidth
+                variant={variant}
+                inputProps={{ readOnly: readonly, maxLength: maxLenght }}
+                placeholder={placeholder}
+                multiline={multiline}
+                rows={rows}
+              />
+            </ThemeProvider>
           ) : (
             <MaskedInput
               mask={cpfCnpjMask('', { mode })}
@@ -48,30 +65,15 @@ const Input = ({ name, control, label, variant, theme, mask, mode }) => {
                 size='small'
                 error={!!error}
                 fullWidth
-                label={label}
-                variant='outlined'
+                variant={variant}
+                inputProps={{ readOnly: readonly }}
+                placeholder={placeholder}
               />
             </MaskedInput>
           )
         }
       />
-      {/* {!mask ? (
-      <MuiTextFieldStyled
-        {...rest}
-        disabled={disabled}
-        multiline={multiline}
-        variant={variant}
-      />
-    ) : (
-      <MaskedInput
-        mask={cpfCnpjMask('', { mode })}
-        disabled={disabled}
-        variant={variant}
-      >
-        <MuiTextFieldStyled name={name} {...rest} multiline={multiline} />
-      </MaskedInput>
-    )} */}
-    </ThemeProvider>
+    </>
   )
 }
 
@@ -81,7 +83,8 @@ Input.propTypes = {
   label: PropTypes.string,
   variant: PropTypes.string,
   mask: PropTypes.bool,
-  mode: PropTypes.string
+  mode: PropTypes.string,
+  multiline: PropTypes.bool
 }
 
 Input.defaultProps = {
@@ -89,7 +92,8 @@ Input.defaultProps = {
   label: '',
   variant: 'outlined',
   mask: false,
-  mode: 'both'
+  mode: 'both',
+  multiline: false
 }
 
 export default Input

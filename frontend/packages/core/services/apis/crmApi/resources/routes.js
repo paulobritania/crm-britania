@@ -113,7 +113,10 @@ export const buyers = {
   download: '/services/buyers/report'
 }
 
-export const establishments = { getAll: '/services/establishments' }
+export const establishments = {
+  getAll: '/services/establishments',
+  getOne: '/services/establishments'
+}
 
 export const lines = {
   getAll: '/services/lines',

@@ -7,20 +7,20 @@ export const ContainerActions = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  
+
   button {
     margin-right: 26px;
     padding: 0;
 
     &:last-child {
       margin-right: 0;
-    } 
-  } 
+    }
+  }
 `
 export const ActionIconButton = styled(IconButton)`
   &.MuiIconButton-root {
-    color: ${ colors.primary.text };
-    
+    color: ${colors.primary.text};
+
     &:hover {
       background-color: transparent;
     }

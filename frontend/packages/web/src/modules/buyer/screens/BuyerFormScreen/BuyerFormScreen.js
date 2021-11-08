@@ -5,9 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import trimMask from '@meta-awesome/functions/src/trimMask'
 import { Scope } from '@unform/core'
 
-import debounce from 'lodash/debounce'
-import isEmpty from 'lodash/isEmpty'
-import upperCase from 'lodash/upperCase'
+import { debounce, isEmpty, upperCase } from 'lodash'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'

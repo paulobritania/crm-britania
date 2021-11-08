@@ -4,18 +4,17 @@ import PropTypes from 'prop-types'
 
 import { isEmpty, map } from 'lodash'
 
-import { ThemeProvider } from '@material-ui/core/styles'
-
-import { MenuItem } from '@material-ui/core'
 import { Controller } from 'react-hook-form'
+import {
+  CircularProgress,
+  InputAdornment,
+  MenuItem,
+  InputLabel
+} from '@material-ui/core'
 
 import { areEqual } from '@britania-crm/utils/memo'
 
-import useStyles, {
-  InputLabelStyled,
-  theme as MuiTheme,
-  TextFieldStyled
-} from './styles'
+import useStyles, { TextFieldStyled } from './styles'
 
 const InputSelectStyled = ({
   name,
@@ -25,8 +24,10 @@ const InputSelectStyled = ({
   valueKey,
   options,
   variant,
-  theme,
-  placeholder
+  loading,
+  clearable,
+  value,
+  customChange
 }) => {
   const classes = useStyles()
 
@@ -56,17 +57,51 @@ const InputSelectStyled = ({
     })
   }, [options, idKey, valueKey, classes])
 
+  const EndAdornment = useMemo(
+    () =>
+      (loading || clearable) && (
+        <>
+          <InputAdornment style={{ marginRight: 12 }} position='end'>
+            {clearable && value && <CloseIconButton size='small' />}
+            {loading && (
+              <CircularProgress disableShrink color='inherit' size={20} />
+            )}
+          </InputAdornment>
+        </>
+      ),
+    [clearable, loading, value]
+  )
+
   return (
-    <ThemeProvider theme={MuiTheme(theme)}>
-      <InputLabelStyled>{label}</InputLabelStyled>
+    <>
+      <InputLabel style={{ margin: '5px auto', color: '#1F2D3D' }}>
+        {label}
+      </InputLabel>
       <Controller
         render={({ field: { onChange, value } }) => (
           <TextFieldStyled
-            onChange={onChange}
+            onChange={customChange || onChange}
             value={value}
             variant={variant}
             select
-            placeholder={placeholder}
+            disabled={loading}
+            InputProps={{
+              endAdornment: EndAdornment
+            }}
+            SelectProps={{
+              MenuProps: {
+                style: { height: 300 },
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left'
+                },
+                getContentAnchorEl: null
+              }
+            }}
           >
             {renderedOptions}
           </TextFieldStyled>
@@ -74,7 +109,7 @@ const InputSelectStyled = ({
         control={control}
         name={name}
       />
-    </ThemeProvider>
+    </>
   )
 }
 
@@ -86,7 +121,10 @@ InputSelectStyled.propTypes = {
   valueKey: PropTypes.string,
   options: PropTypes.array,
   variant: PropTypes.string,
-  setValue: PropTypes.any
+  setValue: PropTypes.any,
+  loading: PropTypes.bool,
+  clearable: PropTypes.bool,
+  customChange: PropTypes.func
 }
 
 InputSelectStyled.defaultProps = {
@@ -95,7 +133,10 @@ InputSelectStyled.defaultProps = {
   idKey: '',
   valueKey: '',
   options: [],
-  variant: 'outlined'
+  variant: 'outlined',
+  loading: false,
+  clearable: false,
+  customChange: null
 }
 
 export default memo(InputSelectStyled, areEqual)

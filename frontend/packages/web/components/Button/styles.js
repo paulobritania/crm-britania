@@ -10,16 +10,16 @@ export default makeStyles({
   textSizeSmall: { padding: '3px 9px' },
   textPrimary: {
     color: colors.primary.main,
+    textDecoration: 'underline',
     '&:hover': {
-      backgroundColor: hexToRgba(colors.primary.main, 0.05),
-      border: `1px solid ${colors.primary.main}`
+      textDecoration: 'underline'
     }
   },
   textSecondary: {
     color: colors.secondary.main,
+    textDecoration: 'underline',
     '&:hover': {
-      backgroundColor: hexToRgba(colors.secondary.main, 0.05),
-      border: `1px solid ${colors.secondary.main}`
+      textDecoration: 'underline'
     }
   },
   textSuccess: {

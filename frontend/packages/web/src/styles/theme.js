@@ -27,9 +27,9 @@ export default createMuiTheme({
     // defined default CSS for Material UI components
     MuiButton: {
       root: {
-        borderRadius: 40,
+        borderRadius: 3,
         fontSize: 16,
-        height: 41,
+        height: 40,
         textTransform: 'none',
         '&:hover': { backgroundColor: 'none' }
       },
@@ -57,10 +57,10 @@ export default createMuiTheme({
       // Name of the rule
       root: {
         height: 40,
-        borderTopColor: 'transparent',
+        border: '1px solid #8492a6',
         borderRadius: 3,
         backgroundColor: colors.white2,
-        '& input': { fontSize: 16 },
+        '& input': { fontSize: 14 },
         '& fieldset': { borderColor: 'transparent' }
       }
     },
