@@ -66,32 +66,32 @@ export class CompaniesService {
         where: {
           ...(query.id && {
             id: {
-              $like: `%${query.id}%`
+              $like: `%${ query.id }%`
             }
           }),
           ...(query.companyId && {
             companyId: {
-              $like: `%${query.companyId}%`
+              $like: `%${ query.companyId }%`
             }
           }),
           ...(query.bankCode && {
             bankCode: {
-              $like: `%${query.bankCode}%`
+              $like: `%${ query.bankCode }%`
             }
           }),
           ...(query.agency && {
             agency: {
-              $like: `%${query.agency}%`
+              $like: `%${ query.agency }%`
             }
           }),
           ...(query.account && {
             account: {
-              $like: `%${query.account}%`
+              $like: `%${ query.account }%`
             }
           }),
           ...(query.note && {
             note: {
-              $like: `%${query.note}%`
+              $like: `%${ query.note }%`
             }
           })
         },
@@ -107,7 +107,7 @@ export class CompaniesService {
       })
     } catch (error) {
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao cadastrar empresa: \n${error}`
+        `Ocorreu um arro ao cadastrar empresa: \n${ error }`
       )
     }
 
@@ -160,7 +160,7 @@ export class CompaniesService {
     } catch (error) {
       await transaction.rollback()
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao cadastrar empresa${error}`
+        `Ocorreu um arro ao cadastrar empresa${ error }`
       )
     }
   }
@@ -195,7 +195,7 @@ export class CompaniesService {
     } catch (error) {
       await transaction.rollback()
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao cadastrar empresa: ${error}`
+        `Ocorreu um arro ao cadastrar empresa: ${ error }`
       )
     }
   }
@@ -271,7 +271,7 @@ export class CompaniesService {
       if (error instanceof HttpException) throw error
 
       throw new InternalServerErrorException(
-        `Ocorreu um erro ao atualizar a conta: ${error}`
+        `Ocorreu um erro ao atualizar a conta: ${ error }`
       )
     }
   }

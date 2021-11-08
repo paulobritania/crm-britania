@@ -78,8 +78,9 @@ export class CompaniesController {
   })
   @Get('/company-bank-account/:id')
   findOneBankAccount(@Param('id') id: number): Promise<CompaniesBankAccountDto>{
-    return this.companiesService.findOneBankAccount(id);
+    return this.companiesService.findOneBankAccount(id)
   }
+
   @ApiResponse({
     type: Number
   })
