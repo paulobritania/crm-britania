@@ -66,32 +66,32 @@ export class CompaniesService {
         where: {
           ...(query.id && {
             id: {
-              $like: `%${ query.id }%`
+              $like: `%${query.id}%`
             }
           }),
           ...(query.companyId && {
             companyId: {
-              $like: `%${ query.companyId }%`
+              $like: `%${query.companyId}%`
             }
           }),
           ...(query.bankCode && {
             bankCode: {
-              $like: `%${ query.bankCode }%`
+              $like: `%${query.bankCode}%`
             }
           }),
           ...(query.agency && {
             agency: {
-              $like: `%${ query.agency }%`
+              $like: `%${query.agency}%`
             }
           }),
           ...(query.account && {
             account: {
-              $like: `%${ query.account }%`
+              $like: `%${query.account}%`
             }
           }),
           ...(query.note && {
             note: {
-              $like: `%${ query.note }%`
+              $like: `%${query.note}%`
             }
           })
         },
@@ -115,17 +115,24 @@ export class CompaniesService {
   }
 
   /**
+   * Busca uma conta bancaria específica
+   * @param id number
+   * @returns CompaniesBankAccount
+   */
+  async findOneBankAccount(id: number): Promise<CompaniesBankAccountDto> {
+    return this.companyBankAccountModel.findByPk(id, {
+      attributes: ['id', 'companyId', 'bankCode', 'agency', 'account', 'note']
+    })
+  }
+
+  /**
    * Busca uma empresa específica
    * @param id number
    * @returns Company
    */
   async findOne(id: number): Promise<CompanyDto> {
     return this.companyModel.findByPk(id, {
-      attributes: [
-        'id',
-        'name',
-        'cnpj'
-      ]
+      attributes: ['id', 'name', 'cnpj']
     })
   }
 
@@ -155,41 +162,45 @@ export class CompaniesService {
       if (error instanceof HttpException) throw error
 
       throw new InternalServerErrorException(
-        `Ocorreu um arro ao cadastrar empresa${  error }`
+        `Ocorreu um arro ao cadastrar empresa${error}`
       )
     }
   }
 
-
-    /**
+  /**
    * Cria uma conta bancaria da empresa e a retorna
    * @param data CompaniesBankAccountDto
    * @param userId number
    * @returns CompaniesBankAccount
    */
-     async createCompanyBankAccount(data: CompaniesBankAccountDto, userId: number): Promise<CompaniesBankAccount> {
-      const transaction = await this.db.transaction()
+  async createCompanyBankAccount(
+    data: CompaniesBankAccountDto,
+    userId: number
+  ): Promise<CompaniesBankAccount> {
+    const transaction = await this.db.transaction()
 
-      const companyBankAccountData = {
-        ...data,
-        createdBy: userId,
-        updatedBy: null
-      }
-      try {
-
-        const company = await this.companyBankAccountModel.create(companyBankAccountData, {
-          transaction
-        })
-
-        await transaction.commit()
-        return company
-      } catch (error) {
-        await transaction.rollback()
-        throw new InternalServerErrorException(
-          `Ocorreu um arro ao cadastrar empresa: ${ error }`
-        )
-      }
+    const companyBankAccountData = {
+      ...data,
+      createdBy: userId,
+      updatedBy: null
     }
+    try {
+      const company = await this.companyBankAccountModel.create(
+        companyBankAccountData,
+        {
+          transaction
+        }
+      )
+
+      await transaction.commit()
+      return company
+    } catch (error) {
+      await transaction.rollback()
+      throw new InternalServerErrorException(
+        `Ocorreu um arro ao cadastrar empresa: ${error}`
+      )
+    }
+  }
 
   /**
    * Atualiza uma empresa existente
@@ -225,41 +236,49 @@ export class CompaniesService {
     }
   }
 
-    /**
+  /**
    * Atualiza uma conta existente
    * @param data CompaniesBankAccountDto
    * @param id number
    * @param userId number
    */
-     async updateCompanyBankAccount(data: CompaniesBankAccountDto, id: number, userId: number): Promise<number> {
-      const transaction = await this.db.transaction()
+  async updateCompanyBankAccount(
+    data: CompaniesBankAccountDto,
+    id: number,
+    userId: number
+  ): Promise<number> {
+    const transaction = await this.db.transaction()
 
-      try {
-        const companyBankAccount = await this.companyBankAccountModel.findByPk(id)
+    try {
+      const companyBankAccount = await this.companyBankAccountModel.findByPk(id)
 
-        if (!companyBankAccount) throw new BadRequestException('conta não encontrada')
+      if (!companyBankAccount)
+        throw new BadRequestException('conta não encontrada')
 
-        const companyBankAccountData = {
-          ...data,
-          updatedBy: userId
-        }
-
-        await companyBankAccount.update({ ...companyBankAccountData }, { transaction })
-
-        await transaction.commit()
-
-        return companyBankAccount.id
-      } catch (error) {
-        await transaction.rollback()
-        if (error instanceof HttpException) throw error
-
-        throw new InternalServerErrorException(
-          `Ocorreu um erro ao atualizar a conta: ${  error }`
-        )
+      const companyBankAccountData = {
+        ...data,
+        updatedBy: userId
       }
-    }
 
-      /**
+      await companyBankAccount.update(
+        { ...companyBankAccountData },
+        { transaction }
+      )
+
+      await transaction.commit()
+
+      return companyBankAccount.id
+    } catch (error) {
+      await transaction.rollback()
+      if (error instanceof HttpException) throw error
+
+      throw new InternalServerErrorException(
+        `Ocorreu um erro ao atualizar a conta: ${error}`
+      )
+    }
+  }
+
+  /**
    * Exclui uma conta bancaria
    * @param id number
    * @param userId number
