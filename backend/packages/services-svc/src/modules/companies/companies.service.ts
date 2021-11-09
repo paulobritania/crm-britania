@@ -191,6 +191,12 @@ export class CompaniesService {
       )
 
       await transaction.commit()
+      const log = {
+        oldData: company.get({ plain: true }),
+        userId,
+        httpVerb: 'update',
+        table: 'companies_bank_account'
+      }
       return company
     } catch (error) {
       await transaction.rollback()
@@ -264,7 +270,12 @@ export class CompaniesService {
       )
 
       await transaction.commit()
-
+      const log = {
+        oldData: companyBankAccount.get({ plain: true }),
+        userId,
+        httpVerb: 'update',
+        table: 'companies_bank_account'
+      }
       return companyBankAccount.id
     } catch (error) {
       await transaction.rollback()
