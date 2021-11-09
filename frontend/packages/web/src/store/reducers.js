@@ -7,6 +7,7 @@ import access from '@britania-crm/stores/access/access.reducer'
 import app from '@britania-crm/stores/app/app.reducer'
 import auth from '@britania-crm/stores/auth/auth.reducer'
 import buyer from '@britania-crm/stores/buyer/buyer.reducer'
+import companies from '@britania-crm/stores/companies/companies.reducer'
 import customer from '@britania-crm/stores/customer/customer.reducer'
 import documents from '@britania-crm/stores/documents/documents.reducer'
 import fans from '@britania-crm/stores/fan/fan.reducer'
@@ -68,6 +69,11 @@ const buyerPersistConfig = {
   storage
 }
 
+const companiesPersistConfig = {
+  key: 'companies',
+  storage
+}
+
 const customerPersistConfig = {
   key: 'customer',
   storage
@@ -98,6 +104,7 @@ const rootReducer = combineReducers({
   workflow: persistReducer(workflowPersistConfig, workflow),
   access: persistReducer(accessPersistConfig, access),
   buyer: persistReducer(buyerPersistConfig, buyer),
+  companies: persistReducer(companiesPersistConfig, companies),
   customer: persistReducer(customerPersistConfig, customer),
   representative: persistReducer(representativePersistConfig, representative),
   documents: persistReducer(documentsPersistConfig, documents),

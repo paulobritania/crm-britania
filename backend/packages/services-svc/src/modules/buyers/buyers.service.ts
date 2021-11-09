@@ -33,7 +33,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
 
 @Injectable()
 export class BuyersService {
-  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA;
+  private readonly clientHierarchy: string;
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
@@ -47,7 +47,9 @@ export class BuyersService {
     @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) { }
+  ) {
+    this.clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA
+  }
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -78,7 +80,7 @@ export class BuyersService {
         })
         if (!hierarchy)
           throw new BadRequestException(
-            `A relação entre a linha ${lineFamily.lineDescription} e a família ${lineFamily.familyDescription} ` +
+            `A relação entre a linha ${ lineFamily.lineDescription } e a família ${ lineFamily.familyDescription } ` +
             'não foi encontrada na hierarquia do cliente selecionado'
           )
         return hierarchy
@@ -287,19 +289,19 @@ export class BuyersService {
       where: {
         ...(query.name && {
           name: {
-            $like: `%${query.name}%`
+            $like: `%${ query.name }%`
           }
         }),
         ...(query.q && {
           name: {
-            $like: `%${query.q}%`
+            $like: `%${ query.q }%`
           }
         }),
         ...(query.active && { active: query.active }),
         ...(query.clientTotvsCode
           ? {
             clientTotvsCode: {
-              $like: `%${query.clientTotvsCode}%`
+              $like: `%${ query.clientTotvsCode }%`
             }
           }
           : clientCodes.length && {
@@ -309,47 +311,47 @@ export class BuyersService {
           }),
         ...(query.birthday && {
           birthday: {
-            $like: `%${query.birthday}%`
+            $like: `%${ query.birthday }%`
           }
         }),
         ...(query.category && {
           category: {
-            $like: `%${query.category}%`
+            $like: `%${ query.category }%`
           }
         }),
         ...(query.cpf && {
           cpf: {
-            $like: `%${query.cpf}%`
+            $like: `%${ query.cpf }%`
           }
         }),
         ...(query.email && {
           email: {
-            $like: `%${query.email}%`
+            $like: `%${ query.email }%`
           }
         }),
         ...(query.imageId && {
           imageId: {
-            $like: `%${query.imageId}%`
+            $like: `%${ query.imageId }%`
           }
         }),
         ...(query.role && {
           role: {
-            $like: `%${query.role}%`
+            $like: `%${ query.role }%`
           }
         }),
         ...(query.telephone && {
           telephone: {
-            $like: `%${query.telephone}%`
+            $like: `%${ query.telephone }%`
           }
         }),
         ...(query.voltage && {
           voltage: {
-            $like: `%${query.voltage}%`
+            $like: `%${ query.voltage }%`
           }
         }),
         ...(query.id && {
           id: {
-            $like: `%${query.id}%`
+            $like: `%${ query.id }%`
           }
         })
       },
@@ -391,7 +393,7 @@ export class BuyersService {
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
-      order: [['id', 'DESC']],
+      order: [['id', 'DESC']]
     })
 
     return buyers

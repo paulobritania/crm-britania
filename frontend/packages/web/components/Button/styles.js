@@ -10,16 +10,16 @@ export default makeStyles({
   textSizeSmall: { padding: '3px 9px' },
   textPrimary: {
     color: colors.primary.main,
+    textDecoration: 'underline',
     '&:hover': {
-      backgroundColor: hexToRgba(colors.primary.main, 0.05),
-      border: `1px solid ${colors.primary.main}`
+      textDecoration: 'underline'
     }
   },
   textSecondary: {
     color: colors.secondary.main,
+    textDecoration: 'underline',
     '&:hover': {
-      backgroundColor: hexToRgba(colors.secondary.main, 0.05),
-      border: `1px solid ${colors.secondary.main}`
+      textDecoration: 'underline'
     }
   },
   textSuccess: {
@@ -59,13 +59,13 @@ export default makeStyles({
   },
 
   outlinedPrimary: {
-    borderColor: colors.primaryNew.main,
-    color: colors.primaryNew.main,
-    '&:hover': { backgroundColor: hexToRgba(colors.primaryNew.main, 0.05) }
+    borderColor: colors.primary.main,
+    color: colors.primary.main,
+    '&:hover': { backgroundColor: hexToRgba(colors.primary.main, 0.05) }
   },
   outlinedSecondary: {
-    borderColor: colors.secondaryNew.main,
-    color: colors.secondaryNew.main,
+    borderColor: colors.secondary.main,
+    color: colors.secondary.main,
     '&:hover': { backgroundColor: hexToRgba(colors.secondary.main, 0.05) }
   },
   outlinedSuccess: {
@@ -95,7 +95,7 @@ export default makeStyles({
   },
 
   containedPrimary: {
-    backgroundColor: colors.primaryNew.main,
+    backgroundColor: colors.primary.main,
     '&:hover': { backgroundColor: colors.primary.dark }
   },
   containedSecondary: {

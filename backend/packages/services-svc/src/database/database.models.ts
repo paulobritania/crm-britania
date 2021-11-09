@@ -9,6 +9,7 @@ import { ClientRankingIndicator } from '../modules/clientRankings/entities/clien
 import { Ranking } from '../modules/clientRankings/entities/ranking.entity'
 import { RankingIndicator } from '../modules/clientRankings/entities/rankingIndicator.entity'
 import { RankingIndicatorValue } from '../modules/clientRankings/entities/rankingIndicatorValue.entity'
+import { CompaniesBankAccount } from '../modules/companies/entities/companiesBankAccount.entity'
 import { Company } from '../modules/companies/entities/company.entity'
 import { Document } from '../modules/configurations/entities/document.entity'
 import { Field } from '../modules/fields/entities/field.entity'
@@ -96,6 +97,7 @@ export const DatabaseModelList = [
   RankingIndicator,
   RankingIndicatorValue,
   Company,
+  CompaniesBankAccount,
   Document,
   Field,
   File,

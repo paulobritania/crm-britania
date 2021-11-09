@@ -19,8 +19,11 @@
     "@britania-crm/styles": "^0.0.0",
     "@britania-crm/utils": "^0.0.0",
     "@britania-crm/web-components": "^0.0.0",
+    "@hookform/resolvers": "^2.8.3",
     "formik": "^2.2.6",
+    "react-hook-form": "^7.18.1",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "yup": "^0.32.11"
   }
 }

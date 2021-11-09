@@ -1,21 +1,18 @@
-import {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback
-} from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 
 import useSWR from 'swr'
 
 import isEmpty from 'lodash/isEmpty'
 
 const useFetch = (axiosInstance, url = '', axiosParams, swrConfigs) => {
-  const {
-    data, error, mutate, isValidating
-  } = useSWR(url, async (path) => {
-    const response = await axiosInstance.get(path, axiosParams)
-    return response.data
-  }, swrConfigs)
+  const { data, error, mutate, isValidating } = useSWR(
+    url,
+    async (path) => {
+      const response = await axiosInstance.get(path, axiosParams)
+      return response.data
+    },
+    swrConfigs
+  )
 
   const [loading, setLoading] = useState(false)
 
@@ -38,16 +35,13 @@ const useFetch = (axiosInstance, url = '', axiosParams, swrConfigs) => {
     [data, error, isValidating, loading, refresh]
   )
 
-  useEffect(
-    () => {
-      if (isEmpty(data) && isValidating) {
-        setLoading(true)
-      } else if (!isValidating) {
-        setLoading(false)
-      }
-    },
-    [data, isValidating]
-  )
+  useEffect(() => {
+    if (isEmpty(data) && isValidating) {
+      setLoading(true)
+    } else if (!isValidating) {
+      setLoading(false)
+    }
+  }, [data, isValidating])
 
   return state
 }

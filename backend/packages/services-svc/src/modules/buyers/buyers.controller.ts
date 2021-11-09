@@ -23,7 +23,6 @@ import { FindMatrixDto } from './dto/find/findMatrixQuery.dto'
 import { FindMatrixReturnDto } from './dto/find/findMatrixReturn.dto'
 import { UpdateBuyerDto } from './dto/update/updateBuyer.dto'
 import { Buyer } from './entities/buyer.entity'
-import { Transaction } from 'sequelize'
 
 @ApiTags('Buyers')
 @UseGuards(JwtAuthGuard)

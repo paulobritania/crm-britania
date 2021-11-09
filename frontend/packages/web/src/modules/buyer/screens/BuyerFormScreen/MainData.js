@@ -159,6 +159,7 @@ const MainData = ({
             label={t('matrix code', { abbreviation: false })}
             disabled={isEdit || isDisabled}
             onValueChange={(e) => setNameMatrix(e)}
+            maxLength="9"
           />
         </Grid>
         <Grid item sm={12} md={6}>
@@ -171,6 +172,7 @@ const MainData = ({
             label={t('matrix', { howMany: 1 })}
             disabled={isEdit || isDisabled}
             onValueChange={(e) => setCodeMatrix(e)}
+            maxLength="84"
           />
         </Grid>
         <Grid item sm={12} md={3}>
@@ -182,55 +184,63 @@ const MainData = ({
           />
         </Grid>
         <Grid item sm={12} md={9} className={classes.containerTable}>
-          <Grid item sm={11}>
-            <ul className={classes.tableHeader}>
-              <li>{t('line', { howMany: 1 })}</li>
-              <li>{t('family', { howMany: 1 })}</li>
-              <li>{t('responsible', { howMany: 1 })}</li>
-              <li>{t('regional manager')}</li>
-            </ul>
-          </Grid>
-          <Grid item sm={12} className={classes.table}>
-            {linesBuyers.map((lines, idx) => (
-              <Grid item key={idx} className={classes.flexContainer}>
-                <Grid item sm={3}>
-                  <LineInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    isView={isView}
-                    formRef={formRef}
-                  />
-                </Grid>
-                <Grid item sm={3}>
-                  <FamilyInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    isView={isView}
-                    formRef={formRef}
-                  />
-                </Grid>
-                <Grid item sm={3}>
-                  <ResponsibleInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    formRef={formRef}
-                    isView={isView}
-                  />
-                </Grid>
-                <Grid item sm={3}>
-                  <RegionalInput
-                    index={idx}
-                    matrixCode={matrixCode}
-                    formRef={formRef}
-                    isView={isView}
-                  />
-                </Grid>
-                <Button variant='text' onClick={() => handleRemoveLine(idx)}>
-                  X
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
+          <table style={{ width: '100%'}}>
+            <thead>
+              <tr className={classes.titleTable}>
+                <th style={{textAlign: 'center', paddingTop: '10px'}}>Linha</th>
+                <th style={{textAlign: 'center', paddingTop: '10px'}}>Família</th>
+                <th style={{textAlign: 'center', paddingTop: '10px'}}>Responsável</th>
+                <th style={{textAlign: 'center', paddingTop: '10px'}}>Regional</th>
+              </tr>
+            </thead>
+            <tbody>
+              {linesBuyers.map((lines, idx) => (
+                <tr style={{}} key={idx}>
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                    <LineInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      isView={isView}
+                      formRef={formRef}
+                    />
+                  </td>
+
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                    <FamilyInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      isView={isView}
+                      formRef={formRef}
+                    />
+                  </td>
+
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                    <ResponsibleInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      formRef={formRef}
+                      isView={isView}
+                    />
+                  </td>
+
+                  <td style={{paddingTop: '10px', maxWidth: '100px'}}>
+                    <RegionalInput
+                      index={idx}
+                      matrixCode={matrixCode}
+                      formRef={formRef}
+                      isView={isView}
+                    />
+                  </td>
+
+                  <td>
+                    <Button variant='text' onClick={() => handleRemoveLine(idx)}>
+                      X
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Grid>
         <InputHidden name='linesFamilies' />
         <Grid item sm={12} md={3} className={classes.containerRadio}>
@@ -253,7 +263,7 @@ const MainData = ({
             Nova Linha
           </IconButton>
         </Grid>
-      </Grid>
+      </Grid >
     </>
   )
 }

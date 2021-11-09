@@ -66,7 +66,7 @@ export const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
     color: colors.grey20
   },
-  tableHeader: {
+  tableHeaderLine: {
     display: 'flex',
     fontFamily: fonts.fontOpenSans[0].fontFamily,
     fontWeight: fonts.fontWeight.bold,
@@ -78,7 +78,8 @@ export const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     '& > li': {
       display: 'inline',
-      float: 'left'
+      float: 'left',
+      fontFamily: fonts.fontOpenSans[0].fontFamily,
     }
   },
   labelStatus: { fontSize: '0.75em' },
@@ -87,7 +88,7 @@ export const useStyles = makeStyles(() => ({
     display: 'flex'
   },
   checkbox: { width: '20%' },
-  flexContainer: { display: 'flex' },
+  flexContainer: { display: 'flex', maxWidth: 1000 },
   upload: {
     backgroundColor: '#F9FAFC',
     textAlign: 'center',
@@ -126,5 +127,15 @@ export const useStyles = makeStyles(() => ({
   lgpdText: {
     fontSize: fonts.fontSize.SSB,
     fontWeight: fonts.fontWeight.regular
+  },
+  titleTable: {
+    fontFamily: fonts.fontFaceMavenPro[0].fontFamily,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    color: '#8492A6'
   }
 }))

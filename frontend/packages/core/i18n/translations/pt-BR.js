@@ -66,7 +66,9 @@ export default {
   administrative: 'Administrativo',
   customer: '{howMany, plural, one {Cliente} other {Clientes}}',
   clean: 'Limpar',
+  cleanForm: 'Limpar Formulário',
   cancel: 'Cancelar',
+  cancelRegister: 'Cancelar Cadastro',
   confirm: 'Confirmar',
   save: 'Salvar',
   filter: 'Filtrar',
@@ -112,7 +114,9 @@ export default {
     '{abbreviation, select , true {Dias sem fat.} false {Dias sem faturamento}}',
   'companys branch': 'Filial',
   'companys branch code': 'Cód. Filial',
+  'company is required': 'Empresa é um campo obrigatório',
   company: 'Empresa',
+  'company name': 'Nome da Empresa',
   companies: 'Empresas',
   'company registration': 'Cadastro Empresas',
   'add new customer': 'Adicionar Novo Cliente',
@@ -292,6 +296,15 @@ export default {
   'active - {this}': 'Ativo - {this}',
   client: '{howMany, plural, one {Cliente} other {Clientes}}',
   '{this} register': 'cadastro {this}',
+  'bank is required': 'Banco é um campo obrigatório',
+  bank: '{howMany, plural, one {Banco} other {Bancos}}',
+  '{this} datagrid body empty data source message':
+    'Não existem {this} cadastrados no sistema',
+  'buyer datagrid body empty data source message':
+    'Não existem compradores cadastrados no sistema',
+  'equalization datagrid body empty data source message':
+    'Não existem solicitações de equalização no sistema',
+  'register of {this}': 'Cadastro de {this}',
   buyer: '{howMany, plural, one {Comprador} other {Compradores}}',
   '{this} datagrid body empty data source message':
     'Não existem {this} cadastrados no sistema',

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -10,11 +10,9 @@ module.exports = {
         allowNull: false
       },
       bank_code: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'banks',
-          key: 'code'
-        }
+        type: Sequelize.STRING(10),
+        allowNull: false,
+        default: 0
       },
       company_id: {
         type: Sequelize.INTEGER,
@@ -22,13 +20,13 @@ module.exports = {
         default: 0
       },
       agency: {
-        type: Sequelize.STRING(10),
+        type: Sequelize.STRING(10)
       },
       account: {
-        type: Sequelize.STRING(10),
+        type: Sequelize.STRING(10)
       },
       note: {
-        type: Sequelize.STRING(10),
+        type: Sequelize.STRING(240)
       },
       created_at: {
         type: Sequelize.DATE,
@@ -46,4 +44,4 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     return queryInterface.dropTable('companies_bank_account')
   }
-};
+}

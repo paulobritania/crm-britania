@@ -96,6 +96,11 @@ export const customer = {
   getInfoCustomer: 'services/clients/parent-companies/description'
 }
 
+export const banks = {
+  getAll: '/services/banks',
+  getOne: '/services/banks'
+}
+
 export const buyers = {
   getAll: '/services/buyers',
   getLines: '/services/buyers/lines',
@@ -107,7 +112,10 @@ export const buyers = {
   download: '/services/buyers/report'
 }
 
-export const establishments = { getAll: '/services/establishments' }
+export const establishments = {
+  getAll: '/services/establishments',
+  getOne: '/services/establishments'
+}
 
 export const lines = {
   getAll: '/services/lines',
@@ -167,7 +175,10 @@ export const companies = {
   getAll: '/services/companies',
   getOne: '/services/companies/:id',
   post: '/services/companies',
-  put: '/services/companies/:id'
+  put: '/services/companies/:id',
+  getOneBank: '/services/companies/company-bank-account',
+  postBank: '/services/companies/company-bank-account',
+  putBank: '/services/companies/company-bank-account/:id'
 }
 
 export const products = {
@@ -179,5 +190,3 @@ export const products = {
 export const reports = {
   getContractualPercentage: '/services/reports/vpc/contractual-percentage'
 }
-
-export const bank = { getAll: '/services/banks' }

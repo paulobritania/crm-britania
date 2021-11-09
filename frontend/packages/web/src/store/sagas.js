@@ -1,9 +1,5 @@
-
 import { eventChannel } from 'redux-saga'
-import {
-  all,
-  spawn
-} from 'redux-saga/effects'
+import { all, spawn } from 'redux-saga/effects'
 
 import access from '@britania-crm/stores/access/access.sagas'
 import app from '@britania-crm/stores/app/app.sagas'
@@ -44,7 +40,7 @@ const networkChannel = eventChannel((emitter) => {
   }
 })
 
-export default function* root () {
+export default function* root() {
   yield all([
     spawn(startWatchingNetworkConnectivity(networkChannel)),
     ...app,
