@@ -7,7 +7,6 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import { Controller } from 'react-hook-form'
 
 import MaskedInput from 'react-input-mask'
-import cpfCnpjMask from '@britania-crm/forms/masks/cpfCnpj.mask'
 
 import { theme } from './styles'
 
@@ -23,6 +22,7 @@ const Input = ({
   placeholder,
   mask,
   maxLenght,
+  disabled,
   ...rest
 }) => {
   return (
@@ -42,8 +42,8 @@ const Input = ({
             <ThemeProvider theme={theme}>
               <TextField
                 helperText={error ? error.message : null}
-                size='small'
                 error={!!error}
+                size='small'
                 onChange={onChange}
                 value={value}
                 fullWidth
@@ -52,6 +52,7 @@ const Input = ({
                 placeholder={placeholder}
                 multiline={multiline}
                 rows={rows}
+                disabled={disabled}
               />
             </ThemeProvider>
           ) : (
@@ -59,6 +60,7 @@ const Input = ({
               mask={mask}
               variant={variant}
               value={value}
+              disabled={disabled}
               onChange={onChange}
             >
               <TextField
@@ -83,7 +85,7 @@ Input.propTypes = {
   control: PropTypes.any,
   label: PropTypes.string,
   variant: PropTypes.string,
-  mask: PropTypes.bool,
+  mask: PropTypes.string,
   mode: PropTypes.string,
   multiline: PropTypes.bool
 }
@@ -92,7 +94,7 @@ Input.defaultProps = {
   name: '',
   label: '',
   variant: 'outlined',
-  mask: false,
+  mask: '',
   mode: 'both',
   multiline: false
 }

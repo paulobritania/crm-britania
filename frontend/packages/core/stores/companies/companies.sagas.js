@@ -11,7 +11,12 @@ import {
 import { AppActions } from '../app/app.actions'
 import { CompanyTypes } from './companies.actions'
 
-function* doUpdateCompany({ params, id, onSuccess, onError }) {
+function* doUpdateCompany({
+  params,
+  id,
+  onSuccess = () => {},
+  onError = () => {}
+}) {
   try {
     yield call(putCompany, params, id)
     yield put(AppActions.addAlert({ type: 'success', message: MSG027 }))
@@ -27,10 +32,10 @@ function* doUpdateCompany({ params, id, onSuccess, onError }) {
   }
 }
 
-function* doSaveCompany({ params, onSuccess, onError }) {
+function* doSaveCompany({ params, onSuccess, onError = () => {} }) {
   try {
     const { data } = yield call(postCompany, params)
-    yield call(onSuccess(data))
+    onSuccess(data)
     yield put(
       AppActions.addAlert({
         type: 'success',
@@ -38,6 +43,7 @@ function* doSaveCompany({ params, onSuccess, onError }) {
       })
     )
   } catch (error) {
+    console.log(error)
     yield put(
       AppActions.addAlert({
         type: 'error',
@@ -48,16 +54,20 @@ function* doSaveCompany({ params, onSuccess, onError }) {
   }
 }
 
-function* doSaveCompanyBank({ params, onSuccess, onError }) {
+function* doSaveCompanyBank({
+  params,
+  onSuccess = () => {},
+  onError = () => {}
+}) {
   try {
     yield call(postCompanyBank, params)
+    yield call(onSuccess)
     yield put(
       AppActions.addAlert({
         type: 'success',
         message: 'Conta bancária cadastrada com sucesso!'
       })
     )
-    yield call(onSuccess)
   } catch (error) {
     if (error.response.status === 403) {
       yield put(
@@ -72,17 +82,23 @@ function* doSaveCompanyBank({ params, onSuccess, onError }) {
   }
 }
 
-function* doEditCompanyBank({ id, params, onSuccess, onError }) {
+function* doEditCompanyBank({
+  id,
+  params,
+  onSuccess = () => {},
+  onError = () => {}
+}) {
   try {
     yield call(putCompanyBank, id, params)
+    yield call(onSuccess)
     yield put(
       AppActions.addAlert({
         type: 'success',
         message: 'Conta bancária atualizada com sucesso!'
       })
     )
-    yield call(onSuccess)
   } catch (error) {
+    console.log('erroooooo ->>', error)
     if (error.response.status === 403) {
       yield put(
         AppActions.addAlert({

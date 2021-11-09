@@ -9,8 +9,7 @@ import {
   CircularProgress,
   InputAdornment,
   MenuItem,
-  InputLabel,
-  Input
+  InputLabel
 } from '@material-ui/core'
 
 import { areEqual } from '@britania-crm/utils/memo'
@@ -44,7 +43,7 @@ const InputSelectStyled = ({
 
     if (isEmpty(options)) {
       optsArray.push(
-        <MenuItem selected disabled value=''>
+        <MenuItem selected key='none' disabled>
           <em>Nenhum valor</em>
         </MenuItem>
       )
@@ -91,7 +90,11 @@ const InputSelectStyled = ({
         {label}
       </InputLabel>
       <Controller
-        render={({ field: { onChange, value } }) => (
+        render={({
+          field: { onChange, value },
+          fieldState: { error },
+          formState
+        }) => (
           <TextFieldStyled
             className={value === 0 ? classes.placeholder : ''}
             onChange={customChange || onChange}
@@ -99,6 +102,8 @@ const InputSelectStyled = ({
             variant={variant}
             select
             disabled={loading}
+            helperText={error ? error.message : null}
+            error={!!error}
             InputProps={{
               endAdornment: EndAdornment
             }}

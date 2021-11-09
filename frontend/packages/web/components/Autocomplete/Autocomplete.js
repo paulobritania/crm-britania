@@ -124,7 +124,11 @@ const AutocompleteStyled = ({
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, value } }) => (
+        render={({
+          field: { onChange, value },
+          fieldState: { error },
+          formState
+        }) => (
           <Autocomplete
             open={open}
             onOpen={() => {
@@ -154,6 +158,8 @@ const AutocompleteStyled = ({
                 disabled={disabled}
                 required={required}
                 variant={variant}
+                helperText={error ? error.message : null}
+                error={!!error}
                 type='input'
                 style={{ display: 'flex' }}
                 InputProps={{

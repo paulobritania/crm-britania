@@ -114,6 +114,7 @@ export default {
     '{abbreviation, select , true {Dias sem fat.} false {Dias sem faturamento}}',
   'companys branch': 'Filial',
   'companys branch code': 'Cód. Filial',
+  'company is required': 'Empresa é um campo obrigatório',
   company: 'Empresa',
   'company name': 'Nome da Empresa',
   companies: 'Empresas',
@@ -295,6 +296,7 @@ export default {
   'active - {this}': 'Ativo - {this}',
   client: '{howMany, plural, one {Cliente} other {Clientes}}',
   '{this} register': 'cadastro {this}',
+  'bank is required': 'Banco é um campo obrigatório',
   bank: '{howMany, plural, one {Banco} other {Bancos}}',
   '{this} datagrid body empty data source message':
     'Não existem {this} cadastrados no sistema',

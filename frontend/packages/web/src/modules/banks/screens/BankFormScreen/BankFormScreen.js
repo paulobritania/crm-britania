@@ -16,7 +16,6 @@ import bankSchema, {
 import I18n, { useT } from '@britania-crm/i18n'
 import {
   establishments,
-  banks as banksCrmRoutes,
   banks,
   companies
 } from '@britania-crm/services/apis/crmApi/resources/routes'
@@ -36,7 +35,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Divider from '@material-ui/core/Divider'
 import ConfirmModal from '@britania-crm/web-components/Modal/ConfirmModal'
 
-import { useForm } from 'react-hook-form'
+import { useForm, useFormState } from 'react-hook-form'
 import { useRoutes } from '@britania-crm/web-src/routes/authenticated.routes'
 import { useStyles, InputLabelStyled } from './styles'
 
@@ -54,26 +53,19 @@ const BankFormScreen = () => {
   const modeView = useMemo(() => mode === 'view', [mode])
   const isEdit = useMemo(() => mode === 'edit', [mode])
 
-  const defaultValues = {
-    companyId: null,
-    identifier: 0,
-    bankCode: '',
-    agency: '',
-    account: '',
-    note: ''
-  }
-
-  const methods = useForm({
-    defaultValues: defaultValues
-    // resolver: yupResolver(bankSchema)
+  const {
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    formState: { errors }
+  } = useForm({
+    defaultValues: INITIAL_VALUES,
+    resolver: yupResolver(bankSchema(t))
   })
 
-  const { handleSubmit, reset, control, setValue } = methods
-
   const { data: bankFromApi, loading } = useCrmApi(
-    state?.params?.id
-      ? [`${banksCrmRoutes.getOne}/${state?.params?.id}`]
-      : null,
+    state?.params?.id ? [`${companies.getOneBank}/${state?.params?.id}`] : null,
     {},
     {
       revalidateOnFocus: false
@@ -116,7 +108,6 @@ const BankFormScreen = () => {
 
   const onSuccessCallBack = useCallback(() => {
     setLoader(false)
-    reset()
     history.push(routes.banks.path)
   }, [history, routes])
 
@@ -129,7 +120,7 @@ const BankFormScreen = () => {
           ...values,
           identifier: values.identifier,
           companyId: values.companyId ?? companyId,
-          bankCode: values.bankCode.code,
+          bankCode: values.bank.code,
           agency: values.agency,
           account: values.account,
           note: values.note
@@ -140,13 +131,13 @@ const BankFormScreen = () => {
             CompanyActions.editCompanyBank(
               state?.params?.id,
               payload,
-              onSuccessCallBack,
+              onSuccessCallBack(),
               () => setLoader(false)
             )
           )
         } else {
           dispatch(
-            CompanyActions.saveCompanyBank(payload, onSuccessCallBack, () =>
+            CompanyActions.saveCompanyBank(payload, onSuccessCallBack(), () =>
               setLoader(false)
             )
           )
@@ -183,7 +174,7 @@ const BankFormScreen = () => {
       if (!isEmpty(bankFromApi)) {
         setValue('identifier', bankFromApi.company?.identifier)
         setValue('companyId', bankFromApi.companyId)
-        setValue('bankCode', bankFromApi.bank)
+        setValue('bank', bankFromApi.bank)
         setValue('agency', bankFromApi.agency)
         setValue('account', bankFromApi.account)
         setValue('note', bankFromApi.note)
@@ -217,6 +208,11 @@ const BankFormScreen = () => {
       }),
     [createDialog, history, mode, routes.banks.path, t]
   )
+
+  const handleClear = () => {
+    reset()
+    setCompany({})
+  }
 
   const handleChange = async (e) => {
     const res = await api.get(
@@ -269,8 +265,8 @@ const BankFormScreen = () => {
               defaultValue=''
               mode='cnpj'
               placeholder='00.000.000/0000-00'
-              mask={cpfCnpjMask('', { mode })}
-              readonly
+              mask={cpfCnpjMask('', { mode: 'cnpj' })}
+              readonly={true}
             />
           </Grid>
           <Grid container spacing={4} style={{ marginTop: 10 }}>
@@ -320,7 +316,7 @@ const BankFormScreen = () => {
               }}
               valueKey='description'
               paramName='description'
-              name='bankCode'
+              name='bank'
               label={t('bank')}
               placeholder={t('bank')}
             />
@@ -386,7 +382,7 @@ const BankFormScreen = () => {
                 disabled={loader || loading}
                 variant='outlined'
                 color='secondary'
-                onClick={() => reset()}
+                onClick={() => handleClear()}
               >
                 cleanForm
               </I18n>
