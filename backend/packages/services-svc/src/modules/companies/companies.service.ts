@@ -190,13 +190,15 @@ export class CompaniesService {
         }
       )
 
-      await transaction.commit()
       const log = {
-        oldData: company.get({ plain: true }),
+        newData: data,
+        oldData: null,
         userId,
-        httpVerb: 'update',
+        httpVerb: 'create',
         table: 'companies_bank_account'
       }
+      await transaction.commit()
+      this.logsClient.send({ log: 'create' }, log).toPromise()
       return company
     } catch (error) {
       await transaction.rollback()
@@ -269,13 +271,15 @@ export class CompaniesService {
         { transaction }
       )
 
-      await transaction.commit()
       const log = {
+        newData: data,
         oldData: companyBankAccount.get({ plain: true }),
         userId,
         httpVerb: 'update',
         table: 'companies_bank_account'
       }
+      await transaction.commit()
+      this.logsClient.send({ log: 'update' }, log).toPromise()
       return companyBankAccount.id
     } catch (error) {
       await transaction.rollback()
@@ -301,6 +305,7 @@ export class CompaniesService {
       if (!bankAccount) throw new BadRequestException('Conta não encontrada')
 
       const log = {
+        newData: null,
         oldData: bankAccount.get({ plain: true }),
         userId,
         httpVerb: 'delete',
@@ -308,7 +313,7 @@ export class CompaniesService {
       }
 
       await bankAccount.destroy({ transaction })
-      this.logsClient.send({ log: 'create' }, log).toPromise()
+      this.logsClient.send({ log: 'delete' }, log).toPromise()
 
       await transaction.commit()
     } catch (error) {
