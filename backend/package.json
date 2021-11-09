@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "yarn lint && yarn docker:build && yarn docker:start",
+    "start:dev": "yarn lint && yarn docker:build && yarn docker:dev:start",
     "docker:build": "docker-compose build",
     "docker:start": "docker-compose up -d",
     "docker:dev:start": "docker-compose -f docker-compose.dev.yml up -d --build",

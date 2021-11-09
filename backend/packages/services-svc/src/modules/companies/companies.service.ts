@@ -207,7 +207,7 @@ export class CompaniesService {
    * @param userId number
    */
   async update(data: CompanyDto, id: number, userId: number): Promise<number> {
-    
+
     const transaction = await this.db.transaction()
     try {
       const company = await this.companyModel.findByPk(id)

@@ -9,8 +9,8 @@ import {
   Length,
   Validate
 } from 'class-validator'
-import { PagedQuery } from '../../../../utils/pagination/pagedQuery.dto'
 
+import { PagedQuery } from '../../../../utils/pagination/pagedQuery.dto'
 import { IsStringifiedNumberArray } from '../../../../utils/validations/isStringifiedNumberArrayValidator'
 import { VoltageEnum } from '../../enum/Voltage.enum'
 
