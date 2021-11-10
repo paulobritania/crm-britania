@@ -8,4 +8,9 @@ export class BanksQueryDto extends PagedQuery {
   @IsOptional()
   @ApiProperty({ required: false })
   description: string
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  code: string
 }

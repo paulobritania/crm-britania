@@ -33,7 +33,7 @@ import { BuyerLineFamily } from './entities/buyerLineFamily.entity'
 
 @Injectable()
 export class BuyersService {
-  private readonly clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA;
+  private readonly clientHierarchy: string;
 
   constructor(
     @Inject(ClientsService) private clientsService: ClientsService,
@@ -47,7 +47,9 @@ export class BuyersService {
     @InjectModel(File) private file: typeof File,
     @Inject(HierarchyService)
     private readonly hierarchyService: HierarchyService
-  ) { }
+  ) {
+    this.clientHierarchy = process.env.BRITANIA_CLIENTE_HIERARQUIA
+  }
 
   /**
    * Irá validar se as relações entre linhas x famílias
@@ -392,6 +394,8 @@ export class BuyersService {
           attributes: ['lineCode', 'lineDescription', 'familyCode', 'familyDescription', 'regionalManagerCode', 'regionalManagerDescription', 'responsibleCode', 'responsibleDescription']
         }
       ],
+      offset: query.page,
+      limit: query.pageSize,
       order: [['id', 'DESC']]
     })
 
